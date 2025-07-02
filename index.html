@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hoja de Personaje</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="main-container">
+        <!-- Datos del Personaje -->
+        <div class="card">
+            <h2>Datos del Personaje</h2>
+            <div style="display:flex;align-items:center;gap:24px;">
+                <div style="display:flex;flex-direction:column;align-items:center;gap:8px;">
+                    <img id="char-image" src="https://placehold.co/120x120" alt="Imagen" style="width:120px;height:120px;border-radius:12px;object-fit:cover;max-width:180px;max-height:180px;">
+                    <input id="char-image-upload" type="file" accept="image/*" style="font-size:0.95em;max-width:180px;">
+                    <small style="font-size:0.9em;color:#666;">Sube una imagen (cualquier tamaño)</small>
+                </div>
+                <div style="flex:1;">
+                    <label>Nombre: <input id="char-name" type="text"></label><br>
+                    <label>Raza: <input id="char-race" type="text"></label><br>
+                    <label>Idiomas: <input id="char-languages" type="text"></label><br>
+                    <label>Personalidad: <textarea id="char-personality" rows="2"></textarea></label>
+                </div>
+            </div>
+        </div>
+
+        <!-- Atributos y Modificadores -->
+        <div class="card">
+            <h2 style="font-size:clamp(1.2rem,2vw,2rem);">Atributos</h2>
+            <div class="grid-attributes">
+                <div>
+                    <label style="font-size:clamp(1rem,1.5vw,1.2rem);">Fuerza <input id="attr-fuerza" type="number" min="1"></label>
+                    <div style="font-size:clamp(0.95rem,1.2vw,1.1rem);">Mod: <span id="mod-fuerza">0</span></div>
+                </div>
+                <div>
+                    <label style="font-size:clamp(1rem,1.5vw,1.2rem);">Inteligencia <input id="attr-inteligencia" type="number" min="1"></label>
+                    <div style="font-size:clamp(0.95rem,1.2vw,1.1rem);">Mod: <span id="mod-inteligencia">0</span></div>
+                </div>
+                <div>
+                    <label style="font-size:clamp(1rem,1.5vw,1.2rem);">Agilidad <input id="attr-agilidad" type="number" min="1"></label>
+                    <div style="font-size:clamp(0.95rem,1.2vw,1.1rem);">Mod: <span id="mod-agilidad">0</span></div>
+                </div>
+                <div>
+                    <label style="font-size:clamp(1rem,1.5vw,1.2rem);">Metabolismo <input id="attr-metabolismo" type="number" min="1"></label>
+                    <div style="font-size:clamp(0.95rem,1.2vw,1.1rem);">Mod: <span id="mod-metabolismo">0</span></div>
+                </div>
+                <div>
+                    <label style="font-size:clamp(1rem,1.5vw,1.2rem);">A.M. <input id="attr-am" type="number" min="1"></label>
+                    <div style="font-size:clamp(0.95rem,1.2vw,1.1rem);">Mod: <span id="mod-am">0</span></div>
+                </div>
+            </div>
+            <button id="edit-base-btn" style="margin-top:12px;font-size:clamp(1rem,1.5vw,1.2rem);">Modificar bases</button>
+            <div id="base-modal" class="modal" style="display:none;">
+                <div class="modal-content">
+                    <span class="close" id="close-base-modal">&times;</span>
+                    <h3>Modificar valores base</h3>
+                    <label>Vida base: <input id="base-vida" type="number" min="0"></label><br>
+                    <label>Armadura base: <input id="base-armadura" type="number" min="0"></label><br>
+                    <label>Mistyculas base: <input id="base-mistyculas" type="number" min="0"></label><br>
+                    <button id="save-base-btn">Guardar</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Estadísticas -->
+        <div class="card">
+            <h2>Estadísticas</h2>
+            <table class="stats-table">
+                <tr>
+                    <th>Vida</th>
+                    <th>Armadura</th>
+                    <th>Mistyculas</th>
+                    <th>XP</th>
+                    <th>Nivel</th>
+                    <th>Grupo Acción</th>
+                </tr>
+                <tr>
+                    <td><input id="vida-actual" type="number" min="0" style="width:60px;"> / <span id="vida-max">0</span></td>
+                    <td><input id="armadura" type="number" min="0" style="width:60px;"></td>
+                    <td><input id="mistyculas-actual" type="number" min="0" style="width:60px;"> / <span id="mistyculas-max">0</span></td>
+                    <td><input id="xp-comun" type="number" min="0" style="width:80px;"></td>
+                    <td><span id="nivel">1</span></td>
+                    <td><input id="grupo-accion" type="text" style="width:90px;"></td>
+                </tr>
+            </table>
+            <div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap;">
+                <label>Daño: <input id="input-dano" type="number" style="width:60px;"></label>
+                <button id="apply-damage-btn">Aplicar Daño</button>
+                <label>Curación: <input id="input-curacion" type="number" style="width:60px;"></label>
+                <button id="heal-btn">Curar</button>
+                <label>Regenerar Mistyculas: <input id="input-regen-mistyculas" type="number" style="width:60px;"></label>
+                <button id="regen-mistyculas-btn">Regenerar</button>
+                <label>XP: <input id="input-xp" type="number" style="width:60px;"></label>
+                <button id="add-xp-btn">Agregar XP</button>
+            </div>
+        </div>
+
+        <!-- Buffos, Debuffos y Efectos -->
+        <div class="card">
+            <h2 style="font-size:clamp(1.2rem,2vw,2rem);">Buffos, Debuffos y Efectos</h2>
+            <div style="display:flex;gap:16px;flex-wrap:wrap;align-items:center;">
+                <div>
+                    <strong>Buffos:</strong> <span id="buffs-lista"></span>
+                    <button id="edit-buffs-btn">Editar</button>
+                </div>
+                <div>
+                    <strong>Debuffos:</strong> <span id="debuffs-lista"></span>
+                    <button id="edit-debuffs-btn">Editar</button>
+                </div>
+                <div>
+                    <strong>Efectos:</strong> <span id="efectos-lista"></span>
+                    <button id="edit-efectos-btn">Editar</button>
+                </div>
+            </div>
+            <div id="efectos-modal" class="modal" style="display:none;">
+                <div class="modal-content">
+                    <span class="close" id="close-efectos-modal">&times;</span>
+                    <h3>Gestionar Buffos, Debuffos y Efectos</h3>
+                    <div style="margin-bottom:8px;">
+                        <strong>Tipo:</strong>
+                        <select id="efecto-tipo">
+                            <option value="buffo">Buffo</option>
+                            <option value="debuffo">Debuffo</option>
+                            <option value="efecto">Efecto</option>
+                        </select>
+                    </div>
+                    <label>Nombre: <input id="efecto-nombre" type="text"></label><br>
+                    <label>Duración: <input id="efecto-duracion" type="number" min="1"></label><br>
+                    <label>Atributo afectado:
+                        <select id="efecto-atributo">
+                            <option value="">Ninguno</option>
+                            <option value="fuerza">Fuerza</option>
+                            <option value="inteligencia">Inteligencia</option>
+                            <option value="agilidad">Agilidad</option>
+                            <option value="metabolismo">Metabolismo</option>
+                            <option value="am">A.M.</option>
+                            <option value="vida">Vida</option>
+                            <option value="armadura">Armadura</option>
+                            <option value="mistyculas">Mistyculas</option>
+                        </select>
+                    </label><br>
+                    <label>Valor del efecto: <input id="efecto-valor" type="number"></label><br>
+                    <button id="add-efecto-modal-btn">Agregar/Actualizar</button>
+                    <div id="efectos-lista-modal" style="margin-top:12px;"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Inventario -->
+        <div class="card">
+            <h2>Inventario</h2>
+            <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:16px;">
+                <div>
+                    <h3>Habilidades <button id="add-habilidades-btn">+</button></h3>
+                    <ul id="habilidades-lista" class="inventory-list"></ul>
+                </div>
+                <div>
+                    <h3>Técnicas y Hechizos <button id="add-tecnicas-btn">+</button><button id="add-hechizos-btn" style="margin-left:6px;">+</button></h3>
+                    <ul id="tecnicas-lista" class="inventory-list"></ul>
+                    <ul id="hechizos-lista" class="inventory-list"></ul>
+                </div>
+                <div>
+                    <h3>Mascotas <button id="add-mascotas-btn">+</button></h3>
+                    <ul id="mascotas-lista" class="inventory-list mini-sheet-pet-list-ul"></ul>
+                    <!-- Modal Mascota mejorado -->
+                    <div id="modal-mascota" class="modal" style="display:none;">
+                        <div class="modal-content modal-content-visual modal-content-wide" style="max-width:520px;max-height:90vh;overflow-y:auto;">
+                            <span class="close close-visual" id="close-modal-mascota">&times;</span>
+                            <h3 class="modal-title-visual">Ficha de Mascota</h3>
+                            <div class="mini-sheet-pet" id="mini-sheet-pet-crear">
+                                <div class="mini-sheet-pet-header">
+                                    <div class="mini-sheet-pet-imgbox">
+                                        <img id="mascota-img-preview" src="https://placehold.co/100x100" alt="Imagen Mascota" class="mini-sheet-pet-img">
+                                    </div>
+                                    <div class="mini-sheet-pet-maininfo">
+                                        <label>Nombre: <input id="mascota-nombre" type="text"></label>
+                                        <label>Tipo: <input id="mascota-tipo" type="text"></label>
+                                    </div>
+                                </div>
+                                <label>Habilidades de la mascota:</label>
+                                <textarea id="mascota-habilidades" rows="3" placeholder="Describe las habilidades especiales de la mascota"></textarea>
+                                <div id="mascota-editar-extra" style="display:none;">
+                                    <label>Descripción:</label>
+                                    <textarea id="mascota-desc" rows="2"></textarea>
+                                    <div class="mini-sheet-pet-attrstats">
+                                        <div>
+                                            <label style="font-weight:600;">Atributos</label>
+                                            <div class="mini-sheet-pet-attrs-editable">
+                                                <div class="mini-sheet-pet-attr-row">
+                                                    <label>Fuerza <input id="mascota-fuerza" type="number" min="1"></label>
+                                                    <span>Mod: <span id="mascota-mod-fuerza">0</span></span>
+                                                </div>
+                                                <div class="mini-sheet-pet-attr-row">
+                                                    <label>Inteligencia <input id="mascota-inteligencia" type="number" min="1"></label>
+                                                    <span>Mod: <span id="mascota-mod-inteligencia">0</span></span>
+                                                </div>
+                                                <div class="mini-sheet-pet-attr-row">
+                                                    <label>Agilidad <input id="mascota-agilidad" type="number" min="1"></label>
+                                                    <span>Mod: <span id="mascota-mod-agilidad">0</span></span>
+                                                </div>
+                                                <div class="mini-sheet-pet-attr-row">
+                                                    <label>Metabolismo <input id="mascota-metabolismo" type="number" min="1"></label>
+                                                    <span>Mod: <span id="mascota-mod-metabolismo">0</span></span>
+                                                </div>
+                                                <div class="mini-sheet-pet-attr-row">
+                                                    <label>A.M. <input id="mascota-am" type="number" min="1"></label>
+                                                    <span>Mod: <span id="mascota-mod-am">0</span></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <label style="font-weight:600;">Estadísticas</label>
+                                            <div class="mini-sheet-pet-stats">
+                                                <label>Vida <input id="mascota-vida" type="number" min="0"></label>
+                                                <label>Armadura <input id="mascota-armadura" type="number" min="0"></label>
+                                                <label>Mistyculas <input id="mascota-mistyculas" type="number" min="0"></label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <button id="save-mascota-btn" class="modal-save-btn">Guardar</button>
+                        </div>
+                    </div>
+                    <!-- Modal resultado fórmula -->
+                    <div id="modal-formula-resultado" class="modal" style="display:none;">
+                        <div class="modal-content modal-content-visual modal-content-wide" style="max-width:400px;">
+                            <span class="close close-visual" id="close-modal-formula-resultado">&times;</span>
+                            <h3 class="modal-title-visual">Resultado</h3>
+                            <div id="formula-resultado-text" style="font-size:1.2em;margin:18px 0;"></div>
+                            <button id="cerrar-resultado-btn" class="modal-save-btn">Cerrar</button>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <h3>Objetos <button id="add-objetos-btn">+</button></h3>
+                    <ul id="objetos-lista" class="inventory-list"></ul>
+                </div>
+            </div>
+            <!-- Modales para creación/edición -->
+            <div id="modal-item" class="modal" style="display:none;">
+                <div class="modal-content modal-content-visual modal-content-wide" style="max-height:90vh;overflow-y:auto;">
+                    <span class="close close-visual" id="close-modal-item">&times;</span>
+                    <h3 id="modal-item-title" class="modal-title-visual">Crear/Editar</h3>
+                    <div id="modal-item-fields" class="modal-fields-visual"></div>
+                    <!-- Campo de rareza con autocompletado y badge visual -->
+                    <div style="margin-bottom:10px;display:flex;align-items:center;gap:12px;">
+                        <label for="modal-item-rareza" style="font-weight:600;">Rareza:</label>
+                        <input list="rareza-list" id="modal-item-rareza" name="rareza" class="rareza-autocomplete" placeholder="Selecciona o escribe..." autocomplete="off" style="margin-left:8px;min-width:120px;">
+                        <datalist id="rareza-list">
+                            <option value="intrinseca">Intrínseca</option>
+                            <option value="comun">Común</option>
+                            <option value="epica">Épica</option>
+                            <option value="legendaria">Legendaria</option>
+                            <option value="mitica">Mítica</option>
+                            <option value="genesis">Génesis</option>
+                        </datalist>
+                        <span id="modal-item-rareza-badge" class="rareza-badge" style="margin-left:12px;vertical-align:middle;"></span>
+                        <span id="modal-rareza-badge" class="rareza-badge" style="display:none;"></span>
+                    </div>
+                    <div id="formula-builder" style="display:none;margin-bottom:10px;">
+                        <div class="formula-builder-card">
+                            <label class="formula-label-visual" style="font-weight:600;font-size:1.1em;display:flex;align-items:center;gap:8px;">
+                                Fórmula(s):
+                            </label>
+                            <div id="formula-list" class="formula-list-visual formula-list-group"></div>
+                            <div class="formula-input-row" style="margin-bottom:10px;">
+                                <input id="formula-input" type="text" class="formula-input-visual formula-input" placeholder="Ej: 2d6+Fuerza">
+                                <button id="add-formula-btn" type="button" class="formula-add-btn-visual formula-action-btn">Agregar fórmula</button>
+                            </div>
+                            <div class="formula-group-row">
+                                <span class="formula-group-title formula-group-label">Atributos:</span>
+                                <button class="formula-btn formula-btn-visual" data-insert="Fuerza">Fuerza</button>
+                                <button class="formula-btn formula-btn-visual" data-insert="Inteligencia">Inteligencia</button>
+                                <button class="formula-btn formula-btn-visual" data-insert="Agilidad">Agilidad</button>
+                                <button class="formula-btn formula-btn-visual" data-insert="Metabolismo">Metabolismo</button>
+                                <button class="formula-btn formula-btn-visual" data-insert="A.M">A.M</button>
+                            </div>
+                            <div class="formula-group-row">
+                                <span class="formula-group-title formula-group-label">Mods:</span>
+                                <button class="formula-btn formula-btn-visual" data-insert="Mod.Fuerza">Mod.Fuerza</button>
+                                <button class="formula-btn formula-btn-visual" data-insert="Mod.Int">Mod.Int</button>
+                                <button class="formula-btn formula-btn-visual" data-insert="Mod.Agi">Mod.Agi</button>
+                                <button class="formula-btn formula-btn-visual" data-insert="Mod.Met">Mod.Met</button>
+                                <button class="formula-btn formula-btn-visual" data-insert="Mod.A.M">Mod.A.M</button>
+                            </div>
+                            <div class="formula-group-row">
+                                <span class="formula-group-title formula-group-label">Stats:</span>
+                                <button class="formula-btn formula-btn-visual" data-insert="Mistyculas">Mistyculas</button>
+                                <button class="formula-btn formula-btn-visual" data-insert="Armadura">Armadura</button>
+                                <button class="formula-btn formula-btn-visual" data-insert="VidaBase">Vida Base</button>
+                                <button class="formula-btn formula-btn-visual" data-insert="VidaActual">Vida Actual</button>
+                            </div>
+                            <div class="formula-group-row">
+                                <span class="formula-group-title formula-group-label">Dados:</span>
+                                <button class="formula-btn formula-btn-visual" data-insert="d">d</button>
+                                <button class="formula-btn formula-btn-visual" data-insert="d4">d4</button>
+                                <button class="formula-btn formula-btn-visual" data-insert="d6">d6</button>
+                                <button class="formula-btn formula-btn-visual" data-insert="d8">d8</button>
+                                <button class="formula-btn formula-btn-visual" data-insert="d10">d10</button>
+                                <button class="formula-btn formula-btn-visual" data-insert="d12">d12</button>
+                                <button class="formula-btn formula-btn-visual" data-insert="d20">d20</button>
+                                <button class="formula-btn formula-btn-visual" data-insert="d100">d100</button>
+                            </div>
+                            <div class="formula-group-row">
+                                <span class="formula-group-title formula-group-label">Operadores:</span>
+                                <button class="formula-btn formula-btn-visual" data-insert="+">+</button>
+                                <button class="formula-btn formula-btn-visual" data-insert="-">-</button>
+                                <button class="formula-btn formula-btn-visual" data-insert="*">×</button>
+                                <button class="formula-btn formula-btn-visual" data-insert="/">÷</button>
+                                <button class="formula-btn formula-btn-visual" data-insert="(">(</button>
+                                <button class="formula-btn formula-btn-visual" data-insert=")">)</button>
+                            </div>
+                        </div>
+                    </div>
+                    <button id="save-modal-item-btn" class="modal-save-btn">Guardar</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Gestión de Personaje -->
+        <div class="card">
+            <h2>Gestión de Personaje</h2>
+            <button id="export-btn">Exportar JSON</button>
+            <label style="margin-left:16px;">
+                Importar JSON <input id="import-btn" type="file" accept="application/json" style="display:inline;">
+            </label>
+        </div>
+
+        <!-- Equipamiento y Bolsillos -->
+        <div class="card">
+            <h2>Equipamiento</h2>
+            <div id="equipamiento-lista"></div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
