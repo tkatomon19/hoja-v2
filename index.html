@@ -1290,8 +1290,8 @@ function saveTechnique(index) {
         name: document.getElementById('tech-name').value,
         description: document.getElementById('tech-description').value,
         type: document.getElementById('tech-type').value,
-        costPA: parseInt(document.getElementById('skill-cost-pa').value) || 0,
-        costMP: parseInt(document.getElementById('skill-cost-mp').value) || 0,
+        costPA: parseInt(document.getElementById('tech-cost-pa').value) || 0,
+        costMP: parseInt(document.getElementById('tech-cost-mp').value) || 0,
         formula: document.getElementById('tech-formula').value,
         rarity: isEditing ? character.inventory.techniques[index].rarity : 'Común',
         isDamageFormulaActive: isEditing ? character.inventory.techniques[index].isDamageFormulaActive : false,
@@ -1928,7 +1928,7 @@ function safeEvaluateFormula(baseFormula, abilityLevel = 1) {
             processedFormula = processedFormula.replace(new RegExp(`\\(${key}\\)`, 'gi'), ` ${attr.value} `);
         }
         for (const key in character.stats) {
-            processedFormula = processedFormula.replace(new RegExp(`\\(${character.stats[key].name}\\)`, 'gi'), ` ${character.stats[key].current} `);
+            processedFormula = processedFormula.replace(new RegExp(`\\(${character.stats[k].name}\\)`, 'gi'), ` ${character.stats[key].current} `);
         }
         processedFormula = processedFormula.replace(new RegExp(`\\(NivelHab\\)`, 'gi'), ` ${abilityLevel} `);
         processedFormula = processedFormula.replace(/\(\s*(-?\d+)\s*\)/g, ' $1 ');
