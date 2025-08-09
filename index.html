@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hoja de Personaje - Isekai Delivery Service v3.13</title>
+    <title>Hoja de Personaje - Isekai Delivery Service v4.0</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -159,12 +159,21 @@
         .theme-dark .item-card[data-rarity="Épico"] .rarity-text,
         .theme-dark .item-card[data-rarity="Legendario"] .rarity-text { color: #f9fafb; }
         .stat-block { background-color: var(--stat-bg); transition: background-color 0.3s; }
+
+        /* Estilos para Estados */
+        .status-card { border-left-width: 4px; }
+        .status-card[data-type="Buff"] { border-left-color: #22c55e; background-color: #f0fdf4; }
+        .status-card[data-type="Debuff"] { border-left-color: #ef4444; background-color: #fef2f2; }
+        .status-card[data-type="Neutral"] { border-left-color: #6b7280; background-color: #f9fafb; }
+        .theme-dark .status-card[data-type="Buff"] { background-color: #14532d; border-left-color: #22c55e;}
+        .theme-dark .status-card[data-type="Debuff"] { background-color: #7f1d1d; border-left-color: #ef4444;}
+        .theme-dark .status-card[data-type="Neutral"] { background-color: #374151; border-left-color: #6b7280;}
     </style>
 </head>
 <body class="p-4 md:p-8">
 
     <div class="max-w-7xl mx-auto">
-        <h1 class="text-3xl md:text-4xl font-bold text-center mb-2 text-gray-800 dark:text-gray-200">Hoja de Personaje v3.12</h1>
+        <h1 class="text-3xl md:text-4xl font-bold text-center mb-2 text-gray-800 dark:text-gray-200">Hoja de Personaje v4.0</h1>
         <p class="text-center text-gray-500 dark:text-gray-400 mb-6">Los cambios se guardan automáticamente en tu navegador.</p>
 
         <!-- Contenedor Principal con Grid -->
@@ -285,6 +294,13 @@
                         <button id="end-turn-btn" class="btn btn-secondary w-full">Finalizar Turno</button>
                     </div>
                 </div>
+
+                <!-- Estados -->
+                <div class="card p-6">
+                    <h2 class="card-title">Estados</h2>
+                    <button id="add-status-effect-btn" class="btn btn-primary w-full mb-4">Añadir Estado</button>
+                    <div id="status-effects-list" class="space-y-3"></div>
+                </div>
             </div>
 
             <!-- Columna Derecha -->
@@ -294,6 +310,13 @@
                     <h2 class="card-title">Equipamiento</h2>
                     <div id="equipment-slots" class="space-y-3"></div>
                     <button id="manage-slots-btn" class="btn btn-secondary w-full mt-4 text-sm">Gestionar Slots</button>
+                </div>
+
+                <!-- NUEVO: Recursos -->
+                <div class="card p-6">
+                    <h2 class="card-title">Recursos</h2>
+                    <div id="resources-container" class="space-y-3 mb-4"></div>
+                    <button id="add-resource-btn" class="btn btn-secondary w-full text-sm">Gestionar Recursos</button>
                 </div>
 
                 <!-- Inventario -->
@@ -372,8 +395,8 @@ const SKILL_POINTS_PER_LEVEL = {
 };
 const EVOLUTION_LEVELS = [5, 10, 15, 20];
 const RARITIES = ['Intrínseco', 'Común', 'Raro', 'Épico', 'Legendario', 'Mítico / Único', 'Genesis'];
-const LOCAL_STORAGE_KEY = 'characterSheetData_v3.12';
-const THEME_STORAGE_KEY = 'characterSheetTheme_v3.12';
+const LOCAL_STORAGE_KEY = 'characterSheetData_v4.0';
+const THEME_STORAGE_KEY = 'characterSheetTheme_v4.0';
 
 const ELEMENTS_CONFIG = {
     fuego: { name: 'Fuego', emoji: '🔥', color: 'bg-red-100 dark:bg-red-900/50' },
@@ -386,6 +409,7 @@ const ELEMENTS_CONFIG = {
 };
 
 let character; // Se inicializará en window.onload
+let tempLinkedEffects = []; // Almacén temporal para el constructor de estados
 
 function getDefaultCharacter() {
     return {
@@ -429,7 +453,9 @@ function getDefaultCharacter() {
             { slotName: 'Accesorio 1', type: 'accesorio', item: null, isCustom: false, isDamageFormulaActive: false },
             { slotName: 'Accesorio 2', type: 'accesorio', item: null, isCustom: false, isDamageFormulaActive: false },
         ],
-        inventory: { skills: [], techniques: [], items: [], pets: [], }
+        inventory: { skills: [], techniques: [], items: [], pets: [], },
+        statusEffects: [],
+        resources: [] // NUEVO: Para recursos personalizables
     };
 }
 
@@ -466,6 +492,7 @@ function loadCharacterFromLocalStorage() {
     try {
         const parsedData = JSON.parse(data);
         const defaultChar = getDefaultCharacter();
+        // Migración robusta
         let migratedData = { ...defaultChar, ...parsedData };
         migratedData.identity = { ...defaultChar.identity, ...parsedData.identity };
         migratedData.stats = { ...defaultChar.stats, ...parsedData.stats };
@@ -489,9 +516,12 @@ function loadCharacterFromLocalStorage() {
             }
         }
 
+        // Asegurar que las nuevas propiedades existan
         if (!migratedData.fusionElements) migratedData.fusionElements = [];
         if (!migratedData.skillPoints) migratedData.skillPoints = 0;
         if (!migratedData.spiritRelations) migratedData.spiritRelations = defaultChar.spiritRelations;
+        if (!migratedData.statusEffects) migratedData.statusEffects = [];
+        if (!migratedData.resources) migratedData.resources = []; // NUEVO
         
         ['skills', 'techniques'].forEach(type => {
             if (migratedData.inventory[type]) {
@@ -564,7 +594,7 @@ function addXP(amount) {
         levelsGained++;
         
         const healthRoll = Math.floor(Math.random() * 8) + 1;
-        character.stats.health.base += healthRoll;
+        character.stats.health.base += healthRoll; // Se suma directamente a la base
         healthGained += healthRoll;
 
         skillPointsGained += SKILL_POINTS_PER_LEVEL[currentLevelBeforeUp] || 0;
@@ -605,10 +635,15 @@ function getModifier(attributeValue) {
 function calculateDerivedStats() {
     if (!character) return;
 
+    // Guardar valores actuales para no perderlos
     const tempHealth = character.stats.health.current;
     const tempMana = character.stats.mana.current;
-    const tempAttributes = JSON.parse(JSON.stringify(character.attributes));
 
+    // Crear copias temporales para calcular bonificaciones
+    const tempAttributes = JSON.parse(JSON.stringify(character.attributes));
+    const tempStats = JSON.parse(JSON.stringify(character.stats));
+
+    // 1. Aplicar bonificaciones de equipo a los atributos temporales
     character.equipment.forEach(slot => {
         if (slot.item) {
             slot.item.effects.forEach(effect => {
@@ -620,6 +655,23 @@ function calculateDerivedStats() {
         }
     });
 
+    // 2. Aplicar bonificaciones de estados (continuos) a los atributos temporales
+    character.statusEffects.forEach(status => {
+        status.linkedEffects.forEach(effect => {
+            if (effect.applyOn === 'continuo' && effect.target === 'self') {
+                const keys = effect.attribute.split('.');
+                if (keys[0] === 'attributes' && tempAttributes[keys[1]]) {
+                    if (effect.modification === 'fijo') {
+                        tempAttributes[keys[1]].value += effect.value;
+                    } else { // Porcentaje
+                        tempAttributes[keys[1]].value *= (1 + effect.value / 100);
+                    }
+                }
+            }
+        });
+    });
+
+    // Calcular modificadores con atributos ya bonificados
     const mods = {
         FUE: getModifier(tempAttributes.FUE.value), AGI: getModifier(tempAttributes.AGI.value),
         MET: getModifier(tempAttributes.MET.value), INT: getModifier(tempAttributes.INT.value),
@@ -627,16 +679,18 @@ function calculateDerivedStats() {
     };
     const level = character.stats.level.current;
 
-    let maxHealth = character.stats.health.base + (mods.MET * level);
+    // 3. Calcular estadísticas base derivadas
+    let maxHealth = tempStats.health.base + (mods.MET * level);
     let armor = 10 + mods.AGI + mods.MET;
-    let maxMana = character.stats.mana.base * Math.max(1, mods.INT) * Math.max(1, mods.APM);
-    let actions = character.stats.actions.base + mods.AGI + level;
-    let movement = (mods.FUE + mods.AGI) * 10;
+    let maxMana = tempStats.mana.base * Math.max(1, mods.INT) * Math.max(1, mods.APM);
+    let actions = tempStats.actions.base + mods.AGI + level;
+    let movement = 30 + (mods.AGI * 5);
     let magicSave = 10 + mods.APM + mods.MET;
-    let load = character.stats.load.base + (mods.FUE * 2);
+    let load = tempStats.load.base + (mods.FUE * 2);
     let wisdom = level + mods.INT;
     let resistance = level + mods.MET;
     
+    // 4. Aplicar bonificaciones de equipo a las estadísticas
     character.equipment.forEach(slot => {
         if (slot.item) {
             slot.item.effects.forEach(effect => {
@@ -656,19 +710,58 @@ function calculateDerivedStats() {
         }
     });
 
-    character.stats.health.max = maxHealth;
-    character.stats.mana.max = maxMana;
-    character.stats.armor.current = armor;
-    character.stats.actions.current = actions;
-    character.stats.movement.current = movement;
-    character.stats.magicSave.current = magicSave;
-    character.stats.load.current = load;
-    character.stats.wisdom.current = wisdom;
-    character.stats.resistance.current = resistance;
+    // 5. Aplicar bonificaciones de estados (continuos) a las estadísticas
+    character.statusEffects.forEach(status => {
+        status.linkedEffects.forEach(effect => {
+            if (effect.applyOn === 'continuo' && effect.target === 'self') {
+                const keys = effect.attribute.split('.');
+                if (keys[0] === 'stats') {
+                    let statToModify;
+                    if (keys[1] === 'health') statToModify = 'maxHealth';
+                    else if (keys[1] === 'mana') statToModify = 'maxMana';
+                    else statToModify = keys[1];
+
+                    // Objeto para mapear nombres de variables locales
+                    const statMap = { maxHealth, armor, maxMana, actions, movement, magicSave, load, wisdom, resistance };
+
+                    if (statMap.hasOwnProperty(statToModify)) {
+                         if (effect.modification === 'fijo') {
+                            statMap[statToModify] += effect.value;
+                        } else { // Porcentaje
+                            statMap[statToModify] *= (1 + effect.value / 100);
+                        }
+                        // Reasignar el valor modificado a la variable local
+                        if (statToModify === 'maxHealth') maxHealth = statMap.maxHealth;
+                        if (statToModify === 'maxMana') maxMana = statMap.maxMana;
+                        if (statToModify === 'armor') armor = statMap.armor;
+                        if (statToModify === 'actions') actions = statMap.actions;
+                        if (statToModify === 'movement') movement = statMap.movement;
+                        if (statToModify === 'magicSave') magicSave = statMap.magicSave;
+                        if (statToModify === 'load') load = statMap.load;
+                        if (statToModify === 'wisdom') wisdom = statMap.wisdom;
+                        if (statToModify === 'resistance') resistance = statMap.resistance;
+                    }
+                }
+            }
+        });
+    });
+
+    // 6. Asignar los valores finales al objeto `character`
+    character.stats.health.max = Math.round(maxHealth);
+    character.stats.mana.max = Math.round(maxMana);
+    character.stats.armor.current = Math.round(armor);
+    character.stats.actions.current = Math.round(actions);
+    character.stats.movement.current = Math.round(movement);
+    character.stats.magicSave.current = Math.round(magicSave);
+    character.stats.load.current = Math.round(load);
+    character.stats.wisdom.current = Math.round(wisdom);
+    character.stats.resistance.current = Math.round(resistance);
     
-    character.stats.health.current = Math.min(tempHealth, maxHealth);
-    character.stats.mana.current = Math.min(tempMana, maxMana);
+    // Restaurar vida/maná actuales, ajustando al nuevo máximo
+    character.stats.health.current = Math.min(tempHealth, character.stats.health.max);
+    character.stats.mana.current = Math.min(tempMana, character.stats.mana.max);
     
+    // Restaurar PA, ajustando al nuevo máximo
     character.combat.currentActions = Math.min(character.combat.currentActions, character.stats.actions.current);
 }
 
@@ -693,25 +786,39 @@ function updateUI() {
     // Attributes
     const attributesContainer = document.getElementById('attributes-container');
     attributesContainer.innerHTML = '';
-    for (const key in character.attributes) {
-        const attr = character.attributes[key];
-        let equipmentBonus = 0;
-        character.equipment.forEach(slot => {
-            if (slot.item) {
-                slot.item.effects.forEach(effect => {
-                    const [type, effectKey, value] = effect.split(':');
-                    if (type === 'attr' && effectKey === key) equipmentBonus += parseFloat(value);
-                });
+    let baseAttributes = JSON.parse(JSON.stringify(character.attributes));
+    let finalAttributes = JSON.parse(JSON.stringify(character.attributes));
+
+    // Aplicar bonos de equipo y estados para la visualización
+    character.equipment.forEach(slot => {
+        if (slot.item) slot.item.effects.forEach(effect => {
+            const [type, effectKey, value] = effect.split(':');
+            if (type === 'attr' && finalAttributes[effectKey]) finalAttributes[effectKey].value += parseFloat(value);
+        });
+    });
+    character.statusEffects.forEach(status => {
+        status.linkedEffects.forEach(effect => {
+            if (effect.applyOn === 'continuo' && effect.target === 'self' && effect.attribute.startsWith('attributes.')) {
+                const key = effect.attribute.split('.')[1];
+                if (finalAttributes[key]) {
+                    if (effect.modification === 'fijo') finalAttributes[key].value += effect.value;
+                    else finalAttributes[key].value *= (1 + effect.value / 100);
+                }
             }
         });
-        const totalValue = attr.value + equipmentBonus;
-        const mod = getModifier(totalValue);
+    });
+
+    for (const key in baseAttributes) {
+        const baseAttr = baseAttributes[key];
+        const finalAttr = finalAttributes[key];
+        const bonus = Math.round(finalAttr.value - baseAttr.value);
+        const mod = getModifier(finalAttr.value);
         const div = document.createElement('div');
         div.className = 'grid grid-cols-6 items-center gap-2';
         div.innerHTML = `
-            <label for="attr-${key}" class="font-semibold col-span-2">${attr.name}</label>
-            <input type="number" id="attr-${key}" class="input-field text-center" value="${attr.value}">
-            <span class="text-green-600 font-medium text-center">(+${equipmentBonus})</span>
+            <label for="attr-${key}" class="font-semibold col-span-2">${baseAttr.name}</label>
+            <input type="number" id="attr-${key}" class="input-field text-center" value="${baseAttr.value}">
+            <span class="text-green-600 font-medium text-center">(+${bonus})</span>
             <div class="bg-gray-200 dark:bg-gray-600 text-center font-bold rounded-md py-2">${mod >= 0 ? '+' : ''}${mod}</div>
             <button class="btn btn-primary" onclick="rollAttributeCheck('${key}')" title="Lanzar 1d20 + Modificador">🎲</button>
         `;
@@ -792,6 +899,8 @@ function updateUI() {
     renderSpiritAmulet();
     renderInventory();
     renderEquipment();
+    renderStatusEffects();
+    renderResources(); // NUEVO
     addEventListeners();
 }
 
@@ -934,7 +1043,7 @@ function openSpendSkillPointsModal() {
         const cost = getUpgradeCost(item.upgrades);
         const name = item.name || 'Sin nombre';
         const levelInfo = (type === 'attribute') ? `(${item.value})` : `(Nvl ${item.level})`;
-        const upgradeLimit = (type === 'element') ? 5 : 10;
+        const upgradeLimit = 10;
         
         return `
             <div class="flex justify-between items-center p-2 border-b border-gray-200 dark:border-gray-700">
@@ -947,7 +1056,6 @@ function openSpendSkillPointsModal() {
     };
 
     const attributesHtml = Object.keys(character.attributes).map(key => generateUpgradeRow(character.attributes[key], 'attribute', key)).join('');
-    const elementsHtml = Object.keys(character.elements).map(key => generateUpgradeRow(character.elements[key], 'element', key)).join('');
     const skillsHtml = character.inventory.skills.map((skill, i) => generateUpgradeRow(skill, 'skill', i)).join('') || '<p class="text-xs text-gray-500 dark:text-gray-400 p-2">No hay habilidades para mejorar.</p>';
     const techniquesHtml = character.inventory.techniques.map((tech, i) => generateUpgradeRow(tech, 'technique', i)).join('') || '<p class="text-xs text-gray-500 dark:text-gray-400 p-2">No hay técnicas/hechizos para mejorar.</p>';
 
@@ -962,14 +1070,12 @@ function openSpendSkillPointsModal() {
         <div class="border-b border-gray-200 dark:border-gray-700 mb-4">
             <nav class="-mb-px flex space-x-4" id="ph-tabs">
                 <button data-ph-tab="attributes" class="tab-button whitespace-nowrap py-2 px-1 border-b-2 font-medium text-sm active">Atributos</button>
-                <button data-ph-tab="elements" class="tab-button whitespace-nowrap py-2 px-1 border-b-2 font-medium text-sm">Afinidades</button>
                 <button data-ph-tab="skills" class="tab-button whitespace-nowrap py-2 px-1 border-b-2 font-medium text-sm">Habilidades</button>
                 <button data-ph-tab="techniques" class="tab-button whitespace-nowrap py-2 px-1 border-b-2 font-medium text-sm">Técnicas</button>
             </nav>
         </div>
         <div class="modal-scrollable-content">
             <div id="ph-tab-content-attributes" class="ph-pane active space-y-2">${attributesHtml}</div>
-            <div id="ph-tab-content-elements" class="ph-pane hidden space-y-2">${elementsHtml}</div>
             <div id="ph-tab-content-skills" class="ph-pane hidden space-y-2">${skillsHtml}</div>
             <div id="ph-tab-content-techniques" class="ph-pane hidden space-y-2">${techniquesHtml}</div>
         </div>
@@ -994,7 +1100,6 @@ function upgradeStat(type, keyOrIndex) {
     let upgradeLimit = 10;
 
     if (type === 'attribute') item = character.attributes[keyOrIndex];
-    else if (type === 'element') { item = character.elements[keyOrIndex]; upgradeLimit = 5; }
     else if (type === 'skill') item = character.inventory.skills[keyOrIndex];
     else if (type === 'technique') item = character.inventory.techniques[keyOrIndex];
     
@@ -1380,7 +1485,7 @@ function openItemForm(item = null, index = -1) {
                 <textarea id="item-other-effects" class="input-field" rows="3" placeholder="Ej: Inmune al fuego">${otherEffectsText}</textarea>
             </div>
             <div class="border p-4 rounded-md mt-4 border-gray-200 dark:border-gray-600">
-                <label for="item-damage-formula" class="font-semibold">Fórmula de Daño</label>
+                <label for="item-damage-formula" class="font-semibold">Fórmula de Daño/Efecto</label>
                 <textarea id="item-damage-formula" class="input-field mt-1" placeholder="Ej: 1d8 + (Mod.FUE)" rows="2">${item?.damageFormula || ''}</textarea>
                 <div id="damage-formula-builder-container" class="mt-2"></div>
             </div>
@@ -1453,7 +1558,7 @@ function renderItemCard(item, index) {
     card.dataset.rarity = item.rarity || 'Común';
     const rarityOptions = RARITIES.map(r => `<option value="${r}" ${item.rarity === r ? 'selected' : ''}>${r}</option>`).join('');
     const effectsList = item.effects.map(e => `<li class="text-xs font-mono">${e}</li>`).join('');
-    const damageHtml = item.damageFormula ? `<p class="text-sm font-mono bg-red-100 text-red-800 dark:bg-red-900/50 dark:text-red-300 px-2 py-1 rounded mt-1 inline-block">Daño: ${item.damageFormula}</p>` : '';
+    const damageHtml = item.damageFormula ? `<p class="text-sm font-mono bg-red-100 text-red-800 dark:bg-red-900/50 dark:text-red-300 px-2 py-1 rounded mt-1 inline-block">Efecto: ${item.damageFormula}</p>` : '';
     card.innerHTML = `
         <div class="flex justify-between items-start">
             <div>
@@ -1463,7 +1568,7 @@ function renderItemCard(item, index) {
                 ${damageHtml}
             </div>
             <div class="flex flex-col space-y-1">
-                ${item.damageFormula ? `<button class="btn btn-danger text-xs" onclick="useItemDamage(${index})">Usar Daño</button>` : ''}
+                ${item.damageFormula ? `<button class="btn btn-primary text-xs" onclick="useItemEffect(${index})">Usar Objeto</button>` : ''}
                 ${item.type !== 'consumible' && item.type !== 'otro' ? `<button class="btn btn-primary text-xs" onclick="equipItem(${index})">Equipar</button>` : ''}
                 <button class="btn btn-secondary text-xs" onclick="openItemForm(character.inventory.items[${index}], ${index})">Editar</button>
                 <button class="btn btn-danger text-xs" onclick="deleteItem('items', ${index})">Borrar</button>
@@ -1786,23 +1891,33 @@ function renderEquipment() {
     character.equipment.forEach((slot, index) => {
         const div = document.createElement('div');
         div.className = 'p-3 border dark:border-gray-700 rounded-lg flex justify-between items-center';
+        
         let damageSwitch = '';
         if (slot.item && slot.item.damageFormula) {
             damageSwitch = `
                 <div class="flex items-center space-x-2 ml-4">
-                    <span class="text-xs font-medium">Daño</span>
+                    <span class="text-xs font-medium">Potenciar</span>
                     <label class="switch"><input type="checkbox" onchange="toggleDamageFormula(${index})" ${slot.isDamageFormulaActive ? 'checked' : ''}><span class="slider"></span></label>
                 </div>`;
         }
+
+        let actionButtons = '';
+        if (slot.item) {
+            if (slot.item.damageFormula) {
+                actionButtons += `<button class="btn btn-primary text-xs ml-2" onclick="useEquippedItem(${index})">Usar Objeto</button>`;
+            }
+            actionButtons += `<button class="btn btn-secondary text-xs ml-2" onclick="unequipItem(${index})">Desequipar</button>`;
+        }
+
         div.innerHTML = `
             <div class="flex-grow">
                 <p class="font-semibold capitalize">${slot.slotName}</p>
                 <p class="text-sm text-gray-600 dark:text-gray-400">${slot.item ? slot.item.name : 'Vacío'}</p>
-                 ${slot.item?.damageFormula ? `<p class="text-xs font-mono bg-red-100 text-red-800 dark:bg-red-900/50 dark:text-red-300 px-2 py-1 rounded mt-1 inline-block">${slot.item.damageFormula}</p>` : ''}
+                 ${slot.item?.damageFormula ? `<p class="text-xs font-mono bg-gray-200 dark:bg-gray-700 px-2 py-1 rounded mt-1 inline-block">${slot.item.damageFormula}</p>` : ''}
             </div>
             <div class="flex items-center">
                  ${damageSwitch}
-                ${slot.item ? `<button class="btn btn-secondary text-xs ml-2" onclick="unequipItem(${index})">Desequipar</button>` : ''}
+                 ${actionButtons}
             </div>`;
         container.appendChild(div);
     });
@@ -1864,7 +1979,7 @@ function renderFormulaBuilder(containerId, targetTextareaId) {
         <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
             <div><h4 class="font-semibold mb-2 text-sm">Atributos</h4><div class="flex flex-col space-y-1">${Object.keys(character.attributes).map(k => `<button class="btn btn-secondary text-xs !p-1" onclick="addToFormula('(${k})', '${targetTextareaId}')">${k}</button>`).join('')}</div></div>
             <div><h4 class="font-semibold mb-2 text-sm">Modificadores</h4><div class="flex flex-col space-y-1">${Object.keys(character.attributes).map(k => `<button class="btn btn-secondary text-xs !p-1" onclick="addToFormula('(Mod.${k})', '${targetTextareaId}')">Mod.${k}</button>`).join('')}</div></div>
-            <div><h4 class="font-semibold mb-2 text-sm">Estadísticas</h4><div class="flex flex-col space-y-1">${Object.keys(character.stats).map(k => `<button class="btn btn-secondary text-xs !p-1" onclick="addToFormula('(${character.stats[k].name})', '${targetTextareaId}')">${character.stats[k].name}</button>`).join('')}</div></div>
+            <div><h4 class="font-semibold mb-2 text-sm">Estadísticas</h4><div class="flex flex-col space-y-1">${Object.keys(character.stats).map(key => `<button class="btn btn-secondary text-xs !p-1" onclick="addToFormula('(${character.stats[key].name})', '${targetTextareaId}')">${character.stats[key].name}</button>`).join('')}</div></div>
             <div><h4 class="font-semibold mb-2 text-sm">Dados</h4><div class="grid grid-cols-3 gap-1">${['d4','d6','d8','d10','d12','d20','d100'].map(d => `<button class="btn btn-secondary text-xs !p-1" onclick="addToFormula('1${d}', '${targetTextareaId}')">1${d}</button>`).join('')}<button class="btn btn-primary col-span-3 text-xs" onclick="openDiceBuilderModal('${targetTextareaId}')">()d()</button></div></div>
             <div class="col-span-2"><h4 class="font-semibold mb-2 text-sm">Operadores</h4><div class="grid grid-cols-4 gap-1">${['+','-','*','/','(',')'].map(op => `<button class="btn btn-secondary text-xs !p-1" onclick="addToFormula('${op}', '${targetTextareaId}')">${op}</button>`).join('')}</div></div>
         </div>`;
@@ -1915,50 +2030,90 @@ function addToFormula(text, targetTextareaId) {
     if (textarea) textarea.value += text;
 }
 
-function safeEvaluateFormula(baseFormula, abilityLevel = 1) {
+function safeEvaluateFormula(baseFormula, options = {}) {
+    const { abilityLevel = 1, isEmpowered = false } = options;
+
     let combinedFormula = baseFormula;
-    character.equipment.forEach(slot => {
-        if (slot.item && slot.isDamageFormulaActive && slot.item.damageFormula) {
-            combinedFormula += ` + ${slot.item.damageFormula}`;
-        }
-    });
-    if (!combinedFormula || combinedFormula.trim() === '') return { total: 0, rolls: 'Sin fórmula', error: null };
+    if (isEmpowered) {
+        character.equipment.forEach(slot => {
+            if (slot.item && slot.isDamageFormulaActive && slot.item.damageFormula) {
+                combinedFormula += ` + ${slot.item.damageFormula}`;
+            }
+        });
+    }
+
+    if (!combinedFormula || combinedFormula.trim() === '') {
+        return { total: 0, rolls: 'Sin fórmula', error: null };
+    }
+    
     try {
         let processedFormula = ` ${combinedFormula.trim()} `;
-        for (const key in character.attributes) {
-            const attr = character.attributes[key];
+        
+        const finalAttributes = JSON.parse(JSON.stringify(character.attributes));
+        character.equipment.forEach(slot => {
+            if (slot.item) slot.item.effects.forEach(effect => {
+                const [type, key, value] = effect.split(':');
+                if (type === 'attr' && finalAttributes[key]) finalAttributes[key].value += parseFloat(value);
+            });
+        });
+        character.statusEffects.forEach(status => {
+            status.linkedEffects.forEach(effect => {
+                if (effect.applyOn === 'continuo' && effect.target === 'self' && effect.attribute.startsWith('attributes.')) {
+                    const key = effect.attribute.split('.')[1];
+                    if (finalAttributes[key]) {
+                        if (effect.modification === 'fijo') finalAttributes[key].value += effect.value;
+                        else finalAttributes[key].value *= (1 + effect.value / 100);
+                    }
+                }
+            });
+        });
+
+        // Step 1: Replace all variables with their FINAL numeric values
+        for (const key in finalAttributes) {
+            const attr = finalAttributes[key];
             const mod = getModifier(attr.value);
-            processedFormula = processedFormula.replace(new RegExp(`\\(Mod\\.${key}\\)`, 'gi'), ` ${mod} `);
-            processedFormula = processedFormula.replace(new RegExp(`\\(${key}\\)`, 'gi'), ` ${attr.value} `);
+            processedFormula = processedFormula.replace(new RegExp(`\\(Mod\\.${key}\\)`, 'gi'), mod);
+            processedFormula = processedFormula.replace(new RegExp(`\\(${key}\\)`, 'gi'), Math.round(attr.value));
         }
         for (const key in character.stats) {
-            processedFormula = processedFormula.replace(new RegExp(`\\(${character.stats[k].name}\\)`, 'gi'), ` ${character.stats[k].current} `);
+            processedFormula = processedFormula.replace(new RegExp(`\\(${character.stats[key].name}\\)`, 'gi'), character.stats[key].current);
         }
-        processedFormula = processedFormula.replace(new RegExp(`\\(NivelHab\\)`, 'gi'), ` ${abilityLevel} `);
-        processedFormula = processedFormula.replace(/\(\s*(-?\d+)\s*\)/g, ' $1 ');
-        const diceRegex = /([\w\s()+.*/-]+)\s*d\s*([\w\s()+.*/-]+)/gi;
+        processedFormula = processedFormula.replace(new RegExp(`\\(NivelHab\\)`, 'gi'), abilityLevel);
+
+        // Step 2: Iteratively resolve dice rolls.
         let diceRollsText = [];
-        processedFormula = processedFormula.replace(diceRegex, (match, countStr, sidesStr) => {
-            const count = Math.floor(new Function(`return ${countStr.trim()}`)());
-            const sides = Math.floor(new Function(`return ${sidesStr.trim()}`)());
-            if (isNaN(count) || isNaN(sides) || count < 1 || sides < 1) throw new Error(`Tirada de dado inválida: "${match.trim()}"`);
-            let total = 0;
-            let rolls = [];
-            for (let i = 0; i < count; i++) {
-                const roll = Math.floor(Math.random() * sides) + 1;
-                rolls.push(roll);
-                total += roll;
-            }
-            diceRollsText.push(`${count}d${sides} (${rolls.join(', ')})`);
-            return ` ${total} `;
-        });
-        processedFormula = processedFormula.replace(/\s+/g, ' ').trim();
-        if (/[^0-9.+\-*/()\s]/.test(processedFormula)) throw new Error('La fórmula contiene caracteres no válidos.');
-        if (/([+\-*/]){2,}/.test(processedFormula)) throw new Error('La fórmula contiene operadores duplicados (ej: "++").');
+        const diceRegex = /(\d+)\s*d\s*(\d+)/;
+
+        let iterations = 0;
+        while (diceRegex.test(processedFormula) && iterations < 20) {
+            processedFormula = processedFormula.replace(diceRegex, (match, count, sides) => {
+                const numCount = parseInt(count);
+                const numSides = parseInt(sides);
+                
+                if (isNaN(numCount) || isNaN(numSides) || numCount < 1 || numSides < 1 || numCount > 100) {
+                    throw new Error(`Tirada de dado inválida: "${match.trim()}"`);
+                }
+                
+                let total = 0;
+                let rolls = [];
+                for (let i = 0; i < numCount; i++) {
+                    const roll = Math.floor(Math.random() * numSides) + 1;
+                    rolls.push(roll);
+                    total += roll;
+                }
+                diceRollsText.push(`${numCount}d${numSides} (${rolls.join(', ')})`);
+                return total;
+            });
+            iterations++;
+        }
+
+        // Step 3: Evaluate the final mathematical expression
         const finalResult = new Function(`return ${processedFormula}`)();
+        
         return { total: finalResult, rolls: diceRollsText.join('; ') || 'N/A', error: null };
+
     } catch (e) {
-        console.error("Error en fórmula:", e.message);
+        console.error("Error en fórmula:", e.message, "Fórmula original:", baseFormula);
         return { total: 0, rolls: '', error: e.message };
     }
 }
@@ -1970,48 +2125,132 @@ function useAbility(type, index) {
     if (character.combat.currentActions < ability.costPA) { showNotification('Error', 'No tienes suficientes Puntos de Acción.'); return; }
     if (character.stats.mana.current < ability.costMP) { showNotification('Error', 'No tienes suficientes Místyculas.'); return; }
     
-    const result = safeEvaluateFormula(ability.formula, ability.level);
+    const result = safeEvaluateFormula(ability.formula, { 
+        abilityLevel: ability.level, 
+        isEmpowered: ability.isDamageFormulaActive 
+    });
+
     if (result.error) {
         showNotification('Error de Fórmula', `No se pudo usar la habilidad.\nError: ${result.error}`);
     } else {
-        character.combat.currentActions -= ability.costPA;
         character.stats.mana.current -= ability.costMP;
+        useAction(ability.costPA, ability.name); // Usar la función centralizada
         showNotification(`Resultado de ${ability.name}`, `Total: ${result.total}\nDetalle: ${result.rolls}`);
     }
     saveAndRefresh();
 }
 
-function useItemDamage(itemIndex) {
+function useItemEffect(itemIndex) {
     const item = character.inventory.items[itemIndex];
-    if (!item || !item.damageFormula) { showNotification('Error', 'Este objeto no tiene fórmula de daño.'); return; }
-    const result = safeEvaluateFormula(item.damageFormula);
+    if (!item || !item.damageFormula) { showNotification('Error', 'Este objeto no tiene un efecto usable.'); return; }
+    const result = safeEvaluateFormula(item.damageFormula, {});
     if (result.error) showNotification('Error de Fórmula', `No se pudo usar el objeto.\nError: ${result.error}`);
-    else showNotification(`Daño de ${item.name}`, `Total: ${result.total}\nDetalle: ${result.rolls}`);
+    else showNotification(`Efecto de ${item.name}`, `Total: ${result.total}\nDetalle: ${result.rolls}`);
     saveAndRefresh();
 }
+
+function useEquippedItem(slotIndex) {
+    const item = character.equipment[slotIndex]?.item;
+    if (!item || !item.damageFormula) {
+        showNotification('Error', 'Este objeto no tiene un efecto usable.');
+        return;
+    }
+    const result = safeEvaluateFormula(item.damageFormula, {});
+    if (result.error) {
+        showNotification('Error de Fórmula', `No se pudo usar el objeto.\nError: ${result.error}`);
+    } else {
+        showNotification(`Efecto de ${item.name}`, `Total: ${result.total}\nDetalle: ${result.rolls}`);
+    }
+}
+
 
 // ===================================================================================
 // OTRAS FUNCIONALIDADES: COMBATE, GESTIÓN, ETC.
 // ===================================================================================
 
 function useAction(cost, type) {
+    let message = '';
+    let triggeredEffectsSummary = [];
+
     if (cost < 0) {
         character.combat.currentActions -= cost;
-        showNotification('Acción Bonus', `Has ganado ${-cost} PA. Total: ${character.combat.currentActions} PA.`);
+        message = `Has ganado ${-cost} PA. Total: ${character.combat.currentActions} PA.`;
     } else if (character.combat.currentActions >= cost) {
         character.combat.currentActions -= cost;
-        showNotification('Acción Realizada', `Usaste una Acción ${type}. Te quedan ${character.combat.currentActions} PA.`);
+        message = `Usaste una Acción ${type}. Te quedan ${character.combat.currentActions} PA.`;
+
+        // Procesar efectos de estado que se activan con acciones
+        const { summary, effectsToKeep } = processStatusEffectsByTrigger('accion');
+        triggeredEffectsSummary = summary;
+        character.statusEffects = effectsToKeep;
+
     } else {
         showNotification('Sin PA', 'No tienes suficientes Puntos de Acción.');
+        return;
     }
+
+    if(triggeredEffectsSummary.length > 0) {
+        message += '\n\nEfectos de estado activados:\n' + triggeredEffectsSummary.join('\n');
+    }
+    
+    showNotification('Acción Realizada', message);
     saveAndRefresh();
 }
 
-document.getElementById('end-turn-btn').addEventListener('click', () => {
+
+function endTurn() {
+    let turnSummary = ['Puntos de Acción restaurados.'];
     character.combat.currentActions = character.stats.actions.current;
-    showNotification('Turno Finalizado', 'Puntos de Acción restaurados.');
+    
+    const { summary, effectsToKeep } = processStatusEffectsByTrigger('ciclo');
+    turnSummary.push(...summary);
+    character.statusEffects = effectsToKeep;
+
+    showNotification('Turno Finalizado', turnSummary.join('\n'));
     saveAndRefresh();
-});
+}
+
+function processStatusEffectsByTrigger(triggerType) {
+    const summary = [];
+    const effectsToKeep = [];
+    
+    character.statusEffects.forEach(status => {
+        let keepStatus = true;
+        
+        status.linkedEffects.forEach(effect => {
+            if (effect.applyOn === triggerType && effect.target === 'self') {
+                const keys = effect.attribute.split('.');
+                if (keys.length >= 2) {
+                    let targetObject = character[keys[0]];
+                    if (targetObject && targetObject.hasOwnProperty(keys[1])) {
+                        let value = effect.value;
+                        if (effect.modification === 'porcentaje') {
+                            value = (targetObject[keys[1]].max || targetObject[keys[1]].base) * (effect.value / 100);
+                        }
+                        targetObject[keys[1]].current += value;
+                        summary.push(`'${status.name}' aplicó ${value.toFixed(0)} a ${keys[1]}.`);
+                    }
+                }
+            }
+        });
+
+        const durationTypeMap = { 'ciclo': 'Rondas', 'accion': 'Acciones' };
+        if (status.durationType === durationTypeMap[triggerType]) {
+            status.duration--;
+            if (status.duration <= 0) {
+                keepStatus = false;
+                summary.push(`El estado '${status.name}' ha expirado.`);
+            }
+        }
+        
+        if (keepStatus) {
+            effectsToKeep.push(status);
+        }
+    });
+
+    return { summary, effectsToKeep };
+}
+
 
 function rollAttributeCheck(attributeKey) {
     const attribute = character.attributes[attributeKey];
@@ -2044,7 +2283,7 @@ document.getElementById('export-json-btn').addEventListener('click', () => {
     const exportData = { character: character, theme: themeData };
     const dataStr = JSON.stringify(exportData, null, 2);
     const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
-    const exportFileDefaultName = `${character.identity.name.replace(/\s/g, '_') || 'personaje'}.json`;
+    const exportFileDefaultName = `${character.identity.name.replace(/\s/g, '_') || 'personaje'}_v4.json`;
     const linkElement = document.createElement('a');
     linkElement.setAttribute('href', dataUri);
     linkElement.setAttribute('download', exportFileDefaultName);
@@ -2267,6 +2506,322 @@ function loadTheme() {
 }
 
 // ===================================================================================
+// SISTEMA DE ESTADOS (NUEVO Y MEJORADO)
+// ===================================================================================
+
+function renderStatusEffects() {
+    const container = document.getElementById('status-effects-list');
+    container.innerHTML = '';
+    if (character.statusEffects.length === 0) {
+        container.innerHTML = '<p class="text-sm text-gray-500 dark:text-gray-400 text-center">Sin estados activos.</p>';
+        return;
+    }
+    character.statusEffects.forEach((status, index) => {
+        const card = document.createElement('div');
+        card.className = 'p-3 rounded-lg status-card';
+        card.dataset.type = status.type;
+        const durationText = status.durationType === 'Permanente' ? 'Permanente' : `${status.duration} ${status.durationType}`;
+        card.innerHTML = `
+            <div class="flex justify-between items-start">
+                <div>
+                    <p class="font-bold">${status.name} <span class="text-sm font-normal">(${durationText})</span></p>
+                    <p class="text-xs text-gray-600 dark:text-gray-400 mt-1">${status.description}</p>
+                </div>
+                <div class="flex items-center space-x-1">
+                    <button class="btn btn-secondary btn-sm !p-1.5" onclick="openStatusEffectForm(character.statusEffects[${index}], ${index})">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/><path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/></svg>
+                    </button>
+                    <button class="btn btn-danger btn-sm !p-1.5" onclick="removeStatusEffect('${status.id}')">
+                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z"/><path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z"/></svg>
+                    </button>
+                </div>
+            </div>
+        `;
+        container.appendChild(card);
+    });
+}
+
+function openStatusEffectForm(status = null, index = -1) {
+    const isEditing = status !== null;
+    tempLinkedEffects = isEditing ? JSON.parse(JSON.stringify(status.linkedEffects)) : [];
+    
+    const content = `
+        <h3 class="text-2xl font-bold mb-4">${isEditing ? 'Editar' : 'Crear'} Estado</h3>
+        <div class="modal-scrollable-content"><div class="space-y-4">
+            <div>
+                <label for="status-name" class="block text-sm font-medium">Nombre del Estado</label>
+                <input id="status-name" class="input-field mt-1" placeholder="Ej: Furia, Envenenado" value="${status?.name || ''}">
+            </div>
+            <div>
+                 <label for="status-description" class="block text-sm font-medium">Descripción</label>
+                <textarea id="status-description" class="input-field mt-1" placeholder="¿Qué hace este estado?" rows="2">${status?.description || ''}</textarea>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2 border-t dark:border-gray-700">
+                <div>
+                    <label for="status-type" class="block text-sm font-medium">Tipo</label>
+                    <select id="status-type" class="input-field mt-1">
+                        <option value="Buff" ${status?.type === 'Buff' ? 'selected' : ''}>Buff</option>
+                        <option value="Debuff" ${status?.type === 'Debuff' ? 'selected' : ''}>Debuff</option>
+                        <option value="Neutral" ${status?.type === 'Neutral' ? 'selected' : ''}>Neutral</option>
+                    </select>
+                </div>
+                <div class="flex items-end pb-1">
+                    <label class="flex items-center space-x-2 cursor-pointer"><input type="checkbox" id="status-isStackable" class="h-5 w-5 rounded" ${status?.isStackable ? 'checked' : ''}><span class="font-medium">Acumulable</span></label>
+                </div>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <label for="status-duration-type" class="block text-sm font-medium">Tipo de Duración</label>
+                    <select id="status-duration-type" class="input-field mt-1">
+                        <option value="Rondas" ${status?.durationType === 'Rondas' ? 'selected' : ''}>Rondas</option>
+                        <option value="Acciones" ${status?.durationType === 'Acciones' ? 'selected' : ''}>Acciones</option>
+                        <option value="Permanente" ${status?.durationType === 'Permanente' ? 'selected' : ''}>Permanente</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="status-duration" class="block text-sm font-medium">Duración</label>
+                    <input type="number" id="status-duration" class="input-field mt-1" placeholder="1" value="${status?.duration || 1}">
+                </div>
+            </div>
+            <div class="pt-4 border-t dark:border-gray-700">
+                <h4 class="font-semibold mb-2 text-center">Efectos Vinculados</h4>
+                <div id="linked-effects-list" class="space-y-2 bg-gray-100 dark:bg-gray-800 p-2 rounded min-h-[4rem]"></div>
+                <button class="btn btn-secondary text-sm w-full mt-2" onclick="openLinkedEffectForm()">Añadir Efecto Vinculado</button>
+            </div>
+        </div></div>
+        <div class="flex justify-end mt-6 pt-4 border-t dark:border-gray-600">
+            <button class="btn btn-secondary" onclick="closeModal()">Cancelar</button>
+            <button class="btn btn-primary" onclick="saveStatusEffect(${index})">${isEditing ? 'Guardar Cambios' : 'Crear Estado'}</button>
+        </div>
+    `;
+    openModal(content);
+    renderLinkedEffectsList();
+}
+
+function renderLinkedEffectsList() {
+    const container = document.getElementById('linked-effects-list');
+    container.innerHTML = '';
+    if (tempLinkedEffects.length === 0) {
+        container.innerHTML = '<p class="text-xs text-center text-gray-500 dark:text-gray-400 py-4">Sin efectos vinculados.</p>';
+        return;
+    }
+    tempLinkedEffects.forEach((effect, index) => {
+        const effectDesc = `${effect.attribute.replace('stats.','').replace('.current','').replace('attributes.','')} ${effect.value >= 0 ? '+' : ''}${effect.value}${effect.modification === 'porcentaje' ? '%' : ''}`;
+        const applyOnText = { 'continuo': 'Continuo', 'ciclo': 'Por Ronda', 'accion': 'Por Acción'}[effect.applyOn];
+        
+        const card = document.createElement('div');
+        card.className = 'bg-white dark:bg-gray-700 p-2 rounded shadow-sm flex justify-between items-center';
+        card.innerHTML = `
+            <div>
+                <p class="font-semibold text-sm">${effectDesc}</p>
+                <p class="text-xs text-gray-500 dark:text-gray-400">${applyOnText}</p>
+            </div>
+            <button class="btn btn-danger btn-sm !p-1" onclick="removeLinkedEffect(${index})">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 16 16"><path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z"/><path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z"/></svg>
+            </button>
+        `;
+        container.appendChild(card);
+    });
+}
+
+function openLinkedEffectForm() {
+    const statOptions = () => {
+        let options = '';
+        for (const key in character.attributes) {
+            options += `<option value="attributes.${key}">${character.attributes[key].name}</option>`;
+        }
+        for (const key in character.stats) {
+            if (key === 'health' || key === 'mana') {
+                 options += `<option value="stats.${key}.current">${character.stats[key].name} (Actual)</option>`;
+                 options += `<option value="stats.${key}.max">${character.stats[key].name} (Máximo)</option>`;
+            } else if (!['level', 'xp'].includes(key)) {
+                options += `<option value="stats.${key}.current">${character.stats[key].name}</option>`;
+            }
+        }
+        return options;
+    };
+
+    const content = `
+        <h3 class="text-xl font-bold mb-4">Constructor de Efecto Vinculado</h3>
+        <div class="space-y-4">
+            <div><label class="block text-sm font-medium">Objetivo</label><select id="effect-target" class="input-field"><option value="self">Personaje (Self)</option></select></div>
+            <div><label class="block text-sm font-medium">Atributo/Estadística a modificar</label><select id="effect-attribute" class="input-field">${statOptions()}</select></div>
+            <div class="grid grid-cols-2 gap-4">
+                <div><label class="block text-sm font-medium">Modificación</label><select id="effect-modification" class="input-field"><option value="fijo">Valor Fijo</option><option value="porcentaje">Porcentaje</option></select></div>
+                <div><label class="block text-sm font-medium">Valor</label><input type="number" id="effect-value" class="input-field" value="1"></div>
+            </div>
+            <div><label class="block text-sm font-medium">Cuándo se aplica</label><select id="effect-applyOn" class="input-field"><option value="continuo">Continuo</option><option value="ciclo">Por Ronda</option><option value="accion">Por Gasto de Acción</option></select></div>
+        </div>
+        <div class="flex justify-end mt-6 pt-4 border-t dark:border-gray-600">
+            <button class="btn btn-secondary" onclick="closeModal(2)">Cancelar</button>
+            <button class="btn btn-primary" onclick="addLinkedEffect()">Añadir</button>
+        </div>
+    `;
+    openModal(content, 2);
+}
+
+function addLinkedEffect() {
+    const newEffect = {
+        target: document.getElementById('effect-target').value,
+        attribute: document.getElementById('effect-attribute').value,
+        modification: document.getElementById('effect-modification').value,
+        value: parseFloat(document.getElementById('effect-value').value) || 0,
+        applyOn: document.getElementById('effect-applyOn').value,
+        condition: '' // Para futuro uso
+    };
+    tempLinkedEffects.push(newEffect);
+    renderLinkedEffectsList();
+    closeModal(2);
+}
+
+function removeLinkedEffect(index) {
+    tempLinkedEffects.splice(index, 1);
+    renderLinkedEffectsList();
+}
+
+function saveStatusEffect(index) {
+    const isEditing = index !== -1;
+    const name = document.getElementById('status-name').value;
+    if (!name) {
+        showNotification("Error", "El estado debe tener un nombre.");
+        return;
+    }
+    
+    const newStatus = {
+        id: isEditing ? character.statusEffects[index].id : `status-${Date.now()}`,
+        name: name,
+        description: document.getElementById('status-description').value,
+        type: document.getElementById('status-type').value,
+        isStackable: document.getElementById('status-isStackable').checked,
+        duration: parseInt(document.getElementById('status-duration').value) || 1,
+        durationType: document.getElementById('status-duration-type').value,
+        linkedEffects: JSON.parse(JSON.stringify(tempLinkedEffects))
+    };
+
+    if (newStatus.durationType === 'Permanente') newStatus.duration = Infinity;
+
+    const existingStatusIndex = character.statusEffects.findIndex(s => s.name.toLowerCase() === newStatus.name.toLowerCase() && s.id !== newStatus.id);
+    
+    if (existingStatusIndex !== -1 && !isEditing) {
+        const existingStatus = character.statusEffects[existingStatusIndex];
+        if (existingStatus.isStackable) {
+            existingStatus.duration += newStatus.duration;
+            showNotification("Estado Acumulado", `Se ha extendido la duración de '${existingStatus.name}'.`);
+        } else {
+            existingStatus.duration = newStatus.duration;
+            showNotification("Estado Renovado", `Se ha renovado la duración de '${existingStatus.name}'.`);
+        }
+    } else {
+        if (isEditing) {
+            character.statusEffects[index] = newStatus;
+        } else {
+            character.statusEffects.push(newStatus);
+        }
+    }
+    
+    closeModal();
+    saveAndRefresh();
+}
+
+function removeStatusEffect(statusId) {
+    character.statusEffects = character.statusEffects.filter(s => s.id !== statusId);
+    saveAndRefresh();
+}
+
+// ===================================================================================
+// NUEVO: SISTEMA DE RECURSOS
+// ===================================================================================
+function renderResources() {
+    const container = document.getElementById('resources-container');
+    container.innerHTML = '';
+    if (character.resources.length === 0) {
+        container.innerHTML = '<p class="text-sm text-center text-gray-500 dark:text-gray-400">Sin recursos personalizados.</p>';
+        return;
+    }
+    character.resources.forEach((resource, index) => {
+        const div = document.createElement('div');
+        div.className = 'stat-block p-2 rounded-md';
+        div.innerHTML = `
+            <div class="flex justify-between items-center">
+                <span class="font-medium">${resource.name}</span>
+                <div class="flex items-center gap-2">
+                    <button class="btn btn-secondary btn-sm !p-1" onclick="updateResource(${index}, -1)">-</button>
+                    <input type="number" value="${resource.current}" class="input-field w-16 text-center" onchange="setResource(${index}, this.value)">
+                    <span>/</span>
+                    <span class="font-bold">${resource.max}</span>
+                    <button class="btn btn-primary btn-sm !p-1" onclick="updateResource(${index}, 1)">+</button>
+                </div>
+            </div>
+        `;
+        container.appendChild(div);
+    });
+}
+
+function openManageResourcesModal() {
+    const resourcesHtml = character.resources.map((res, index) => `
+        <div class="flex items-center gap-2 p-2 bg-gray-100 dark:bg-gray-800 rounded">
+            <input type="text" class="input-field" value="${res.name}" onchange="character.resources[${index}].name = this.value; saveCharacterToLocalStorage();">
+            <input type="number" class="input-field w-24" value="${res.max}" onchange="character.resources[${index}].max = parseInt(this.value) || 0; saveAndRefresh();">
+            <button class="btn btn-danger btn-sm !p-1.5" onclick="deleteResource(${index})">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z"/><path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z"/></svg>
+            </button>
+        </div>
+    `).join('');
+    
+    const content = `
+        <h3 class="text-2xl font-bold mb-4">Gestionar Recursos</h3>
+        <div class="modal-scrollable-content"><div class="space-y-4">
+            <div id="resources-list" class="space-y-2">${resourcesHtml}</div>
+            <div>
+                <h4 class="font-semibold mb-2 pt-4 border-t dark:border-gray-600">Añadir Nuevo Recurso</h4>
+                <div class="flex gap-2">
+                    <input id="new-resource-name" class="input-field" placeholder="Nombre (Ej: Suerte)">
+                    <input id="new-resource-max" type="number" class="input-field w-24" placeholder="Max">
+                    <button id="add-new-resource-btn" class="btn btn-primary">Añadir</button>
+                </div>
+            </div>
+        </div></div>
+        <div class="flex justify-end mt-6 pt-4 border-t dark:border-gray-600">
+            <button class="btn btn-secondary" onclick="closeModal()">Cerrar</button>
+        </div>
+    `;
+    openModal(content);
+    document.getElementById('add-new-resource-btn').onclick = () => {
+        const name = document.getElementById('new-resource-name').value.trim();
+        const max = parseInt(document.getElementById('new-resource-max').value) || 0;
+        if (name && max > 0) {
+            character.resources.push({ name, current: max, max });
+            saveAndRefresh();
+            openManageResourcesModal();
+        }
+    };
+}
+
+function deleteResource(index) {
+    character.resources.splice(index, 1);
+    saveAndRefresh();
+    openManageResourcesModal();
+}
+
+function updateResource(index, amount) {
+    const resource = character.resources[index];
+    resource.current += amount;
+    if (resource.current > resource.max) resource.current = resource.max;
+    if (resource.current < 0) resource.current = 0;
+    saveAndRefresh();
+}
+
+function setResource(index, value) {
+    const resource = character.resources[index];
+    let numValue = parseInt(value) || 0;
+    if (numValue > resource.max) numValue = resource.max;
+    if (numValue < 0) numValue = 0;
+    resource.current = numValue;
+    saveAndRefresh();
+}
+
+
+// ===================================================================================
 // INICIALIZACIÓN
 // ===================================================================================
 function initializeCharacter(isImport = false) {
@@ -2288,6 +2843,9 @@ window.onload = () => {
     document.getElementById('theme-toggle-btn').addEventListener('click', openThemeModal);
     document.getElementById('restore-stats-btn').addEventListener('click', restoreHealthAndMana);
     document.getElementById('spend-skill-points-btn').addEventListener('click', openSpendSkillPointsModal);
+    document.getElementById('add-status-effect-btn').addEventListener('click', () => openStatusEffectForm());
+    document.getElementById('end-turn-btn').addEventListener('click', endTurn);
+    document.getElementById('add-resource-btn').addEventListener('click', openManageResourcesModal);
 };
 
 </script>
