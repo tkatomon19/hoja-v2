@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hoja de Personaje - Isekai Delivery Service v4.0</title>
+    <title>Hoja de Personaje - Isekai Delivery Service v4.1</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -173,7 +173,7 @@
 <body class="p-4 md:p-8">
 
     <div class="max-w-7xl mx-auto">
-        <h1 class="text-3xl md:text-4xl font-bold text-center mb-2 text-gray-800 dark:text-gray-200">Hoja de Personaje v4.0</h1>
+        <h1 class="text-3xl md:text-4xl font-bold text-center mb-2 text-gray-800 dark:text-gray-200">Hoja de Personaje v4.1</h1>
         <p class="text-center text-gray-500 dark:text-gray-400 mb-6">Los cambios se guardan automáticamente en tu navegador.</p>
 
         <!-- Contenedor Principal con Grid -->
@@ -395,8 +395,8 @@ const SKILL_POINTS_PER_LEVEL = {
 };
 const EVOLUTION_LEVELS = [5, 10, 15, 20];
 const RARITIES = ['Intrínseco', 'Común', 'Raro', 'Épico', 'Legendario', 'Mítico / Único', 'Genesis'];
-const LOCAL_STORAGE_KEY = 'characterSheetData_v4.0';
-const THEME_STORAGE_KEY = 'characterSheetTheme_v4.0';
+const LOCAL_STORAGE_KEY = 'characterSheetData_v4.1'; // Updated version key
+const THEME_STORAGE_KEY = 'characterSheetTheme_v4.1'; // Updated version key
 
 const ELEMENTS_CONFIG = {
     fuego: { name: 'Fuego', emoji: '🔥', color: 'bg-red-100 dark:bg-red-900/50' },
@@ -440,7 +440,7 @@ function getDefaultCharacter() {
             level: { name: 'Nivel', base: 1, current: 1 }, xp: { name: 'Experiencia', base: 0, current: 0 },
             health: { name: 'Vida', base: 25, current: 25, max: 25 }, armor: { name: 'Armadura', base: 10, current: 10 },
             mana: { name: 'Místyculas', base: 100, current: 100, max: 100 }, actions: { name: 'Acciones', base: 2, current: 3 },
-            movement: { name: 'Movimiento (pies)', base: 0, current: 60 },
+            movement: { name: 'Movimiento (pies)', base: 30, current: 30 },
             magicSave: { name: 'Salvación Magia', base: 10, current: 10 },
             load: { name: 'Carga', base: 10, current: 10 },
             resistance: { name: 'Resistencia', base: 0, current: 0 }, wisdom: { name: 'Sabiduría', base: 0, current: 0 },
@@ -455,7 +455,7 @@ function getDefaultCharacter() {
         ],
         inventory: { skills: [], techniques: [], items: [], pets: [], },
         statusEffects: [],
-        resources: [] // NUEVO: Para recursos personalizables
+        resources: [] // Para recursos personalizables
     };
 }
 
@@ -521,12 +521,13 @@ function loadCharacterFromLocalStorage() {
         if (!migratedData.skillPoints) migratedData.skillPoints = 0;
         if (!migratedData.spiritRelations) migratedData.spiritRelations = defaultChar.spiritRelations;
         if (!migratedData.statusEffects) migratedData.statusEffects = [];
-        if (!migratedData.resources) migratedData.resources = []; // NUEVO
+        if (!migratedData.resources) migratedData.resources = [];
         
+        // CORRECCIÓN: Asegurar que las habilidades/técnicas antiguas sin nivel se inicialicen en 0.
         ['skills', 'techniques'].forEach(type => {
             if (migratedData.inventory[type]) {
                 migratedData.inventory[type].forEach(item => {
-                    if (item.level === undefined) item.level = 1;
+                    if (item.level === undefined) item.level = 0;
                     if (item.upgrades === undefined) item.upgrades = 0;
                 });
             }
@@ -681,11 +682,13 @@ function calculateDerivedStats() {
 
     // 3. Calcular estadísticas base derivadas
     let maxHealth = tempStats.health.base + (mods.MET * level);
-    let armor = 10 + mods.AGI + mods.MET;
+    // CORRECCIÓN: Usar el valor base del personaje en lugar de un número fijo.
+    let armor = tempStats.armor.base + mods.AGI + mods.MET;
     let maxMana = tempStats.mana.base * Math.max(1, mods.INT) * Math.max(1, mods.APM);
     let actions = tempStats.actions.base + mods.AGI + level;
-    let movement = 30 + (mods.AGI * 5);
-    let magicSave = 10 + mods.APM + mods.MET;
+    let movement = tempStats.movement.base + (mods.AGI * 5);
+    // CORRECCIÓN: Usar el valor base del personaje en lugar de un número fijo.
+    let magicSave = tempStats.magicSave.base + mods.APM + mods.MET;
     let load = tempStats.load.base + (mods.FUE * 2);
     let wisdom = level + mods.INT;
     let resistance = level + mods.MET;
@@ -900,7 +903,7 @@ function updateUI() {
     renderInventory();
     renderEquipment();
     renderStatusEffects();
-    renderResources(); // NUEVO
+    renderResources();
     addEventListeners();
 }
 
@@ -1097,7 +1100,7 @@ function openSpendSkillPointsModal() {
 
 function upgradeStat(type, keyOrIndex) {
     let item;
-    let upgradeLimit = 10;
+    const upgradeLimit = 10; // CORRECCIÓN: El límite de mejoras es 10.
 
     if (type === 'attribute') item = character.attributes[keyOrIndex];
     else if (type === 'skill') item = character.inventory.skills[keyOrIndex];
@@ -1293,7 +1296,7 @@ function openSkillForm(skill = null, index = -1) {
         </div>`;
     openModal(content);
     renderFormulaBuilder('formula-builder-container', 'skill-formula');
-    document.getElementById('save-skill-btn').addEventListener('click', () => saveSkill(index));
+    document.getElementById('save-skill-btn').onclick = () => saveSkill(index);
 }
 
 function saveSkill(index) {
@@ -1307,7 +1310,7 @@ function saveSkill(index) {
         formula: document.getElementById('skill-formula').value,
         rarity: isEditing ? character.inventory.skills[index].rarity : 'Común',
         isDamageFormulaActive: isEditing ? character.inventory.skills[index].isDamageFormulaActive : false,
-        level: isEditing ? character.inventory.skills[index].level : 1,
+        level: isEditing ? character.inventory.skills[index].level : 0, // CORRECCIÓN: Inicia en nivel 0
         upgrades: isEditing ? character.inventory.skills[index].upgrades : 0,
     };
     if (index === -1) character.inventory.skills.push(newSkill);
@@ -1335,7 +1338,7 @@ function renderSkillCard(skill, index) {
     card.innerHTML = `
         <div class="flex justify-between items-start">
             <div>
-                <p class="font-bold">${skill.name} <span class="text-sm font-normal">(Nvl ${skill.level || 1})</span></p>
+                <p class="font-bold">${skill.name} <span class="text-sm font-normal">(Nvl ${skill.level || 0})</span></p>
                 <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">${skill.description || 'Sin descripción.'}</p>
                 <select class="input-field item-rarity-select mt-2 text-sm" onchange="changeRarity('skills', ${index}, this.value)">${rarityOptions}</select>
                 <p class="text-sm mt-2">Coste: ${skill.costPA} PA / ${skill.costMP} MP</p>
@@ -1390,7 +1393,7 @@ function openTechniqueForm(tech = null, index = -1) {
         </div>`;
     openModal(content);
     renderFormulaBuilder('formula-builder-container', 'tech-formula');
-    document.getElementById('save-tech-btn').addEventListener('click', () => saveTechnique(index));
+    document.getElementById('save-tech-btn').onclick = () => saveTechnique(index);
 }
 
 function saveTechnique(index) {
@@ -1404,7 +1407,7 @@ function saveTechnique(index) {
         formula: document.getElementById('tech-formula').value,
         rarity: isEditing ? character.inventory.techniques[index].rarity : 'Común',
         isDamageFormulaActive: isEditing ? character.inventory.techniques[index].isDamageFormulaActive : false,
-        level: isEditing ? character.inventory.techniques[index].level : 1,
+        level: isEditing ? character.inventory.techniques[index].level : 0, // CORRECCIÓN: Inicia en nivel 0
         upgrades: isEditing ? character.inventory.techniques[index].upgrades : 0,
     };
     if (index === -1) character.inventory.techniques.push(newTech);
@@ -1432,7 +1435,7 @@ function renderTechniqueCard(tech, index) {
     card.innerHTML = `
         <div class="flex justify-between items-start">
             <div>
-                <p class="font-bold">${tech.name} <span class="text-sm font-normal">(Nvl ${tech.level || 1})</span></p>
+                <p class="font-bold">${tech.name} <span class="text-sm font-normal">(Nvl ${tech.level || 0})</span></p>
                 <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">${tech.description || 'Sin descripción.'}</p>
                 <select class="input-field item-rarity-select mt-2 text-sm" onchange="changeRarity('techniques', ${index}, this.value)">${rarityOptions}</select>
                 <p class="text-sm mt-2">Coste: ${tech.costPA} PA / ${tech.costMP} MP</p>
@@ -1496,7 +1499,7 @@ function openItemForm(item = null, index = -1) {
         </div>`;
     openModal(content);
     renderFormulaBuilder('damage-formula-builder-container', 'item-damage-formula');
-    document.getElementById('save-item-btn').addEventListener('click', () => saveItem(index));
+    document.getElementById('save-item-btn').onclick = () => saveItem(index);
     document.getElementById('add-effect-btn').addEventListener('click', addEffectRow);
 }
 
@@ -1651,7 +1654,7 @@ function openPetForm(pet = null, index = -1) {
             reader.readAsDataURL(event.target.files[0]);
         }
     });
-    document.getElementById('save-pet-btn').addEventListener('click', () => savePet(index));
+    document.getElementById('save-pet-btn').onclick = () => savePet(index);
 }
 
 function savePet(index) {
@@ -1792,7 +1795,7 @@ function openPetSkillForm(petIndex, skill = null, skillIndex = -1) {
             <button id="save-pet-skill-btn" class="btn btn-primary">${isEditing ? 'Guardar' : 'Crear'}</button>
         </div>`;
     openModal(content, 2);
-    document.getElementById('save-pet-skill-btn').addEventListener('click', () => savePetSkill(petIndex, skillIndex));
+    document.getElementById('save-pet-skill-btn').onclick = () => savePetSkill(petIndex, skillIndex);
 }
 
 function savePetSkill(petIndex, skillIndex) {
@@ -1862,7 +1865,7 @@ function openManageSlotsModal() {
              <div class="flex justify-end mt-6 pt-4 border-t dark:border-gray-600"><button class="btn btn-secondary" onclick="closeModal()">Cerrar</button></div>`;
     };
     openModal(generateModalContent());
-    document.getElementById('add-new-slot-btn').addEventListener('click', () => {
+    document.getElementById('add-new-slot-btn').onclick = () => {
         const input = document.getElementById('new-slot-name-input');
         const slotName = input.value.trim();
         if (slotName) {
@@ -1871,7 +1874,7 @@ function openManageSlotsModal() {
             openManageSlotsModal(); 
             saveAndRefresh();
         }
-    });
+    };
 }
 
 function handleDeleteSlot(index) {
@@ -2015,14 +2018,14 @@ function openDiceBuilderModal(targetTextareaId) {
             <button class="btn btn-primary" id="confirm-dice-btn">Añadir Dado</button>
         </div>`;
     openModal(content, 2);
-    document.getElementById('confirm-dice-btn').addEventListener('click', () => {
+    document.getElementById('confirm-dice-btn').onclick = () => {
         const count = document.getElementById('dice-count-input').value.trim() || '1';
         const sides = document.getElementById('dice-sides-input').value.trim();
         if (sides) {
             addToFormula(`${count}d${sides}`, targetTextareaId);
             closeModal(2);
         } else showNotification("Error", "Debes especificar el número de caras del dado.");
-    });
+    };
 }
 
 function addToFormula(text, targetTextareaId) {
@@ -2283,7 +2286,7 @@ document.getElementById('export-json-btn').addEventListener('click', () => {
     const exportData = { character: character, theme: themeData };
     const dataStr = JSON.stringify(exportData, null, 2);
     const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
-    const exportFileDefaultName = `${character.identity.name.replace(/\s/g, '_') || 'personaje'}_v4.json`;
+    const exportFileDefaultName = `${character.identity.name.replace(/\s/g, '_') || 'personaje'}_v4.1.json`;
     const linkElement = document.createElement('a');
     linkElement.setAttribute('href', dataUri);
     linkElement.setAttribute('download', exportFileDefaultName);
@@ -2366,7 +2369,8 @@ document.getElementById('edit-base-stats-btn').addEventListener('click', () => {
             <button class="btn btn-primary" id="save-base-stats">Guardar y Recalcular</button>
         </div>`;
     openModal(content);
-    document.getElementById('save-base-stats').addEventListener('click', () => {
+    // CORRECCIÓN: Se usa .onclick para evitar adjuntar múltiples listeners
+    document.getElementById('save-base-stats').onclick = () => {
         Object.keys(character.stats).filter(key => !['level', 'xp'].includes(key)).forEach(key => {
             const input = document.getElementById(`base-stat-${key}`);
             if(input) character.stats[key].base = parseInt(input.value) || 0;
@@ -2387,7 +2391,7 @@ document.getElementById('edit-base-stats-btn').addEventListener('click', () => {
         }
         closeModal();
         saveAndRefresh();
-    });
+    };
 });
 
 document.getElementById('inventory-tabs').addEventListener('click', (e) => {
@@ -2488,7 +2492,7 @@ function openThemeModal() {
             updateActiveButton('custom');
         }
     });
-    document.getElementById('theme-modal-save-btn').addEventListener('click', (e) => {
+    document.getElementById('theme-modal-save-btn').onclick = (e) => {
         const themeName = e.target.dataset.themeName;
         let customColors = null;
         if (themeName === 'custom') {
@@ -2498,7 +2502,7 @@ function openThemeModal() {
         saveTheme(themeName, customColors);
         applyTheme(themeName);
         closeModal();
-    });
+    };
 }
 function loadTheme() {
     const savedTheme = JSON.parse(localStorage.getItem(THEME_STORAGE_KEY));
