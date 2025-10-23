@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hoja de Personaje - Isekai Delivery Service v4.1</title>
+    <title>Hoja de Personaje - Isekai Delivery Service v4.5</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -62,6 +62,7 @@
             background-color: var(--card-bg); border-radius: 0.75rem;
             box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
             border: 1px solid var(--border-color); transition: background-color 0.3s, border-color 0.3s;
+            resize: both; overflow: auto; min-width: 200px; min-height: 100px;
         }
         .card-title {
             color: var(--title-color); font-weight: 600; font-size: 1.125rem;
@@ -173,7 +174,7 @@
 <body class="p-4 md:p-8">
 
     <div class="max-w-7xl mx-auto">
-        <h1 class="text-3xl md:text-4xl font-bold text-center mb-2 text-gray-800 dark:text-gray-200">Hoja de Personaje v4.1</h1>
+        <h1 class="text-3xl md:text-4xl font-bold text-center mb-2 text-gray-800 dark:text-gray-200">Hoja de Personaje v4.5</h1>
         <p class="text-center text-gray-500 dark:text-gray-400 mb-6">Los cambios se guardan automáticamente en tu navegador.</p>
 
         <!-- Contenedor Principal con Grid -->
@@ -182,7 +183,7 @@
             <!-- Columna Izquierda -->
             <div class="space-y-6">
                 <!-- Identidad del Personaje -->
-                <div class="card p-6">
+                <div class="card p-6" draggable="true" ondragstart="drag(event)">
                     <h2 class="card-title">Identidad</h2>
                     <div class="space-y-4">
                         <div class="flex items-center space-x-4">
@@ -212,7 +213,7 @@
                 </div>
 
                 <!-- Atributos -->
-                <div class="card p-6">
+                <div class="card p-6" draggable="true" ondragstart="drag(event)">
                     <h2 class="card-title">Atributos</h2>
                     <div id="attributes-container" class="space-y-3">
                         <!-- Los atributos se generan dinámicamente aquí -->
@@ -220,7 +221,7 @@
                 </div>
 
                 <!-- Elementos -->
-                <div class="card p-6">
+                <div class="card p-6" draggable="true" ondragstart="drag(event)">
                     <h2 class="card-title">Afinidad Elemental</h2>
                     <div id="elements-container" class="grid grid-cols-1 gap-4"></div>
                     <div id="fusion-elements-container" class="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700"></div>
@@ -233,7 +234,7 @@
             <!-- Columna Central -->
             <div class="space-y-6">
                 <!-- Experiencia y Nivel -->
-                <div class="card p-6">
+                <div class="card p-6" draggable="true" ondragstart="drag(event)">
                     <div class="flex justify-between items-center mb-4">
                          <h2 class="card-title m-0 p-0 border-none">Nivel y Experiencia</h2>
                          <div class="text-right">
@@ -263,7 +264,7 @@
                 </div>
 
                 <!-- Estadísticas Derivadas -->
-                <div class="card p-6">
+                <div class="card p-6" draggable="true" ondragstart="drag(event)">
                     <div class="flex justify-between items-center mb-4 gap-2">
                         <h2 class="card-title m-0 p-0 border-none">Estadísticas</h2>
                         <div class="flex gap-2">
@@ -275,7 +276,7 @@
                 </div>
 
                 <!-- Combate -->
-                <div class="card p-6">
+                <div class="card p-6" draggable="true" ondragstart="drag(event)">
                     <h2 class="card-title">Combate</h2>
                     <div class="space-y-4">
                         <div class="text-center">
@@ -296,7 +297,7 @@
                 </div>
 
                 <!-- Estados -->
-                <div class="card p-6">
+                <div class="card p-6" draggable="true" ondragstart="drag(event)">
                     <h2 class="card-title">Estados</h2>
                     <button id="add-status-effect-btn" class="btn btn-primary w-full mb-4">Añadir Estado</button>
                     <div id="status-effects-list" class="space-y-3"></div>
@@ -306,21 +307,21 @@
             <!-- Columna Derecha -->
             <div class="space-y-6">
                 <!-- Equipamiento -->
-                <div class="card p-6">
+                <div class="card p-6" draggable="true" ondragstart="drag(event)">
                     <h2 class="card-title">Equipamiento</h2>
                     <div id="equipment-slots" class="space-y-3"></div>
                     <button id="manage-slots-btn" class="btn btn-secondary w-full mt-4 text-sm">Gestionar Slots</button>
                 </div>
 
                 <!-- NUEVO: Recursos -->
-                <div class="card p-6">
+                <div class="card p-6" draggable="true" ondragstart="drag(event)">
                     <h2 class="card-title">Recursos</h2>
                     <div id="resources-container" class="space-y-3 mb-4"></div>
                     <button id="add-resource-btn" class="btn btn-secondary w-full text-sm">Gestionar Recursos</button>
                 </div>
 
                 <!-- Inventario -->
-                <div class="card p-6">
+                <div class="card p-6" draggable="true" ondragstart="drag(event)">
                     <h2 class="card-title">Inventario y Habilidades</h2>
                     <div class="border-b border-gray-200 dark:border-gray-700 mb-4">
                         <nav class="-mb-px flex space-x-4" id="inventory-tabs">
@@ -352,7 +353,7 @@
                 </div>
 
                 <!-- Gestión -->
-                 <div class="card p-6">
+                 <div class="card p-6" draggable="true" ondragstart="drag(event)">
                     <h2 class="card-title">Gestión de Datos</h2>
                     <div class="grid grid-cols-2 gap-3">
                         <button id="theme-toggle-btn" class="btn btn-secondary">Cambiar Tema</button>
@@ -395,8 +396,8 @@ const SKILL_POINTS_PER_LEVEL = {
 };
 const EVOLUTION_LEVELS = [5, 10, 15, 20];
 const RARITIES = ['Intrínseco', 'Común', 'Raro', 'Épico', 'Legendario', 'Mítico / Único', 'Genesis'];
-const LOCAL_STORAGE_KEY = 'characterSheetData_v4.1'; // Updated version key
-const THEME_STORAGE_KEY = 'characterSheetTheme_v4.1'; // Updated version key
+const LOCAL_STORAGE_KEY = 'characterSheetData_v4.5'; // Updated version key
+const THEME_STORAGE_KEY = 'characterSheetTheme_v4.5'; // Updated version key
 
 const ELEMENTS_CONFIG = {
     fuego: { name: 'Fuego', emoji: '🔥', color: 'bg-red-100 dark:bg-red-900/50' },
@@ -1693,8 +1694,9 @@ function savePet(index) {
 
 function renderPetCard(pet, index) {
     const card = document.createElement('div');
-    card.className = 'p-4 rounded-lg item-card space-y-4';
+    card.className = 'p-4 rounded-lg item-card';
     card.dataset.rarity = pet.rarity || 'Común';
+    const rarityOptions = RARITIES.map(r => `<option value="${r}" ${pet.rarity === r ? 'selected' : ''}>${r}</option>`).join('');
     const hydratedPet = calculatePetStats(pet);
     const attributesHtml = Object.entries(hydratedPet.attributes).map(([key, value]) => `
         <div class="flex justify-between text-xs">
@@ -2056,7 +2058,7 @@ function safeEvaluateFormula(baseFormula, options = {}) {
         character.equipment.forEach(slot => {
             if (slot.item) slot.item.effects.forEach(effect => {
                 const [type, key, value] = effect.split(':');
-                if (type === 'attr' && finalAttributes[key]) finalAttributes[key].value += parseFloat(value);
+                if (type === 'attr' && finalAttributes[key]) finalAttributes[key].value += parseFloat(value) || 0;
             });
         });
         character.statusEffects.forEach(status => {
@@ -2064,8 +2066,8 @@ function safeEvaluateFormula(baseFormula, options = {}) {
                 if (effect.applyOn === 'continuo' && effect.target === 'self' && effect.attribute.startsWith('attributes.')) {
                     const key = effect.attribute.split('.')[1];
                     if (finalAttributes[key]) {
-                        if (effect.modification === 'fijo') finalAttributes[key].value += effect.value;
-                        else finalAttributes[key].value *= (1 + effect.value / 100);
+                        if (effect.modification === 'fijo') finalAttributes[key].value += effect.value || 0;
+                        else finalAttributes[key].value *= (1 + (effect.value || 0) / 100);
                     }
                 }
             });
@@ -2256,12 +2258,29 @@ function processStatusEffectsByTrigger(triggerType) {
 
 
 function rollAttributeCheck(attributeKey) {
-    const attribute = character.attributes[attributeKey];
-    const modifier = getModifier(attribute.value);
+    const finalAttributes = JSON.parse(JSON.stringify(character.attributes));
+    character.equipment.forEach(slot => {
+        if (slot.item) slot.item.effects.forEach(effect => {
+            const [type, effectKey, value] = effect.split(':');
+            if (type === 'attr' && finalAttributes[effectKey]) finalAttributes[effectKey].value += parseFloat(value) || 0;
+        });
+    });
+    character.statusEffects.forEach(status => {
+        status.linkedEffects.forEach(effect => {
+            if (effect.applyOn === 'continuo' && effect.target === 'self' && effect.attribute.startsWith('attributes.')) {
+                const key = effect.attribute.split('.')[1];
+                if (finalAttributes[key]) {
+                    if (effect.modification === 'fijo') finalAttributes[key].value += effect.value || 0;
+                    else finalAttributes[key].value *= (1 + (effect.value || 0) / 100);
+                }
+            }
+        });
+    });
+    const modifier = getModifier(finalAttributes[attributeKey].value);
     const roll = Math.floor(Math.random() * 20) + 1;
     const total = roll + modifier;
     const modifierString = modifier >= 0 ? `+${modifier}` : modifier;
-    showNotification(`Prueba de ${attribute.name}`, `Resultado: ${total}\n(Tirada: ${roll}, Modificador: ${modifierString})`);
+    showNotification(`Prueba de ${character.attributes[attributeKey].name}`, `Resultado: ${total}\n(Tirada: ${roll}, Modificador: ${modifierString})`);
 }
 
 function rollStatCheck(statKey) {
@@ -2286,7 +2305,7 @@ document.getElementById('export-json-btn').addEventListener('click', () => {
     const exportData = { character: character, theme: themeData };
     const dataStr = JSON.stringify(exportData, null, 2);
     const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
-    const exportFileDefaultName = `${character.identity.name.replace(/\s/g, '_') || 'personaje'}_v4.1.json`;
+    const exportFileDefaultName = `${character.identity.name.replace(/\s/g, '_') || 'personaje'}_v4.5.json`;
     const linkElement = document.createElement('a');
     linkElement.setAttribute('href', dataUri);
     linkElement.setAttribute('download', exportFileDefaultName);
@@ -2369,7 +2388,6 @@ document.getElementById('edit-base-stats-btn').addEventListener('click', () => {
             <button class="btn btn-primary" id="save-base-stats">Guardar y Recalcular</button>
         </div>`;
     openModal(content);
-    // CORRECCIÓN: Se usa .onclick para evitar adjuntar múltiples listeners
     document.getElementById('save-base-stats').onclick = () => {
         Object.keys(character.stats).filter(key => !['level', 'xp'].includes(key)).forEach(key => {
             const input = document.getElementById(`base-stat-${key}`);
@@ -2513,6 +2531,24 @@ function loadTheme() {
 // SISTEMA DE ESTADOS (NUEVO Y MEJORADO)
 // ===================================================================================
 
+const predefinedStatusEffects = [
+    { name: 'Bendición', description: 'Aumenta la fuerza temporalmente.', type: 'Buff', isStackable: false, duration: 3, durationType: 'Rondas', linkedEffects: [{ target: 'self', attribute: 'attributes.FUE', modification: 'fijo', value: 2, applyOn: 'continuo' }] },
+    { name: 'Veneno', description: 'Causa daño por ronda.', type: 'Debuff', isStackable: true, duration: 5, durationType: 'Rondas', linkedEffects: [{ target: 'self', attribute: 'stats.health.current', modification: 'fijo', value: -5, applyOn: 'ciclo' }] },
+    { name: 'Concentración', description: 'Mejora la magia.', type: 'Neutral', isStackable: false, duration: Infinity, durationType: 'Permanente', linkedEffects: [{ target: 'self', attribute: 'stats.mana.max', modification: 'porcentaje', value: 10, applyOn: 'continuo' }] },
+    { name: 'Parálisis', description: 'Reduce acciones.', type: 'Debuff', isStackable: false, duration: 2, durationType: 'Rondas', linkedEffects: [{ target: 'self', attribute: 'stats.actions.current', modification: 'fijo', value: -1, applyOn: 'continuo' }] },
+    { name: 'Regeneración', description: 'Recupera vida por ronda.', type: 'Buff', isStackable: true, duration: 4, durationType: 'Rondas', linkedEffects: [{ target: 'self', attribute: 'stats.health.current', modification: 'fijo', value: 5, applyOn: 'ciclo' }] },
+    { name: 'Maldición', description: 'Reduce inteligencia.', type: 'Debuff', isStackable: false, duration: 3, durationType: 'Rondas', linkedEffects: [{ target: 'self', attribute: 'attributes.INT', modification: 'fijo', value: -2, applyOn: 'continuo' }] },
+    { name: 'Escudo', description: 'Aumenta armadura.', type: 'Buff', isStackable: false, duration: 3, durationType: 'Rondas', linkedEffects: [{ target: 'self', attribute: 'stats.armor.current', modification: 'fijo', value: 5, applyOn: 'continuo' }] },
+    { name: 'Furia', description: 'Aumenta daño pero reduce defensa.', type: 'Buff', isStackable: false, duration: 3, durationType: 'Rondas', linkedEffects: [{ target: 'self', attribute: 'attributes.FUE', modification: 'fijo', value: 4, applyOn: 'continuo' }, { target: 'self', attribute: 'stats.armor.current', modification: 'fijo', value: -3, applyOn: 'continuo' }] },
+    { name: 'Invisibilidad', description: 'Evita detección.', type: 'Neutral', isStackable: false, duration: 2, durationType: 'Rondas', linkedEffects: [{ target: 'self', attribute: 'attributes.AGI', modification: 'porcentaje', value: 20, applyOn: 'continuo' }] },
+    { name: 'Debilidad', description: 'Reduce fuerza.', type: 'Debuff', isStackable: true, duration: 4, durationType: 'Rondas', linkedEffects: [{ target: 'self', attribute: 'attributes.FUE', modification: 'fijo', value: -3, applyOn: 'continuo' }] },
+    { name: 'Velocidad', description: 'Aumenta movimiento.', type: 'Buff', isStackable: false, duration: 3, durationType: 'Rondas', linkedEffects: [{ target: 'self', attribute: 'stats.movement.current', modification: 'fijo', value: 10, applyOn: 'continuo' }] },
+    { name: 'Confusión', description: 'Reduce precisión.', type: 'Debuff', isStackable: false, duration: 2, durationType: 'Rondas', linkedEffects: [{ target: 'self', attribute: 'attributes.AGI', modification: 'fijo', value: -2, applyOn: 'continuo' }] },
+    { name: 'Protección', description: 'Reduce daño recibido.', type: 'Buff', isStackable: true, duration: 5, durationType: 'Rondas', linkedEffects: [{ target: 'self', attribute: 'stats.armor.current', modification: 'porcentaje', value: 15, applyOn: 'continuo' }] },
+    { name: 'Sangrado', description: 'Daño continuo.', type: 'Debuff', isStackable: true, duration: 3, durationType: 'Rondas', linkedEffects: [{ target: 'self', attribute: 'stats.health.current', modification: 'fijo', value: -3, applyOn: 'ciclo' }] },
+    { name: 'Inspiración', description: 'Aumenta sabiduría.', type: 'Buff', isStackable: false, duration: 4, durationType: 'Rondas', linkedEffects: [{ target: 'self', attribute: 'stats.wisdom.current', modification: 'fijo', value: 3, applyOn: 'continuo' }] }
+];
+
 function renderStatusEffects() {
     const container = document.getElementById('status-effects-list');
     container.innerHTML = '';
@@ -2549,9 +2585,15 @@ function openStatusEffectForm(status = null, index = -1) {
     const isEditing = status !== null;
     tempLinkedEffects = isEditing ? JSON.parse(JSON.stringify(status.linkedEffects)) : [];
     
+    const predefinedButtons = predefinedStatusEffects.map(effect => `<button class="btn btn-secondary w-full mb-2" onclick="loadPredefinedStatus('${effect.name}')">${effect.name}</button>`).join('');
+
     const content = `
         <h3 class="text-2xl font-bold mb-4">${isEditing ? 'Editar' : 'Crear'} Estado</h3>
         <div class="modal-scrollable-content"><div class="space-y-4">
+            <div class="pt-4 border-t dark:border-gray-600">
+                <h4 class="font-semibold mb-2">Estados Predefinidos</h4>
+                <div class="grid grid-cols-2 gap-2">${predefinedButtons}</div>
+            </div>
             <div>
                 <label for="status-name" class="block text-sm font-medium">Nombre del Estado</label>
                 <input id="status-name" class="input-field mt-1" placeholder="Ej: Furia, Envenenado" value="${status?.name || ''}">
@@ -2600,6 +2642,20 @@ function openStatusEffectForm(status = null, index = -1) {
     `;
     openModal(content);
     renderLinkedEffectsList();
+}
+
+function loadPredefinedStatus(name) {
+    const predefined = predefinedStatusEffects.find(effect => effect.name === name);
+    if (predefined) {
+        document.getElementById('status-name').value = predefined.name;
+        document.getElementById('status-description').value = predefined.description;
+        document.getElementById('status-type').value = predefined.type;
+        document.getElementById('status-isStackable').checked = predefined.isStackable;
+        document.getElementById('status-duration-type').value = predefined.durationType;
+        document.getElementById('status-duration').value = predefined.durationType === 'Permanente' ? 1 : predefined.duration;
+        tempLinkedEffects = JSON.parse(JSON.stringify(predefined.linkedEffects));
+        renderLinkedEffectsList();
+    }
 }
 
 function renderLinkedEffectsList() {
@@ -2839,6 +2895,10 @@ function initializeCharacter(isImport = false) {
         character.spiritRelations[key].bonus = getBonusForRelation(relationValue);
     }
     saveAndRefresh();
+}
+
+function drag(ev) {
+    ev.dataTransfer.setData("text", ev.target.id);
 }
 
 window.onload = () => {
