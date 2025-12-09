@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hoja de Personaje - Isekai Delivery Service v4.5</title>
+    <title>Hoja de Personaje - Isekai Delivery Service v5.0 Premium</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -57,53 +57,137 @@
         body {
             background-color: var(--bg-color); color: var(--text-color);
             font-family: 'Inter', sans-serif; transition: background-color 0.3s, color 0.3s;
+            min-height: 100vh;
         }
         .card {
-            background-color: var(--card-bg); border-radius: 0.75rem;
-            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
-            border: 1px solid var(--border-color); transition: background-color 0.3s, border-color 0.3s;
-            resize: both; overflow: auto; min-width: 200px; min-height: 100px;
+            background-color: var(--card-bg); border-radius: 1rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            border: 1px solid var(--border-color); transition: all 0.3s ease;
+            overflow: hidden;
+        }
+        .card:hover {
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.15), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            transform: translateY(-2px);
+        }
+        .card p-7 {
+            padding: 1.75rem;
         }
         .card-title {
-            color: var(--title-color); font-weight: 600; font-size: 1.125rem;
-            border-bottom: 1px solid var(--border-color); padding-bottom: 0.75rem; margin-bottom: 1rem;
+            color: var(--title-color); font-weight: 700; font-size: 1.25rem;
+            border-bottom: 2px solid var(--border-color); padding-bottom: 1rem; margin-bottom: 1.5rem;
+            letter-spacing: -0.3px;
         }
         .input-field {
-            width: 100%; padding: 0.5rem 0.75rem; border-radius: 0.5rem;
-            border: 1px solid var(--border-color); background-color: var(--input-bg);
-            color: var(--text-color); transition: border-color 0.2s, box-shadow 0.2s, background-color 0.3s;
+            width: 100%; padding: 0.75rem 1rem; border-radius: 0.625rem;
+            border: 2px solid var(--border-color); background-color: var(--input-bg);
+            color: var(--text-color); transition: all 0.2s ease;
+            font-size: 1rem; font-family: inherit; font-weight: 500;
         }
         .input-field:focus {
             outline: none; border-color: var(--accent-color);
-            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+        .input-field:hover:not(:focus) {
+            border-color: var(--text-secondary);
+        }
+        textarea.input-field {
+            resize: vertical;
+            min-height: 80px;
+        }
+        
+        /* Mejora especial para inputs de atributos */
+        input.input-field[type="number"] {
+            font-size: 1.25rem;
+            font-weight: 600;
+            padding: 0.75rem;
+        }
+        
+        /* Estilos para botones de atributos */
+        .stat-block .btn-primary {
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(59, 130, 246, 0.4);
+        }
+        .stat-block .btn-primary:hover {
+            box-shadow: 0 6px 12px rgba(59, 130, 246, 0.6);
+            transform: scale(1.02);
         }
         .btn {
-            padding: 0.5rem 1rem; border-radius: 0.5rem; font-weight: 600; text-align: center;
-            cursor: pointer; transition: all 0.2s ease-in-out; display: inline-flex;
-            align-items: center; justify-content: center; border: none;
+            padding: 0.75rem 1.5rem; border-radius: 0.625rem; font-weight: 700; text-align: center;
+            cursor: pointer; transition: all 0.2s ease; display: inline-flex;
+            align-items: center; justify-content: center; border: none; font-size: 1rem;
+            letter-spacing: 0.3px;
         }
         .btn:disabled { opacity: 0.5; cursor: not-allowed; }
-        .btn-primary { background-color: var(--accent-color); color: white; }
-        .btn-primary:hover:not(:disabled) { background-color: var(--accent-hover); }
-        .btn-secondary { background-color: #4b5563; color: white; }
-        .btn-secondary:hover:not(:disabled) { background-color: #374151; }
-        .btn-danger { background-color: #ef4444; color: white; }
-        .btn-danger:hover:not(:disabled) { background-color: #dc2626; }
+        .btn-primary { background-color: var(--accent-color); color: white; box-shadow: 0 2px 4px rgba(59, 130, 246, 0.3); }
+        .btn-primary:hover:not(:disabled) { background-color: var(--accent-hover); box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4); transform: translateY(-1px); }
+        .btn-secondary { background-color: #6b7280; color: white; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); }
+        .btn-secondary:hover:not(:disabled) { background-color: #4b5563; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); transform: translateY(-1px); }
+        .btn-danger { background-color: #ef4444; color: white; box-shadow: 0 2px 4px rgba(239, 68, 68, 0.3); }
+        .btn-danger:hover:not(:disabled) { background-color: #dc2626; box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4); transform: translateY(-1px); }
+        
+        /* Estilos para Labels */
+        label {
+            display: block;
+            text-align: center;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+        }
+        
+        /* Mejoras de espaciado general */
+        .space-y-3 > * + * { margin-top: 0.75rem; }
+        .space-y-4 > * + * { margin-top: 1rem; }
+        .space-y-6 > * + * { margin-top: 1.5rem; }
+        .space-y-8 > * + * { margin-top: 2rem; }
+        
+        /* Centrado de contenido en tarjetas específicas */
+        .card > .space-y-4 { text-align: center; }
+        .card > .text-center { margin: 0 auto; }
+        
+        /* Mejoras de consistencia visual */
+        .card-title + .space-y-4,
+        .card-title + .space-y-3 {
+            margin-top: 1.5rem;
+        }
         .modal-overlay {
             position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-            background-color: rgba(0, 0, 0, 0.6); display: flex;
+            background-color: rgba(0, 0, 0, 0.7); display: flex;
             align-items: center; justify-content: center; z-index: 50;
             opacity: 0; visibility: hidden; transition: opacity 0.3s, visibility 0.3s;
+            backdrop-filter: blur(4px);
         }
         .modal-overlay.active { opacity: 1; visibility: visible; }
+        
+        #modal-secondary {
+            z-index: 70 !important;
+        }
+        
+        #notification-modal {
+            z-index: 100 !important;
+        }
+        
+        #modal {
+            z-index: 110 !important;
+        }
+        
+        #modal-tertiary {
+            z-index: 120 !important;
+        }
+        
         .modal-content {
-            background: var(--card-bg); color: var(--text-color); padding: 1.5rem; border-radius: 0.75rem;
+            background: var(--card-bg); color: var(--text-color); padding: 2rem; border-radius: 1rem;
             width: 90%; max-width: 600px; transform: scale(0.95);
             transition: transform 0.3s, background-color 0.3s; display: flex; flex-direction: column;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2), 0 10px 10px -5px rgba(0, 0, 0, 0.1);
         }
-        .modal-overlay.active .modal-content { transform: scale(1); }
+        
+        #modal-secondary-content.modal-content {
+            max-width: 90vw;
+            width: 95vw;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
         .modal-scrollable-content { max-height: 70vh; overflow-y: auto; padding-right: 1rem; margin-right: -1rem; }
-        .tab-button.active { border-color: var(--accent-color); color: var(--accent-color); font-weight: 600; }
+        .tab-button.active { border-color: var(--accent-color); color: var(--accent-color); font-weight: 700; }
         .switch { position: relative; display: inline-block; width: 40px; height: 22px; }
         .switch input { opacity: 0; width: 0; height: 0; }
         .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 22px; }
@@ -112,7 +196,7 @@
         input:checked + .slider:before { transform: translateX(18px); }
 
         /* Estilos de Rareza */
-        .item-card { border-left-width: 5px; transition: all 0.3s ease; }
+        .item-card { border-left-width: 5px; transition: all 0.3s ease; border-radius: 0.75rem; }
         .item-card[data-rarity="Intrínseco"] { border-color: #6b7280; background-color: var(--rarity-intrinsic-bg); }
         .item-card[data-rarity="Común"] { border-color: #9ca3af; background-color: var(--rarity-common-bg); }
         .item-card[data-rarity="Raro"] { border-color: #3b82f6; background-color: var(--rarity-rare-bg); }
@@ -159,31 +243,248 @@
         .theme-dark .item-card[data-rarity="Raro"] .rarity-text,
         .theme-dark .item-card[data-rarity="Épico"] .rarity-text,
         .theme-dark .item-card[data-rarity="Legendario"] .rarity-text { color: #f9fafb; }
-        .stat-block { background-color: var(--stat-bg); transition: background-color 0.3s; }
+        .stat-block { background-color: var(--stat-bg); transition: background-color 0.3s; border-radius: 0.75rem; }
+        
+        /* Mejoras responsive para números grandes */
+        @media (max-width: 768px) {
+            .grid.grid-cols-12 { grid-template-columns: repeat(auto-fit, minmax(60px, 1fr)); }
+        }
 
         /* Estilos para Estados */
-        .status-card { border-left-width: 4px; }
+        .status-card { border-left-width: 4px; border-radius: 0.75rem; transition: all 0.3s ease; }
         .status-card[data-type="Buff"] { border-left-color: #22c55e; background-color: #f0fdf4; }
         .status-card[data-type="Debuff"] { border-left-color: #ef4444; background-color: #fef2f2; }
         .status-card[data-type="Neutral"] { border-left-color: #6b7280; background-color: #f9fafb; }
         .theme-dark .status-card[data-type="Buff"] { background-color: #14532d; border-left-color: #22c55e;}
         .theme-dark .status-card[data-type="Debuff"] { background-color: #7f1d1d; border-left-color: #ef4444;}
         .theme-dark .status-card[data-type="Neutral"] { background-color: #374151; border-left-color: #6b7280;}
+        
+        /* Estilos para modal de combate */
+        .combat-modal-content {
+            max-height: 90vh;
+            overflow-y: auto;
+            width: 95vw;
+            max-width: 1400px;
+        }
+        .combat-modal-content::-webkit-scrollbar {
+            width: 10px;
+        }
+        .combat-modal-content::-webkit-scrollbar-track {
+            background: var(--bg-color);
+        }
+        .combat-modal-content::-webkit-scrollbar-thumb {
+            background: var(--accent-color);
+            border-radius: 5px;
+        }
+        .combat-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            padding: 1rem;
+        }
+        
+        /* Nuevo layout más ancho */
+        .combat-grid-compact {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-template-rows: auto auto auto;
+            gap: 1.5rem;
+            padding: 1rem;
+        }
+        .combat-grid-full {
+            grid-column: 1 / -1;
+        }
+        .combat-col-left {
+            grid-column: 1;
+        }
+        .combat-col-center {
+            grid-column: 2;
+        }
+        .combat-col-right {
+            grid-column: 3;
+        }
+        
+        @media (max-width: 1400px) {
+            .combat-grid-compact {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .combat-col-right {
+                grid-column: 2;
+                grid-row: 1 / 3;
+            }
+        }
+        @media (max-width: 768px) {
+            .combat-grid-compact {
+                grid-template-columns: 1fr;
+            }
+            .combat-col-right {
+                grid-column: 1;
+                grid-row: auto;
+            }
+        }
+        
+        /* Botones de acción en items */
+        .item-action-btn {
+            padding: 0.25rem 0.5rem;
+            font-size: 0.75rem;
+            margin-top: 0.25rem;
+        }
+        .combat-section {
+            background: linear-gradient(135deg, var(--card-bg) 0%, var(--card-bg) 100%);
+            border: 2px solid var(--accent-color);
+            border-radius: 1.25rem;
+            padding: 1.75rem;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .combat-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--accent-color), transparent);
+        }
+        .combat-section:hover {
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
+            transform: translateY(-4px);
+            border-color: #60a5fa;
+        }
+        .combat-section-title {
+            font-size: 1.35rem;
+            font-weight: 800;
+            margin-bottom: 1.25rem;
+            color: var(--accent-color);
+            border-bottom: 3px solid var(--accent-color);
+            padding-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .combat-stat-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem 1rem;
+            border-radius: 0.75rem;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            border-left: 4px solid var(--accent-color);
+            transition: all 0.2s ease;
+        }
+        .combat-stat-item:hover {
+            transform: translateX(4px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .combat-stat-label {
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+        }
+        .combat-stat-value {
+            font-size: 1.5rem;
+            font-weight: 900;
+            color: var(--accent-color);
+        }
+        .combat-item {
+            padding: 1rem;
+            border-radius: 0.875rem;
+            margin-bottom: 0.75rem;
+            border-left: 4px solid transparent;
+            background-color: var(--stat-bg);
+            transition: all 0.2s ease;
+        }
+        .combat-item:hover {
+            transform: translateX(4px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .combat-item-name {
+            font-weight: 700;
+            font-size: 1rem;
+            margin-bottom: 0.25rem;
+        }
+        .combat-item-desc {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+        .combat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 3px solid var(--accent-color);
+        }
+        .combat-header h2 {
+            font-size: 2.5rem;
+            font-weight: 900;
+            color: var(--accent-color);
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .vital-health { border-left-color: #ef4444 !important; background-color: rgba(239, 68, 68, 0.1) !important; }
+        .vital-mana { border-left-color: #3b82f6 !important; background-color: rgba(59, 130, 246, 0.1) !important; }
+        .vital-armor { border-left-color: #8b5cf6 !important; background-color: rgba(139, 92, 246, 0.1) !important; }
+        .vital-actions { border-left-color: #f59e0b !important; background-color: rgba(245, 158, 11, 0.1) !important; }
+        
+        .skill-item { border-left-color: #22c55e !important; }
+        .tech-item { border-left-color: #a855f7 !important; }
+        .equip-item { border-left-color: #f59e0b !important; }
+        .item-item { border-left-color: #06b6d4 !important; }
+        .pet-item { border-left-color: #ec4899 !important; }
+        .buff-item { border-left-color: #22c55e !important; background-color: rgba(34, 197, 94, 0.1) !important; }
+        .debuff-item { border-left-color: #ef4444 !important; background-color: rgba(239, 68, 68, 0.1) !important; }
+        
+        /* Animación de scroll suave */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--bg-color);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--border-color);
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--text-secondary);
+        }
+        
+        /* Grid layout mejorado */
+        @media (max-width: 1024px) {
+            .grid { gap: 1rem; }
+        }
+        
+        /* Responsivo mejorado */
+        @media (max-width: 768px) {
+            body { padding: 0.5rem; }
+            .card p-7 { padding: 1.25rem; }
+        }
     </style>
 </head>
 <body class="p-4 md:p-8">
 
     <div class="max-w-7xl mx-auto">
-        <h1 class="text-3xl md:text-4xl font-bold text-center mb-2 text-gray-800 dark:text-gray-200">Hoja de Personaje v4.5</h1>
-        <p class="text-center text-gray-500 dark:text-gray-400 mb-6">Los cambios se guardan automáticamente en tu navegador.</p>
+        <!-- Header Section -->
+        <div class="mb-8 pb-6 border-b-2 border-gray-300 dark:border-gray-600 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+            <div class="flex-1">
+                <h1 class="text-4xl md:text-5xl font-bold mb-2 text-gray-900 dark:text-white tracking-tight">Hoja de Personaje v5.0 Premium</h1>
+                <p class="text-lg text-gray-600 dark:text-gray-400">Los cambios se guardan automáticamente en tu navegador</p>
+            </div>
+            <button id="combat-mode-btn" class="btn btn-primary h-14 px-6 whitespace-nowrap text-lg font-bold shadow-lg hover:shadow-xl" onclick="openCombatMode()">
+                ⚔️ Modo Combate
+            </button>
+        </div>
 
         <!-- Contenedor Principal con Grid -->
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 auto-rows-max">
 
             <!-- Columna Izquierda -->
-            <div class="space-y-6">
+            <div class="space-y-8">
                 <!-- Identidad del Personaje -->
-                <div class="card p-6" draggable="true" ondragstart="drag(event)">
+                <div class="card p-7">
                     <h2 class="card-title">Identidad</h2>
                     <div class="space-y-4">
                         <div class="flex items-center space-x-4">
@@ -213,15 +514,15 @@
                 </div>
 
                 <!-- Atributos -->
-                <div class="card p-6" draggable="true" ondragstart="drag(event)">
+                <div class="card p-7">
                     <h2 class="card-title">Atributos</h2>
-                    <div id="attributes-container" class="space-y-3">
+                    <div id="attributes-container" class="space-y-4">
                         <!-- Los atributos se generan dinámicamente aquí -->
                     </div>
                 </div>
 
                 <!-- Elementos -->
-                <div class="card p-6" draggable="true" ondragstart="drag(event)">
+                <div class="card p-7">
                     <h2 class="card-title">Afinidad Elemental</h2>
                     <div id="elements-container" class="grid grid-cols-1 gap-4"></div>
                     <div id="fusion-elements-container" class="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700"></div>
@@ -232,9 +533,9 @@
             </div>
 
             <!-- Columna Central -->
-            <div class="space-y-6">
+            <div class="space-y-8">
                 <!-- Experiencia y Nivel -->
-                <div class="card p-6" draggable="true" ondragstart="drag(event)">
+                <div class="card p-7">
                     <div class="flex justify-between items-center mb-4">
                          <h2 class="card-title m-0 p-0 border-none">Nivel y Experiencia</h2>
                          <div class="text-right">
@@ -264,7 +565,7 @@
                 </div>
 
                 <!-- Estadísticas Derivadas -->
-                <div class="card p-6" draggable="true" ondragstart="drag(event)">
+                <div class="card p-7">
                     <div class="flex justify-between items-center mb-4 gap-2">
                         <h2 class="card-title m-0 p-0 border-none">Estadísticas</h2>
                         <div class="flex gap-2">
@@ -272,11 +573,11 @@
                            <button id="edit-base-stats-btn" class="btn btn-secondary text-sm">Editar Base</button>
                         </div>
                     </div>
-                    <div id="stats-container" class="grid grid-cols-1 gap-y-3"></div>
+                    <div id="stats-container" class="grid grid-cols-1 gap-y-4"></div>
                 </div>
 
                 <!-- Combate -->
-                <div class="card p-6" draggable="true" ondragstart="drag(event)">
+                <div class="card p-7">
                     <h2 class="card-title">Combate</h2>
                     <div class="space-y-4">
                         <div class="text-center">
@@ -297,7 +598,7 @@
                 </div>
 
                 <!-- Estados -->
-                <div class="card p-6" draggable="true" ondragstart="drag(event)">
+                <div class="card p-7">
                     <h2 class="card-title">Estados</h2>
                     <button id="add-status-effect-btn" class="btn btn-primary w-full mb-4">Añadir Estado</button>
                     <div id="status-effects-list" class="space-y-3"></div>
@@ -305,23 +606,23 @@
             </div>
 
             <!-- Columna Derecha -->
-            <div class="space-y-6">
+            <div class="space-y-8">
                 <!-- Equipamiento -->
-                <div class="card p-6" draggable="true" ondragstart="drag(event)">
+                <div class="card p-7">
                     <h2 class="card-title">Equipamiento</h2>
                     <div id="equipment-slots" class="space-y-3"></div>
                     <button id="manage-slots-btn" class="btn btn-secondary w-full mt-4 text-sm">Gestionar Slots</button>
                 </div>
 
                 <!-- NUEVO: Recursos -->
-                <div class="card p-6" draggable="true" ondragstart="drag(event)">
+                <div class="card p-7">
                     <h2 class="card-title">Recursos</h2>
                     <div id="resources-container" class="space-y-3 mb-4"></div>
                     <button id="add-resource-btn" class="btn btn-secondary w-full text-sm">Gestionar Recursos</button>
                 </div>
 
                 <!-- Inventario -->
-                <div class="card p-6" draggable="true" ondragstart="drag(event)">
+                <div class="card p-7">
                     <h2 class="card-title">Inventario y Habilidades</h2>
                     <div class="border-b border-gray-200 dark:border-gray-700 mb-4">
                         <nav class="-mb-px flex space-x-4" id="inventory-tabs">
@@ -353,7 +654,7 @@
                 </div>
 
                 <!-- Gestión -->
-                 <div class="card p-6" draggable="true" ondragstart="drag(event)">
+                 <div class="card p-7">
                     <h2 class="card-title">Gestión de Datos</h2>
                     <div class="grid grid-cols-2 gap-3">
                         <button id="theme-toggle-btn" class="btn btn-secondary">Cambiar Tema</button>
@@ -374,11 +675,13 @@
 
     <!-- Modales -->
     <div id="modal" class="modal-overlay"><div id="modal-content" class="modal-content"></div></div>
-    <div id="modal-secondary" class="modal-overlay" style="z-index: 60;"><div id="modal-secondary-content" class="modal-content"></div></div>
+    <div id="modal-secondary" class="modal-overlay"><div id="modal-secondary-content" class="modal-content"></div></div>
+    <div id="modal-tertiary" class="modal-overlay"><div id="modal-tertiary-content" class="modal-content"></div></div>
     <div id="notification-modal" class="modal-overlay" onclick="this.classList.remove('active')">
-        <div class="modal-content max-w-sm text-center">
+        <div class="modal-content max-w-sm text-center" onclick="event.stopPropagation()">
             <h3 id="notification-title" class="text-xl font-bold mb-4"></h3>
-            <p id="notification-message" class="whitespace-pre-wrap"></p>
+            <p id="notification-message" class="whitespace-pre-wrap mb-6"></p>
+            <button class="btn btn-primary" onclick="document.getElementById('notification-modal').classList.remove('active')">Aceptar</button>
         </div>
     </div>
 
@@ -396,8 +699,8 @@ const SKILL_POINTS_PER_LEVEL = {
 };
 const EVOLUTION_LEVELS = [5, 10, 15, 20];
 const RARITIES = ['Intrínseco', 'Común', 'Raro', 'Épico', 'Legendario', 'Mítico / Único', 'Genesis'];
-const LOCAL_STORAGE_KEY = 'characterSheetData_v4.5'; // Updated version key
-const THEME_STORAGE_KEY = 'characterSheetTheme_v4.5'; // Updated version key
+const LOCAL_STORAGE_KEY = 'characterSheetData_v5.0'; // Updated version key
+const THEME_STORAGE_KEY = 'characterSheetTheme_v5.0'; // Updated version key
 
 const ELEMENTS_CONFIG = {
     fuego: { name: 'Fuego', emoji: '🔥', color: 'bg-red-100 dark:bg-red-900/50' },
@@ -406,11 +709,19 @@ const ELEMENTS_CONFIG = {
     electricidad: { name: 'Electricidad', emoji: '⚡', color: 'bg-yellow-100 dark:bg-yellow-900/50' },
     tierra: { name: 'Tierra', emoji: '🌍', color: 'bg-amber-100 dark:bg-amber-900/50' },
     luz: { name: 'Luz', emoji: '☀️', color: 'bg-yellow-50 dark:bg-yellow-800/50' },
-    oscuridad: { name: 'Oscuridad', emoji: '🌙', color: 'bg-slate-200 dark:bg-slate-800' }
+    oscuridad: { name: 'Oscuridad', emoji: '🌙', color: 'bg-slate-900 dark:bg-slate-600' }
 };
 
 let character; // Se inicializará en window.onload
 let tempLinkedEffects = []; // Almacén temporal para el constructor de estados
+
+const predefinedStatusEffects = [
+    { name: 'Fortaleza', description: 'Aumenta la defensa', type: 'Buff', isStackable: false, durationType: 'Rondas', duration: 3, linkedEffects: [{ target: 'self', attribute: 'stats.armor.current', modification: 'fijo', value: 5, applyOn: 'continuo', condition: '' }] },
+    { name: 'Debilidad', description: 'Reduce la fuerza', type: 'Debuff', isStackable: true, durationType: 'Rondas', duration: 2, linkedEffects: [{ target: 'self', attribute: 'attributes.FUE', modification: 'fijo', value: -2, applyOn: 'continuo', condition: '' }] },
+    { name: 'Envenenado', description: 'Daño por turno', type: 'Debuff', isStackable: true, durationType: 'Rondas', duration: 4, linkedEffects: [{ target: 'self', attribute: 'stats.health.current', modification: 'fijo', value: -3, applyOn: 'ciclo', condition: '' }] },
+    { name: 'Regeneración', description: 'Cura por turno', type: 'Buff', isStackable: false, durationType: 'Rondas', duration: 5, linkedEffects: [{ target: 'self', attribute: 'stats.health.current', modification: 'fijo', value: 5, applyOn: 'ciclo', condition: '' }] },
+    { name: 'Congelado', description: 'Reduce velocidad', type: 'Debuff', isStackable: false, durationType: 'Rondas', duration: 2, linkedEffects: [{ target: 'self', attribute: 'stats.movement.current', modification: 'porcentaje', value: -50, applyOn: 'continuo', condition: '' }] }
+];
 
 function getDefaultCharacter() {
     return {
@@ -818,13 +1129,28 @@ function updateUI() {
         const bonus = Math.round(finalAttr.value - baseAttr.value);
         const mod = getModifier(finalAttr.value);
         const div = document.createElement('div');
-        div.className = 'grid grid-cols-6 items-center gap-2';
+        div.className = 'flex flex-col sm:flex-row items-stretch sm:items-center gap-3 p-4 rounded-lg stat-block border-2 border-blue-300 dark:border-blue-700 bg-gradient-to-r from-blue-50 to-transparent dark:from-blue-900/30';
         div.innerHTML = `
-            <label for="attr-${key}" class="font-semibold col-span-2">${baseAttr.name}</label>
-            <input type="number" id="attr-${key}" class="input-field text-center" value="${baseAttr.value}">
-            <span class="text-green-600 font-medium text-center">(+${bonus})</span>
-            <div class="bg-gray-200 dark:bg-gray-600 text-center font-bold rounded-md py-2">${mod >= 0 ? '+' : ''}${mod}</div>
-            <button class="btn btn-primary" onclick="rollAttributeCheck('${key}')" title="Lanzar 1d20 + Modificador">🎲</button>
+            <div class="flex-1 min-w-0">
+                <p class="font-bold text-sm text-gray-600 dark:text-gray-400 mb-1">${baseAttr.name}</p>
+                <div class="flex items-center gap-2">
+                    <button class="btn btn-primary flex-1 h-20 text-4xl font-bold hover:ring-4 hover:ring-blue-300 dark:hover:ring-blue-600 transition-all" onclick="editAttribute('${key}')" title="Click para editar">
+                        ${baseAttr.value}
+                    </button>
+                    <input type="number" id="attr-${key}" class="input-field hidden" value="${baseAttr.value}" onchange="saveAndRefresh()">
+                </div>
+            </div>
+            <div class="flex gap-2 items-center sm:flex-col">
+                <div class="bg-gradient-to-br from-green-400 to-green-600 text-white text-center font-bold rounded-lg p-3 min-w-16 sm:min-w-0">
+                    <p class="text-xs mb-1">Bonus</p>
+                    <p class="text-2xl">${bonus >= 0 ? '+' : ''}${bonus}</p>
+                </div>
+                <div class="bg-gradient-to-br from-blue-500 to-blue-700 text-white text-center font-bold rounded-lg p-3 min-w-16 sm:min-w-0">
+                    <p class="text-xs mb-1">Mod</p>
+                    <p class="text-2xl">${mod >= 0 ? '+' : ''}${mod}</p>
+                </div>
+                <button class="btn btn-primary h-12 w-12 sm:h-full sm:w-full sm:min-w-16 flex items-center justify-center text-xl" onclick="rollAttributeCheck('${key}')" title="Lanzar 1d20 + Modificador">🎲</button>
+            </div>
         `;
         attributesContainer.appendChild(div);
     }
@@ -857,30 +1183,30 @@ function updateUI() {
     for (const key in statsToDisplay) {
         const stat = statsToDisplay[key];
         const div = document.createElement('div');
-        div.className = 'flex justify-between items-center stat-block p-2 rounded-md';
+        div.className = 'flex justify-between items-center stat-block p-4 rounded-lg border border-gray-200 dark:border-gray-700';
         if (key === 'health' || key === 'mana') {
              div.innerHTML = `
-                <span class="font-medium">${stat.name}</span>
-                <div class="flex items-center gap-1">
-                    <input type="number" id="stat-${key}-current" value="${stat.current}" class="input-field w-16 text-center">
-                    <span>/</span>
-                    <span class="font-bold">${stat.base}</span>
+                <span class="font-bold text-lg">${stat.name}</span>
+                <div class="flex items-center gap-3">
+                    <input type="number" id="stat-${key}-current" value="${stat.current}" class="input-field w-20 text-center font-bold">
+                    <span class="text-lg font-bold">/</span>
+                    <span class="font-bold text-lg">${stat.base}</span>
                 </div>
             `;
             statsContainer.appendChild(div);
         } else if (['resistance', 'wisdom', 'magicSave'].includes(key)) {
             div.innerHTML = `
-                <span class="font-medium">${stat.name}</span>
-                <div class="flex items-center gap-2">
-                    <span class="font-bold">${stat.current}</span>
+                <span class="font-bold text-lg">${stat.name}</span>
+                <div class="flex items-center gap-3">
+                    <span class="font-bold text-xl">${stat.current}</span>
                     <button class="btn btn-primary" onclick="rollStatCheck('${key}')" title="Lanzar 1d20 + Valor">🎲</button>
                 </div>
             `;
             statsContainer.appendChild(div);
         } else {
             div.innerHTML = `
-                <span class="font-medium">${stat.name}</span>
-                <span class="font-bold">${stat.current}</span>
+                <span class="font-bold text-lg">${stat.name}</span>
+                <span class="font-bold text-xl">${stat.current}</span>
             `;
             statsContainer.appendChild(div);
         }
@@ -1008,27 +1334,300 @@ const modalSecondary = document.getElementById('modal-secondary');
 const modalSecondaryContent = document.getElementById('modal-secondary-content');
 
 function openModal(content, level = 1) {
-    const targetModal = level === 1 ? modal : modalSecondary;
-    const targetContent = level === 1 ? modalContent : modalSecondaryContent;
-    targetContent.innerHTML = content;
-    targetModal.classList.add('active');
+    let targetModal, targetContent;
+    
+    if (level === 1) {
+        targetModal = modal;
+        targetContent = modalContent;
+    } else if (level === 2) {
+        targetModal = modalSecondary;
+        targetContent = modalSecondaryContent;
+    } else if (level === 3) {
+        targetModal = document.getElementById('modal-tertiary');
+        targetContent = document.getElementById('modal-tertiary-content');
+    }
+    
+    if (targetContent) {
+        targetContent.innerHTML = content;
+    }
+    if (targetModal) {
+        targetModal.classList.add('active');
+    }
 }
 
-function closeModal(level = 'all') {
-    if (level === 1 || level === 'all') {
+function closeModal(level = 1) {
+    if (level === 1) {
         modal.classList.remove('active');
         modalContent.innerHTML = '';
     }
-    if (level === 2 || level === 'all') {
+    if (level === 2) {
         modalSecondary.classList.remove('active');
         modalSecondaryContent.innerHTML = '';
+    }
+    if (level === 3) {
+        const modalTertiary = document.getElementById('modal-tertiary');
+        const modalTertiaryContent = document.getElementById('modal-tertiary-content');
+        if (modalTertiary) modalTertiary.classList.remove('active');
+        if (modalTertiaryContent) modalTertiaryContent.innerHTML = '';
+    }
+    if (level === 'all') {
+        modal.classList.remove('active');
+        modalContent.innerHTML = '';
+        modalSecondary.classList.remove('active');
+        modalSecondaryContent.innerHTML = '';
+        const modalTertiary = document.getElementById('modal-tertiary');
+        const modalTertiaryContent = document.getElementById('modal-tertiary-content');
+        if (modalTertiary) modalTertiary.classList.remove('active');
+        if (modalTertiaryContent) modalTertiaryContent.innerHTML = '';
     }
 }
 
 function showNotification(title, message) {
     document.getElementById('notification-title').textContent = title;
-    document.getElementById('notification-message').textContent = message;
+    document.getElementById('notification-message').innerHTML = message;
     document.getElementById('notification-modal').classList.add('active');
+}
+
+// Tirada de atributo en modo combate con dice roll
+function rollAttributeCheckCombat(key) {
+    const attr = character.attributes[key];
+    if (!attr) return;
+    
+    const d20 = Math.floor(Math.random() * 20) + 1;
+    const mod = getModifier(attr.value);
+    const total = d20 + mod;
+    
+    const message = `<strong>${attr.name}:</strong><br>
+        🎲 D20: ${d20}<br>
+        Modificador: ${mod >= 0 ? '+' : ''}${mod}<br>
+        <strong>Total: ${total}</strong>`;
+    
+    showNotification(`Tirada de ${attr.name}`, message);
+}
+
+// Usar acción de combate con costo
+function useCombatAction(actionName, cost) {
+    if (character.combat.currentActions < cost) {
+        showNotification('Acción No Disponible', `No tienes suficientes acciones. Necesitas ${cost}, tienes ${character.combat.currentActions}`);
+        return;
+    }
+    
+    character.combat.currentActions -= cost;
+    character.stats.actions.current = character.combat.currentActions; // Sincronizar
+    saveAndRefresh();
+    showNotification('Acción Usada', `${actionName} - Costo: ${cost} acciones`);
+    refreshCombatVitals();
+}
+
+// Actualizar solo los vitales en el modo combate sin reabrirlo
+function refreshCombatVitals() {
+    // Actualizar Vida
+    const healthValue = document.querySelector('.vital-health .combat-stat-value');
+    if (healthValue) {
+        healthValue.textContent = `${character.stats.health.current}/${character.stats.health.max}`;
+    }
+    
+    // Actualizar Místyculas
+    const manaValue = document.querySelector('.vital-mana .combat-stat-value');
+    if (manaValue) {
+        manaValue.textContent = `${character.stats.mana.current}/${character.stats.mana.max}`;
+    }
+    
+    // Actualizar Armadura
+    const armorValue = document.querySelector('.vital-armor .combat-stat-value');
+    if (armorValue) {
+        armorValue.textContent = `${character.stats.armor.current}`;
+    }
+    
+    // Actualizar Acciones
+    const actionsValue = document.querySelector('.vital-actions .combat-stat-value');
+    if (actionsValue) {
+        actionsValue.textContent = `${character.combat.currentActions}`;
+    }
+}
+
+// Actualizar equipamiento en el modo combate
+function refreshCombatEquipment() {
+    const equipmentContainer = document.querySelector('.combat-col-right');
+    if (!equipmentContainer) return;
+    
+    // Encontrar la sección de equipo
+    const equipmentSections = equipmentContainer.querySelectorAll('.combat-section');
+    const equipmentSection = Array.from(equipmentSections).find(section => 
+        section.querySelector('.combat-section-title')?.textContent.includes('Equipo')
+    );
+    
+    if (!equipmentSection) return;
+    
+    // Reconstruir el equipo
+    let equipHTML = '<div class="space-y-1.5 max-h-40 overflow-y-auto">';
+    
+    character.equipment.forEach((slot, idx) => {
+        if (slot.item) {
+            equipHTML += `
+                <div class="p-2 rounded-lg bg-yellow-50 dark:bg-yellow-900/20 border-l-4 border-yellow-500">
+                    <p class="font-semibold text-yellow-700 dark:text-yellow-400 text-xs">${slot.slotName}</p>
+                    <p class="text-xs text-gray-600 dark:text-gray-400 mb-1">${slot.item.name}</p>
+                    <div class="flex gap-1">
+                        <button class="item-action-btn btn btn-secondary flex-1 text-xs" onclick="useEquippedItem(${idx})">Usar</button>
+                        <button class="item-action-btn btn btn-danger flex-1 text-xs" onclick="unequipItem(${idx})">Desequipar</button>
+                    </div>
+                </div>
+            `;
+        } else {
+            equipHTML += `
+                <div class="p-2 rounded-lg bg-gray-50 dark:bg-gray-800 border-l-4 border-gray-300 opacity-50">
+                    <p class="font-semibold text-gray-400 text-xs">${slot.slotName}</p>
+                    <p class="text-xs text-gray-500">Vacío</p>
+                </div>
+            `;
+        }
+    });
+    
+    equipHTML += '</div>';
+    
+    // Reemplazar el contenido
+    const equipContentDiv = equipmentSection.querySelector('.space-y-1\\.5');
+    if (equipContentDiv) {
+        equipContentDiv.outerHTML = equipHTML;
+    }
+}
+
+// Actualizar estados en el modo combate
+function refreshCombatStates() {
+    const statesContainer = document.querySelector('.combat-col-right');
+    if (!statesContainer) return;
+    
+    const stateSections = statesContainer.querySelectorAll('.combat-section');
+    const statesSection = Array.from(stateSections).find(section => 
+        section.querySelector('.combat-section-title')?.textContent.includes('Estados')
+    );
+    
+    if (!statesSection) return;
+    
+    let statesHTML = '<div class="space-y-1.5 max-h-40 overflow-y-auto">';
+    
+    if (character.statusEffects.length > 0) {
+        character.statusEffects.forEach(status => {
+            const itemClass = status.type === 'Buff' ? 'bg-green-100 dark:bg-green-900/30 border-green-500' : 
+                            status.type === 'Debuff' ? 'bg-red-100 dark:bg-red-900/30 border-red-500' : 
+                            'bg-gray-100 dark:bg-gray-800 border-gray-500';
+            statesHTML += `
+                <div class="p-2 rounded-lg ${itemClass} border-l-4 text-xs">
+                    <p class="font-semibold">${status.name}</p>
+                    <p class="text-xs opacity-75">${status.duration}${status.durationType.charAt(0)}</p>
+                </div>
+            `;
+        });
+    } else {
+        statesHTML += '<p class="text-xs text-gray-500 italic">Sin estados</p>';
+    }
+    
+    statesHTML += '</div>';
+    
+    const statesContentDiv = statesSection.querySelector('.space-y-1\\.5');
+    if (statesContentDiv) {
+        statesContentDiv.outerHTML = statesHTML;
+    }
+}
+
+
+function editVitalCombat(vitalType) {
+    const vital = character.stats[vitalType];
+    const modalContent = document.getElementById('modal-content');
+    const modal = document.getElementById('modal');
+    
+    const vitalNames = {
+        'health': 'Vida',
+        'mana': 'Místyculas',
+        'armor': 'Armadura',
+        'actions': 'Acciones'
+    };
+    
+    modalContent.innerHTML = `
+        <h3 class="text-2xl font-bold mb-4">Editar ${vitalNames[vitalType]}</h3>
+        <div class="space-y-4">
+            <div>
+                <label class="block text-sm font-medium mb-2">Valor Actual</label>
+                <input type="number" id="vital-current" class="input-field text-center text-2xl font-bold h-16" value="${vital.current}" min="0">
+            </div>
+            <div>
+                <label class="block text-sm font-medium mb-2">Valor Máximo</label>
+                <input type="number" id="vital-max" class="input-field text-center text-2xl font-bold h-16" value="${vital.max || vital.current}" min="1">
+            </div>
+            <div class="flex gap-3">
+                <button class="btn btn-primary flex-1" onclick="saveVitalEdit('${vitalType}')">Guardar</button>
+                <button class="btn btn-secondary flex-1" onclick="closeModal(1)">Cancelar</button>
+            </div>
+        </div>
+    `;
+    modal.classList.add('active');
+}
+
+function saveVitalEdit(vitalType) {
+    const newCurrent = parseInt(document.getElementById('vital-current').value) || 0;
+    const newMax = parseInt(document.getElementById('vital-max').value) || 1;
+    
+    character.stats[vitalType].current = Math.min(newCurrent, newMax);
+    character.stats[vitalType].max = newMax;
+    
+    // Sincronizar en combat mode también
+    if (vitalType === 'actions') {
+        character.combat.currentActions = character.stats.actions.current;
+    }
+    
+    saveAndRefresh();
+    closeModal(1); // Solo cerrar modal de edición, NO el modo combate
+    
+    // Actualizar solo los vitales en el HTML del modo combate sin cerrar la ventana
+    refreshCombatVitals();
+}
+
+// Añadir estado en modo combate
+function saveStatusEffect() {
+    const name = document.getElementById('status-name').value.trim();
+    if (!name) {
+        showNotification('Error', 'El nombre del estado no puede estar vacío');
+        return;
+    }
+    
+    const newStatus = {
+        name: name,
+        type: document.getElementById('status-type').value,
+        duration: parseInt(document.getElementById('status-duration').value) || 1,
+        durationType: document.getElementById('status-duration-type').value,
+        trigger: 'manual'
+    };
+    
+    character.statusEffects.push(newStatus);
+    saveAndRefresh();
+    closeModal(1); // Solo cerrar el modal de edición
+    refreshCombatStates();
+}
+
+// Equipar objeto desde inventario
+function equipItemFromInventory(itemIndex) {
+    const item = character.inventory.items[itemIndex];
+    if (!item) return;
+    
+    // Buscar un slot vacío o crear uno nuevo
+    let equipped = false;
+    for (let i = 0; i < character.equipment.length; i++) {
+        if (!character.equipment[i].item) {
+            character.equipment[i] = { slotName: `${item.name}`, item: item };
+            character.inventory.items.splice(itemIndex, 1);
+            equipped = true;
+            break;
+        }
+    }
+    
+    if (!equipped) {
+        showNotification('Espacio Lleno', 'No hay espacio en el equipo');
+        return;
+    }
+    
+    saveAndRefresh();
+    refreshCombatEquipment();
 }
 
 // ===================================================================================
@@ -1962,15 +2561,6 @@ function confirmEquip(itemIndex, slotName) {
     }
 }
 
-function unequipItem(slotIndex) {
-    const slot = character.equipment[slotIndex];
-    if (slot && slot.item) {
-        character.inventory.items.push(slot.item);
-        slot.item = null;
-        slot.isDamageFormulaActive = false;
-        saveAndRefresh();
-    }
-}
 
 
 // ===================================================================================
@@ -2140,7 +2730,14 @@ function useAbility(type, index) {
     } else {
         character.stats.mana.current -= ability.costMP;
         useAction(ability.costPA, ability.name); // Usar la función centralizada
+        
+        // Sincronizar acciones después de usar la habilidad
+        character.stats.actions.current = character.combat.currentActions;
+        
         showNotification(`Resultado de ${ability.name}`, `Total: ${result.total}\nDetalle: ${result.rolls}`);
+        
+        // Actualizar vitales en el modo combate
+        refreshCombatVitals();
     }
     saveAndRefresh();
 }
@@ -2182,6 +2779,8 @@ function useAction(cost, type) {
         message = `Has ganado ${-cost} PA. Total: ${character.combat.currentActions} PA.`;
     } else if (character.combat.currentActions >= cost) {
         character.combat.currentActions -= cost;
+        // Sincronizar con stats
+        character.stats.actions.current = character.combat.currentActions;
         message = `Usaste una Acción ${type}. Te quedan ${character.combat.currentActions} PA.`;
 
         // Procesar efectos de estado que se activan con acciones
@@ -2305,7 +2904,7 @@ document.getElementById('export-json-btn').addEventListener('click', () => {
     const exportData = { character: character, theme: themeData };
     const dataStr = JSON.stringify(exportData, null, 2);
     const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
-    const exportFileDefaultName = `${character.identity.name.replace(/\s/g, '_') || 'personaje'}_v4.5.json`;
+    const exportFileDefaultName = `${character.identity.name.replace(/\s/g, '_') || 'personaje'}_v5.0_premium.json`;
     const linkElement = document.createElement('a');
     linkElement.setAttribute('href', dataUri);
     linkElement.setAttribute('download', exportFileDefaultName);
@@ -2531,24 +3130,6 @@ function loadTheme() {
 // SISTEMA DE ESTADOS (NUEVO Y MEJORADO)
 // ===================================================================================
 
-const predefinedStatusEffects = [
-    { name: 'Bendición', description: 'Aumenta la fuerza temporalmente.', type: 'Buff', isStackable: false, duration: 3, durationType: 'Rondas', linkedEffects: [{ target: 'self', attribute: 'attributes.FUE', modification: 'fijo', value: 2, applyOn: 'continuo' }] },
-    { name: 'Veneno', description: 'Causa daño por ronda.', type: 'Debuff', isStackable: true, duration: 5, durationType: 'Rondas', linkedEffects: [{ target: 'self', attribute: 'stats.health.current', modification: 'fijo', value: -5, applyOn: 'ciclo' }] },
-    { name: 'Concentración', description: 'Mejora la magia.', type: 'Neutral', isStackable: false, duration: Infinity, durationType: 'Permanente', linkedEffects: [{ target: 'self', attribute: 'stats.mana.max', modification: 'porcentaje', value: 10, applyOn: 'continuo' }] },
-    { name: 'Parálisis', description: 'Reduce acciones.', type: 'Debuff', isStackable: false, duration: 2, durationType: 'Rondas', linkedEffects: [{ target: 'self', attribute: 'stats.actions.current', modification: 'fijo', value: -1, applyOn: 'continuo' }] },
-    { name: 'Regeneración', description: 'Recupera vida por ronda.', type: 'Buff', isStackable: true, duration: 4, durationType: 'Rondas', linkedEffects: [{ target: 'self', attribute: 'stats.health.current', modification: 'fijo', value: 5, applyOn: 'ciclo' }] },
-    { name: 'Maldición', description: 'Reduce inteligencia.', type: 'Debuff', isStackable: false, duration: 3, durationType: 'Rondas', linkedEffects: [{ target: 'self', attribute: 'attributes.INT', modification: 'fijo', value: -2, applyOn: 'continuo' }] },
-    { name: 'Escudo', description: 'Aumenta armadura.', type: 'Buff', isStackable: false, duration: 3, durationType: 'Rondas', linkedEffects: [{ target: 'self', attribute: 'stats.armor.current', modification: 'fijo', value: 5, applyOn: 'continuo' }] },
-    { name: 'Furia', description: 'Aumenta daño pero reduce defensa.', type: 'Buff', isStackable: false, duration: 3, durationType: 'Rondas', linkedEffects: [{ target: 'self', attribute: 'attributes.FUE', modification: 'fijo', value: 4, applyOn: 'continuo' }, { target: 'self', attribute: 'stats.armor.current', modification: 'fijo', value: -3, applyOn: 'continuo' }] },
-    { name: 'Invisibilidad', description: 'Evita detección.', type: 'Neutral', isStackable: false, duration: 2, durationType: 'Rondas', linkedEffects: [{ target: 'self', attribute: 'attributes.AGI', modification: 'porcentaje', value: 20, applyOn: 'continuo' }] },
-    { name: 'Debilidad', description: 'Reduce fuerza.', type: 'Debuff', isStackable: true, duration: 4, durationType: 'Rondas', linkedEffects: [{ target: 'self', attribute: 'attributes.FUE', modification: 'fijo', value: -3, applyOn: 'continuo' }] },
-    { name: 'Velocidad', description: 'Aumenta movimiento.', type: 'Buff', isStackable: false, duration: 3, durationType: 'Rondas', linkedEffects: [{ target: 'self', attribute: 'stats.movement.current', modification: 'fijo', value: 10, applyOn: 'continuo' }] },
-    { name: 'Confusión', description: 'Reduce precisión.', type: 'Debuff', isStackable: false, duration: 2, durationType: 'Rondas', linkedEffects: [{ target: 'self', attribute: 'attributes.AGI', modification: 'fijo', value: -2, applyOn: 'continuo' }] },
-    { name: 'Protección', description: 'Reduce daño recibido.', type: 'Buff', isStackable: true, duration: 5, durationType: 'Rondas', linkedEffects: [{ target: 'self', attribute: 'stats.armor.current', modification: 'porcentaje', value: 15, applyOn: 'continuo' }] },
-    { name: 'Sangrado', description: 'Daño continuo.', type: 'Debuff', isStackable: true, duration: 3, durationType: 'Rondas', linkedEffects: [{ target: 'self', attribute: 'stats.health.current', modification: 'fijo', value: -3, applyOn: 'ciclo' }] },
-    { name: 'Inspiración', description: 'Aumenta sabiduría.', type: 'Buff', isStackable: false, duration: 4, durationType: 'Rondas', linkedEffects: [{ target: 'self', attribute: 'stats.wisdom.current', modification: 'fijo', value: 3, applyOn: 'continuo' }] }
-];
-
 function renderStatusEffects() {
     const container = document.getElementById('status-effects-list');
     container.innerHTML = '';
@@ -2579,6 +3160,340 @@ function renderStatusEffects() {
         `;
         container.appendChild(card);
     });
+}
+
+function editAttribute(key) {
+    const attribute = character.attributes[key];
+    const modal = document.getElementById('modal');
+    const modalContent = document.getElementById('modal-content');
+    
+    modalContent.innerHTML = `
+        <h3 class="text-2xl font-bold mb-4">Editar ${attribute.name}</h3>
+        <div class="space-y-4">
+            <div>
+                <label class="block text-sm font-medium mb-2">Valor Base</label>
+                <input type="number" id="edit-attr-value" class="input-field text-center text-2xl font-bold h-16" value="${attribute.value}" min="1" max="20">
+            </div>
+            <div>
+                <label class="block text-sm font-medium mb-2">Mejoras (Upgrades)</label>
+                <input type="number" id="edit-attr-upgrades" class="input-field text-center text-xl" value="${attribute.upgrades}" min="0">
+            </div>
+            <div class="bg-blue-50 dark:bg-blue-900/30 p-4 rounded-lg">
+                <p class="text-sm text-gray-600 dark:text-gray-400 mb-2">Modificador:</p>
+                <p id="edit-attr-mod-preview" class="text-3xl font-bold text-blue-600">+0</p>
+            </div>
+            <div class="flex gap-3">
+                <button class="btn btn-primary flex-1" onclick="saveAttributeEdit('${key}')">Guardar</button>
+                <button class="btn btn-secondary flex-1" onclick="closeModal()">Cancelar</button>
+            </div>
+        </div>
+    `;
+    
+    // Vista previa del modificador
+    document.getElementById('edit-attr-value').addEventListener('input', (e) => {
+        const mod = getModifier(parseInt(e.target.value) || 10);
+        document.getElementById('edit-attr-mod-preview').textContent = `${mod >= 0 ? '+' : ''}${mod}`;
+    });
+    
+    modal.classList.add('active');
+}
+
+function saveAttributeEdit(key) {
+    const newValue = parseInt(document.getElementById('edit-attr-value').value) || 10;
+    const newUpgrades = parseInt(document.getElementById('edit-attr-upgrades').value) || 0;
+    
+    character.attributes[key].value = newValue;
+    character.attributes[key].upgrades = newUpgrades;
+    
+    saveAndRefresh();
+    closeModal();
+}
+
+function openCombatMode() {
+    const modal = document.getElementById('modal-secondary');
+    const modalContent = document.getElementById('modal-secondary-content');
+    
+    // Generar HTML del modo combate - Layout ancho de 3 columnas
+    let combatHTML = `
+        <div class="combat-header">
+            <h2>⚔️ MODO DE COMBATE</h2>
+            <button class="btn btn-secondary w-14 h-14 flex items-center justify-center text-2xl" onclick="closeModalSecondary()">✕</button>
+        </div>
+        
+        <div class="combat-grid-compact">
+            <!-- COLUMNA IZQUIERDA: MASCOTAS -->
+            <div class="combat-col-left space-y-4">
+                <div class="combat-section h-full">
+                    <div class="combat-section-title">🐾 Mascotas</div>
+                    <div class="space-y-2 max-h-96 overflow-y-auto">
+    `;
+    
+    if (character.inventory.pets.length > 0) {
+        character.inventory.pets.forEach((pet, idx) => {
+            combatHTML += `
+                <div class="p-3 rounded-lg bg-orange-50 dark:bg-orange-900/20 border-l-4 border-orange-500">
+                    <p class="font-bold text-orange-700 dark:text-orange-400 text-sm">${pet.name}</p>
+                    <p class="text-xs text-gray-600 dark:text-gray-400 mb-2 line-clamp-2">${pet.description || ''}</p>
+                    <div class="flex gap-1">
+                        <button class="item-action-btn btn btn-primary flex-1" onclick="showNotification('Mascota', '${pet.name} está listo para el combate!')">Usar</button>
+                        <button class="item-action-btn btn btn-secondary flex-1" onclick="showNotification('Info', '${pet.name} - ${pet.description || 'Sin descripción'}')">Info</button>
+                    </div>
+                </div>
+            `;
+        });
+    } else {
+        combatHTML += '<p class="text-xs text-gray-500 italic text-center py-4">Sin mascotas</p>';
+    }
+    
+    combatHTML += `
+                    </div>
+                </div>
+            </div>
+            
+            <!-- COLUMNA CENTRAL: ESTADÍSTICAS Y HABILIDADES -->
+            <div class="combat-col-center space-y-4">
+                <!-- ESTADÍSTICAS VITALES -->
+                <div class="combat-section">
+                    <div class="combat-section-title">⚡ Vitales</div>
+                    <div class="space-y-2">
+                        <div class="combat-stat-item vital-health cursor-pointer hover:shadow-lg transition-all" onclick="editVitalCombat('health')" title="Click para editar">
+                            <span class="combat-stat-label">Vida</span>
+                            <span class="combat-stat-value">${character.stats.health.current}/${character.stats.health.max}</span>
+                        </div>
+                        <div class="combat-stat-item vital-mana cursor-pointer hover:shadow-lg transition-all" onclick="editVitalCombat('mana')" title="Click para editar">
+                            <span class="combat-stat-label">Místyculas</span>
+                            <span class="combat-stat-value">${character.stats.mana.current}/${character.stats.mana.max}</span>
+                        </div>
+                        <div class="combat-stat-item vital-armor cursor-pointer hover:shadow-lg transition-all" onclick="editVitalCombat('armor')" title="Click para editar">
+                            <span class="combat-stat-label">Armadura</span>
+                            <span class="combat-stat-value">${character.stats.armor.current}</span>
+                        </div>
+                        <div class="combat-stat-item vital-actions cursor-pointer hover:shadow-lg transition-all" onclick="editVitalCombat('actions')" title="Click para editar">
+                            <span class="combat-stat-label">Acciones</span>
+                            <span class="combat-stat-value">${character.combat.currentActions}</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- ATRIBUTOS -->
+                <div class="combat-section">
+                    <div class="combat-section-title">💪 Atributos</div>
+                    <div class="grid grid-cols-2 gap-2">
+    `;
+    
+    for (const key in character.attributes) {
+        const attr = character.attributes[key];
+        const mod = getModifier(attr.value);
+        combatHTML += `
+            <div class="p-3 rounded-lg bg-gray-50 dark:bg-gray-800 border-l-4 border-blue-500 text-center cursor-pointer hover:shadow-lg transition-all" onclick="rollAttributeCheckCombat('${key}')">
+                <p class="text-xs font-bold text-gray-600 dark:text-gray-400">${attr.name}</p>
+                <p class="text-2xl font-bold text-blue-600">${attr.value}</p>
+                <p class="text-xs text-blue-500 font-bold">${mod >= 0 ? '+' : ''}${mod}</p>
+                <p class="text-xs text-gray-500 mt-1">🎲 Click para tirada</p>
+            </div>
+        `;
+    }
+    
+    combatHTML += `
+                    </div>
+                </div>
+                
+                <!-- ACCIONES DE COMBATE -->
+                <div class="combat-section">
+                    <div class="combat-section-title">⚔️ Acciones</div>
+                    <div class="space-y-2">
+                        <button class="w-full p-2 rounded-lg bg-blue-500 hover:bg-blue-600 text-white text-sm font-bold transition-all" onclick="useCombatAction('Menor', 1)">A. Menor (1)</button>
+                        <button class="w-full p-2 rounded-lg bg-purple-500 hover:bg-purple-600 text-white text-sm font-bold transition-all" onclick="useCombatAction('Objeto', 1)">A. Objeto (1)</button>
+                        <button class="w-full p-2 rounded-lg bg-red-500 hover:bg-red-600 text-white text-sm font-bold transition-all" onclick="useCombatAction('Compleja', 2)">A. Compleja (2)</button>
+                        <button class="w-full p-2 rounded-lg bg-yellow-600 hover:bg-yellow-700 text-white text-sm font-bold transition-all" onclick="useCombatAction('Reacción', 3)">Reacción (3)</button>
+                        <button class="w-full p-2 rounded-lg bg-green-600 hover:bg-green-700 text-white text-sm font-bold transition-all" onclick="useCombatAction('Bonus', 1)">A. Bonus (+1)</button>
+                        <button class="w-full p-2 rounded-lg bg-orange-600 hover:bg-orange-700 text-white text-sm font-bold transition-all" onclick="useCombatAction('Legendaria', 20)">Acción Legendaria (20)</button>
+                        <button class="w-full p-2 rounded-lg bg-gray-600 hover:bg-gray-700 text-white text-sm font-bold transition-all" onclick="endTurn()">Finalizar Turno</button>
+                    </div>
+                </div>
+                
+                <!-- HABILIDADES -->
+                <div class="combat-section">
+                    <div class="combat-section-title">🎯 Habilidades</div>
+                    <div class="space-y-2 max-h-40 overflow-y-auto">
+    `;
+    
+    if (character.inventory.skills.length > 0) {
+        character.inventory.skills.forEach((skill, index) => {
+            combatHTML += `
+                <div class="p-2 rounded-lg bg-green-50 dark:bg-green-900/20 border-l-4 border-green-500">
+                    <div class="flex justify-between items-start gap-2">
+                        <div class="flex-1 min-w-0">
+                            <p class="font-bold text-green-700 dark:text-green-400 text-sm">${skill.name}</p>
+                            <p class="text-xs text-gray-600 dark:text-gray-400 line-clamp-1">${skill.description || ''}</p>
+                            <p class="text-xs text-green-600 dark:text-green-300 mt-1">💚 PA: ${skill.costPA} | 💙 MP: ${skill.costMP}</p>
+                        </div>
+                        <button class="item-action-btn btn btn-primary whitespace-nowrap text-xs" onclick="useAbility('skills', ${index})">Usar</button>
+                    </div>
+                </div>
+            `;
+        });
+    } else {
+        combatHTML += '<p class="text-xs text-gray-500 italic">Sin habilidades</p>';
+    }
+    
+    combatHTML += `
+                    </div>
+                </div>
+            </div>
+            
+            <!-- COLUMNA DERECHA: TÉCNICAS Y EQUIPO -->
+            <div class="combat-col-right space-y-4">
+                <!-- TÉCNICAS/HECHIZOS -->
+                <div class="combat-section">
+                    <div class="combat-section-title">✨ Técnicas/Hechizos</div>
+                    <div class="space-y-2 max-h-40 overflow-y-auto">
+    `;
+    
+    if (character.inventory.techniques.length > 0) {
+        character.inventory.techniques.forEach((tech, index) => {
+            combatHTML += `
+                <div class="p-2 rounded-lg bg-purple-50 dark:bg-purple-900/20 border-l-4 border-purple-500">
+                    <div class="flex justify-between items-start gap-2">
+                        <div class="flex-1 min-w-0">
+                            <p class="font-bold text-purple-700 dark:text-purple-400 text-sm">${tech.name}</p>
+                            <p class="text-xs text-gray-600 dark:text-gray-400 line-clamp-1">${tech.description || ''}</p>
+                            <p class="text-xs text-purple-600 dark:text-purple-300 mt-1">💚 PA: ${tech.costPA} | 💙 MP: ${tech.costMP}</p>
+                        </div>
+                        <button class="item-action-btn btn btn-primary whitespace-nowrap text-xs" onclick="useAbility('techniques', ${index})">Usar</button>
+                    </div>
+                </div>
+            `;
+        });
+    } else {
+        combatHTML += '<p class="text-xs text-gray-500 italic">Sin técnicas</p>';
+    }
+    
+    combatHTML += `
+                    </div>
+                </div>
+                
+                <!-- EQUIPAMIENTO -->
+                <div class="combat-section">
+                    <div class="combat-section-title">🛡️ Equipo</div>
+                    <div class="space-y-1.5 max-h-40 overflow-y-auto">
+    `;
+    
+    character.equipment.forEach((slot, idx) => {
+        if (slot.item) {
+            combatHTML += `
+                <div class="p-2 rounded-lg bg-yellow-50 dark:bg-yellow-900/20 border-l-4 border-yellow-500">
+                    <p class="font-semibold text-yellow-700 dark:text-yellow-400 text-xs">${slot.slotName}</p>
+                    <p class="text-xs text-gray-600 dark:text-gray-400 mb-1">${slot.item.name}</p>
+                    <div class="flex gap-1">
+                        <button class="item-action-btn btn btn-secondary flex-1 text-xs" onclick="useEquippedItem(${idx})">Usar</button>
+                        <button class="item-action-btn btn btn-danger flex-1 text-xs" onclick="unequipItem(${idx})">Desequipar</button>
+                    </div>
+                </div>
+            `;
+        } else {
+            combatHTML += `
+                <div class="p-2 rounded-lg bg-gray-50 dark:bg-gray-800 border-l-4 border-gray-300 opacity-50">
+                    <p class="font-semibold text-gray-400 text-xs">${slot.slotName}</p>
+                    <p class="text-xs text-gray-500">Vacío</p>
+                </div>
+            `;
+        }
+    });
+    
+    combatHTML += `
+                    </div>
+                </div>
+                
+                <!-- OBJETOS -->
+                <div class="combat-section">
+                    <div class="combat-section-title">🎁 Objetos</div>
+                    <div class="space-y-1.5 max-h-40 overflow-y-auto">
+    `;
+    
+    if (character.inventory.items.length > 0) {
+        character.inventory.items.forEach((item, index) => {
+            combatHTML += `
+                <div class="p-2 rounded-lg bg-cyan-50 dark:bg-cyan-900/20 border-l-4 border-cyan-500">
+                    <div class="flex items-start gap-2">
+                        <div class="flex-1 min-w-0">
+                            <p class="font-bold text-cyan-700 dark:text-cyan-400 text-xs">${item.name}</p>
+                            <p class="text-xs text-gray-600">x${item.quantity || 1}</p>
+                        </div>
+                        <div class="flex gap-1 flex-shrink-0">
+                            <button class="item-action-btn btn btn-primary text-xs whitespace-nowrap" onclick="equipItemFromInventory(${index})">Equipar</button>
+                            <button class="item-action-btn btn btn-secondary text-xs whitespace-nowrap" onclick="useItemEffect(${index})">Usar</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        });
+    } else {
+        combatHTML += '<p class="text-xs text-gray-500 italic">Sin objetos</p>';
+    }
+    
+    combatHTML += `
+                    </div>
+                </div>
+                
+                <!-- ESTADOS ACTIVOS -->
+                <div class="combat-section">
+                    <div class="flex justify-between items-center mb-3">
+                        <div class="combat-section-title">🔴 Estados</div>
+                        <button class="btn btn-primary text-xs px-2 py-1" onclick="openStatusEffectForm()">+ Añadir</button>
+                    </div>
+                    <div class="space-y-1.5 max-h-40 overflow-y-auto">
+    `;
+    
+    if (character.statusEffects.length > 0) {
+        character.statusEffects.forEach(status => {
+            const itemClass = status.type === 'Buff' ? 'bg-green-100 dark:bg-green-900/30 border-green-500' : 
+                            status.type === 'Debuff' ? 'bg-red-100 dark:bg-red-900/30 border-red-500' : 
+                            'bg-gray-100 dark:bg-gray-800 border-gray-500';
+            combatHTML += `
+                <div class="p-2 rounded-lg ${itemClass} border-l-4 text-xs">
+                    <p class="font-semibold">${status.name}</p>
+                    <p class="text-xs opacity-75">${status.duration}${status.durationType.charAt(0)}</p>
+                </div>
+            `;
+        });
+    } else {
+        combatHTML += '<p class="text-xs text-gray-500 italic">Sin estados</p>';
+    }
+    
+    combatHTML += `
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    modalContent.innerHTML = combatHTML;
+    modal.classList.add('active');
+}
+
+function unequipItem(slotIndex) {
+    if (character.equipment[slotIndex].item) {
+        // Agregar el item al inventario
+        const item = character.equipment[slotIndex].item;
+        const existingItem = character.inventory.items.find(i => i.name === item.name);
+        
+        if (existingItem) {
+            existingItem.quantity = (existingItem.quantity || 1) + 1;
+        } else {
+            character.inventory.items.push({ ...item, quantity: 1 });
+        }
+        
+        // Desequipar
+        character.equipment[slotIndex].item = null;
+        saveAndRefresh();
+        refreshCombatEquipment();
+        showNotification('Desequipado', `${item.name} ha sido movido al inventario`);
+    }
+}
+
+function closeModalSecondary() {
+    document.getElementById('modal-secondary').classList.remove('active');
 }
 
 function openStatusEffectForm(status = null, index = -1) {
@@ -2713,11 +3628,11 @@ function openLinkedEffectForm() {
             <div><label class="block text-sm font-medium">Cuándo se aplica</label><select id="effect-applyOn" class="input-field"><option value="continuo">Continuo</option><option value="ciclo">Por Ronda</option><option value="accion">Por Gasto de Acción</option></select></div>
         </div>
         <div class="flex justify-end mt-6 pt-4 border-t dark:border-gray-600">
-            <button class="btn btn-secondary" onclick="closeModal(2)">Cancelar</button>
+            <button class="btn btn-secondary" onclick="closeModal(3)">Cancelar</button>
             <button class="btn btn-primary" onclick="addLinkedEffect()">Añadir</button>
         </div>
     `;
-    openModal(content, 2);
+    openModal(content, 3);
 }
 
 function addLinkedEffect() {
@@ -2898,7 +3813,7 @@ function initializeCharacter(isImport = false) {
 }
 
 function drag(ev) {
-    ev.dataTransfer.setData("text", ev.target.id);
+    // Función de drag removida - ya no se usa
 }
 
 window.onload = () => {
