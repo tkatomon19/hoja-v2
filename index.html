@@ -69,7 +69,7 @@
             box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.15), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
             transform: translateY(-2px);
         }
-        .card p-7 {
+        .card.p-7 {
             padding: 1.75rem;
         }
         .card-title {
@@ -460,9 +460,10 @@
         /* Responsivo mejorado */
         @media (max-width: 768px) {
             body { padding: 0.5rem; }
-            .card p-7 { padding: 1.25rem; }
+            .card.p-7 { padding: 1.25rem; }
         }
     </style>
+<base target="_blank">
 </head>
 <body class="p-4 md:p-8">
 
@@ -592,7 +593,7 @@
                             <button class="btn btn-primary" onclick="useAction(3, 'Reacción')">Reacción (3)</button>
                             <button class="btn btn-secondary" onclick="useAction(-1, 'Bonus')">A. Bonus (+1)</button>
                         </div>
-                        <button class="btn-primary w-full mt-2" onclick="useAction(20, 'Legendaria')">Acción Legendaria (20)</button>
+                        <button class="btn btn-primary w-full mt-2" onclick="useAction(20, 'Legendaria')">Acción Legendaria (20)</button>
                         <button id="end-turn-btn" class="btn btn-secondary w-full">Finalizar Turno</button>
                     </div>
                 </div>
@@ -1900,7 +1901,7 @@ function openSkillForm(skill = null, index = -1) {
 }
 
 function saveSkill(index) {
-    const isEditing = index !== -1;
+    const isEditing = index !== undefined && index !== -1;
     const newSkill = {
         name: document.getElementById('skill-name').value,
         description: document.getElementById('skill-description').value,
@@ -1997,7 +1998,7 @@ function openTechniqueForm(tech = null, index = -1) {
 }
 
 function saveTechnique(index) {
-    const isEditing = index !== -1;
+    const isEditing = index !== undefined && index !== -1;
     const newTech = {
         name: document.getElementById('tech-name').value,
         description: document.getElementById('tech-description').value,
@@ -2133,7 +2134,7 @@ function addEffectRow() {
 }
 
 function saveItem(index) {
-    const isEditing = index !== -1;
+    const isEditing = index !== undefined && index !== -1;
     const effects = [];
     document.querySelectorAll('#structured-effects-container > div').forEach(row => {
         const type = row.querySelector('.effect-type-select').value;
@@ -2258,7 +2259,7 @@ function openPetForm(pet = null, index = -1) {
 }
 
 function savePet(index) {
-    const isEditing = index !== -1;
+    const isEditing = index !== undefined && index !== -1;
     const petData = isEditing ? character.inventory.pets[index] : {};
     petData.name = document.getElementById('pet-name').value || 'Mascota sin nombre';
     petData.type = document.getElementById('pet-type').value || 'Desconocido';
@@ -3646,7 +3647,7 @@ function addLinkedEffect() {
     };
     tempLinkedEffects.push(newEffect);
     renderLinkedEffectsList();
-    closeModal(2);
+    closeModal(3);
 }
 
 function removeLinkedEffect(index) {
@@ -3655,7 +3656,7 @@ function removeLinkedEffect(index) {
 }
 
 function saveStatusEffect(index) {
-    const isEditing = index !== -1;
+    const isEditing = index !== undefined && index !== -1;
     const name = document.getElementById('status-name').value;
     if (!name) {
         showNotification("Error", "El estado debe tener un nombre.");
