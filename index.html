@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hoja de Personaje - Isekai Delivery Service v5.1</title>
+    <title>Hoja de Personaje - Isekai Delivery Service v6 Premium</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -102,6 +102,62 @@
             padding: 0.75rem;
         }
         
+        /* Estilos para sliders */
+        input[type="range"].slider {
+            -webkit-appearance: none;
+            appearance: none;
+            background: transparent;
+            cursor: pointer;
+        }
+        input[type="range"].slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #a855f7, #d946ef);
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(168, 85, 247, 0.5);
+            transition: all 0.2s ease;
+        }
+        input[type="range"].slider::-webkit-slider-thumb:hover {
+            transform: scale(1.2);
+            box-shadow: 0 4px 12px rgba(168, 85, 247, 0.7);
+        }
+        input[type="range"].slider::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #a855f7, #d946ef);
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 2px 8px rgba(168, 85, 247, 0.5);
+            transition: all 0.2s ease;
+        }
+        input[type="range"].slider::-moz-range-thumb:hover {
+            transform: scale(1.2);
+            box-shadow: 0 4px 12px rgba(168, 85, 247, 0.7);
+        }
+        input[type="range"].slider::-webkit-slider-runnable-track {
+            height: 8px;
+            border-radius: 4px;
+            background: linear-gradient(90deg, #d8b4fe, #e879f9);
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+        input[type="range"].slider::-moz-range-track {
+            height: 8px;
+            border-radius: 4px;
+            background: linear-gradient(90deg, #d8b4fe, #e879f9);
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+            border: none;
+        }
+        .theme-dark input[type="range"].slider::-webkit-slider-runnable-track {
+            background: linear-gradient(90deg, #7c3aed, #6d28d9);
+        }
+        .theme-dark input[type="range"].slider::-moz-range-track {
+            background: linear-gradient(90deg, #7c3aed, #6d28d9);
+        }
+        
         /* Estilos para botones de atributos */
         .stat-block .btn-primary {
             transition: all 0.3s ease;
@@ -151,33 +207,37 @@
         .modal-overlay {
             position: fixed; top: 0; left: 0; right: 0; bottom: 0;
             background-color: rgba(0, 0, 0, 0.7); display: flex;
-            align-items: center; justify-content: center; z-index: 50;
+            align-items: center; justify-content: center; z-index: 9998;
             opacity: 0; visibility: hidden; transition: opacity 0.3s, visibility 0.3s;
             backdrop-filter: blur(4px);
         }
         .modal-overlay.active { opacity: 1; visibility: visible; }
         
-        #modal-secondary {
-            z-index: 70 !important;
-        }
-        
-        #notification-modal {
-            z-index: 100 !important;
-        }
-        
         #modal {
-            z-index: 110 !important;
+            z-index: 9998 !important;
+        }
+        
+        #modal-secondary {
+            z-index: 9999 !important;
         }
         
         #modal-tertiary {
-            z-index: 120 !important;
+            z-index: 10000 !important;
+        }
+        
+        #notification-modal {
+            z-index: 10001 !important;
         }
         
         .modal-content {
             background: var(--card-bg); color: var(--text-color); padding: 2rem; border-radius: 1rem;
-            width: 90%; max-width: 600px; transform: scale(0.95);
+            width: 90%; max-width: 750px; transform: scale(0.95);
             transition: transform 0.3s, background-color 0.3s; display: flex; flex-direction: column;
             box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2), 0 10px 10px -5px rgba(0, 0, 0, 0.1);
+            position: relative;
+            z-index: 1;
+            max-height: 90vh;
+            overflow-y: auto;
         }
         
         #modal-secondary-content.modal-content {
@@ -216,6 +276,22 @@
         .item-card[data-rarity="Mítico / Único"] .bg-gray-200, .item-card[data-rarity="Mítico / Único"] .bg-gray-100 { 
             background-color: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.2); 
         }
+            /* Pet notes visual differentiation */
+            textarea#pet-notes { background-color: #f0f9ff; border-left: 4px solid #7dd3fc; }
+
+            /* Favores (Debts) UI */
+            #favores-container { position: fixed; top: 1rem; right: 1rem; background: rgba(255,255,255,0.95); padding: 1rem; border-radius: 0.5rem; box-shadow: 0 6px 18px rgba(0,0,0,0.08); z-index: 60; max-width: 320px; border: 1px solid rgba(203,213,225,0.5); }
+            #favores-container > div:first-child { font-weight: 600; margin-bottom: 0.5rem; }
+            #favores-container .count { font-weight: 700; font-size: 1.125rem; color: #0ea5e9; }
+            #favores-container .max { font-weight: 600; color: #64748b; }
+            #favores-notes { background-color: #f0f9ff; border-left: 4px solid #7dd3fc; border: 1px solid #e0f2fe; }
+
+            /* Map container */
+            #map-container { border: 1px dashed rgba(99,102,241,0.25); padding: 1rem; border-radius: 0.5rem; background: linear-gradient(180deg, rgba(249,250,251,0.6), rgba(255,255,255,0.25)); margin-top: 1rem; }
+            #map-grid { display: grid; grid-template-columns: repeat(10, 40px); gap: 2px; padding: 0.75rem; background: #fafbfc; border-radius: 0.375rem; }
+            .map-cell { width: 40px; height: 40px; background: #e0e7ff; display:flex; align-items:center; justify-content:center; font-size:10px; cursor:pointer; border: 1px solid #c7d2fe; transition: all 0.2s ease; }
+            .map-cell:hover { background: #ddd6fe; box-shadow: inset 0 0 4px rgba(99,102,241,0.2); }
+            .map-cell.avatar { background: #4f46e5; color:white; font-weight:700; border-color: #3730a3; box-shadow: 0 0 8px rgba(79,70,229,0.4); }
         
         @keyframes genesis-anim { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
         .item-card[data-rarity="Genesis"] {
@@ -471,12 +547,10 @@
         <!-- Header Section -->
         <div class="mb-8 pb-6 border-b-2 border-gray-300 dark:border-gray-600 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div class="flex-1">
-                <h1 class="text-4xl md:text-5xl font-bold mb-2 text-gray-900 dark:text-white tracking-tight">Hoja de Personaje v5.1</h1>
+                <h1 class="text-4xl md:text-5xl font-bold mb-2 text-black-900 dark:text-black tracking-tight">Hoja de Personaje v6 Premium</h1>
                 <p class="text-lg text-gray-600 dark:text-gray-400">Los cambios se guardan automáticamente en tu navegador</p>
             </div>
-            <button id="combat-mode-btn" class="btn btn-primary h-14 px-6 whitespace-nowrap text-lg font-bold shadow-lg hover:shadow-xl" onclick="openCombatMode()">
-                ⚔️ Modo Combate
-            </button>
+            <!-- Modo Combate eliminado: acciones integradas en la vista principal -->
         </div>
 
         <!-- Contenedor Principal con Grid -->
@@ -595,13 +669,14 @@
                         </div>
                         <button class="btn btn-primary w-full mt-2" onclick="useAction(20, 'Legendaria')">Acción Legendaria (20)</button>
                         <button id="end-turn-btn" class="btn btn-secondary w-full">Finalizar Turno</button>
+                        <button class="btn btn-primary w-full" onclick="openMapModal()">Ver Mapa</button>
                     </div>
                 </div>
 
                 <!-- Estados -->
                 <div class="card p-7">
                     <h2 class="card-title">Estados</h2>
-                    <button id="add-status-effect-btn" class="btn btn-primary w-full mb-4">Añadir Estado</button>
+                    <button id="add-status-effect-btn" class="btn btn-primary w-full mb-4">+ Añadir Estado</button>
                     <div id="status-effects-list" class="space-y-3"></div>
                 </div>
             </div>
@@ -700,8 +775,8 @@ const SKILL_POINTS_PER_LEVEL = {
 };
 const EVOLUTION_LEVELS = [5, 10, 15, 20];
 const RARITIES = ['Intrínseco', 'Común', 'Raro', 'Épico', 'Legendario', 'Mítico / Único', 'Genesis'];
-const LOCAL_STORAGE_KEY = 'characterSheetData_v5.0'; // Updated version key
-const THEME_STORAGE_KEY = 'characterSheetTheme_v5.0'; // Updated version key
+const LOCAL_STORAGE_KEY = 'characterSheetData_v6.11'; // Updated version key
+const THEME_STORAGE_KEY = 'characterSheetTheme_v6.11'; // Updated version key
 
 const ELEMENTS_CONFIG = {
     fuego: { name: 'Fuego', emoji: '🔥', color: 'bg-red-100 dark:bg-red-900/50' },
@@ -712,7 +787,99 @@ const ELEMENTS_CONFIG = {
     luz: { name: 'Luz', emoji: '☀️', color: 'bg-yellow-50 dark:bg-yellow-800/50' },
     oscuridad: { name: 'Oscuridad', emoji: '🌙', color: 'bg-slate-900 dark:bg-slate-600' }
 };
-
+function createNewInventoryItem(type) {
+    const uniqueId = `${type}_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    
+    const baseItem = {
+        id: uniqueId,
+        name: '',
+        description: '',
+        type: '',
+        rarity: 'Común',
+        level: 0,
+        upgrades: 0,
+        isDamageFormulaActive: false,
+        costs: JSON.stringify([]),
+        formulas: JSON.stringify([]),
+        costPA: 0,
+        costMP: 0,
+        costHP: 0,
+        costMovement: 0,
+        costResources: '',
+        formula: '',
+        createdAt: new Date().toISOString(),
+        lastModified: new Date().toISOString()
+    };
+    
+    switch(type) {
+        case 'skills':
+            return {
+                ...baseItem,
+                type: 'Activa'  // Valor predeterminado para habilidades
+            };
+        case 'techniques':
+            return {
+                ...baseItem,
+                type: 'Técnica'  // Valor predeterminado para técnicas
+            };
+        case 'items':
+            return {
+                ...baseItem,
+                type: 'otro',  // Valor predeterminado para objetos
+                equipped: false,
+                slot: '',
+                effects: [],
+                damageFormula: '',
+                equipmentBonus: JSON.stringify({})
+            };
+        case 'pets':
+            return {
+                ...baseItem,
+                health: { current: 10, max: 10 },
+                actions: 1,
+                element: 'ninguno'
+            };
+        default:
+            console.warn(`Tipo desconocido: ${type}. Retornando item base.`);
+            return baseItem;
+    }
+}
+function validateInventoryItem(item, type) {
+    const errors = [];
+    if (!item.name || item.name.trim() === '') {
+        errors.push('El nombre es obligatorio');
+    }
+    
+    if (item.name && item.name.length > 100) {
+        errors.push('El nombre no puede exceder 100 caracteres');
+    }
+    if (item.costs) {
+        try {
+            const costs = typeof item.costs === 'string' ? JSON.parse(item.costs) : item.costs;
+            if (!Array.isArray(costs)) {
+                errors.push('El formato de costos es inválido');
+            }
+        } catch(e) {
+            errors.push('Error al procesar los costos');
+        }
+    }
+    if (item.formulas) {
+        try {
+            const formulas = typeof item.formulas === 'string' ? JSON.parse(item.formulas) : item.formulas;
+            if (!Array.isArray(formulas)) {
+                errors.push('El formato de fórmulas es inválido');
+            }
+        } catch(e) {
+            errors.push('Error al procesar las fórmulas');
+        }
+    }
+    
+    return {
+        valid: errors.length === 0,
+        errors: errors
+    };
+}
+ 
 let character; // Se inicializará en window.onload
 let tempLinkedEffects = []; // Almacén temporal para el constructor de estados
 
@@ -805,7 +972,6 @@ function loadCharacterFromLocalStorage() {
     try {
         const parsedData = JSON.parse(data);
         const defaultChar = getDefaultCharacter();
-        // Migración robusta
         let migratedData = { ...defaultChar, ...parsedData };
         migratedData.identity = { ...defaultChar.identity, ...parsedData.identity };
         migratedData.stats = { ...defaultChar.stats, ...parsedData.stats };
@@ -829,14 +995,12 @@ function loadCharacterFromLocalStorage() {
             }
         }
 
-        // Asegurar que las nuevas propiedades existan
         if (!migratedData.fusionElements) migratedData.fusionElements = [];
         if (!migratedData.skillPoints) migratedData.skillPoints = 0;
         if (!migratedData.spiritRelations) migratedData.spiritRelations = defaultChar.spiritRelations;
         if (!migratedData.statusEffects) migratedData.statusEffects = [];
         if (!migratedData.resources) migratedData.resources = [];
         
-        // CORRECCIÓN: Asegurar que las habilidades/técnicas antiguas sin nivel se inicialicen en 0.
         ['skills', 'techniques'].forEach(type => {
             if (migratedData.inventory[type]) {
                 migratedData.inventory[type].forEach(item => {
@@ -845,6 +1009,23 @@ function loadCharacterFromLocalStorage() {
                 });
             }
         });
+
+        if (migratedData.inventory && migratedData.inventory.items) {
+            migratedData.inventory.items.forEach(item => {
+                if (item.linkedEffects && !item.effects) {
+                    item.effects = [];
+                }
+                if (!item.damageFormula && item.formula) {
+                    item.damageFormula = item.formula;
+                }
+                if (!item.effects) {
+                    item.effects = [];
+                }
+                if (!item.equipmentBonus) {
+                    item.equipmentBonus = JSON.stringify({});
+                }
+            });
+        }
 
         return migratedData;
     } catch (error) {
@@ -949,27 +1130,42 @@ function getModifier(attributeValue) {
 function calculateDerivedStats() {
     if (!character) return;
 
-    // Guardar valores actuales para no perderlos
     const tempHealth = character.stats.health.current;
     const tempMana = character.stats.mana.current;
 
-    // Crear copias temporales para calcular bonificaciones
     const tempAttributes = JSON.parse(JSON.stringify(character.attributes));
     const tempStats = JSON.parse(JSON.stringify(character.stats));
 
-    // 1. Aplicar bonificaciones de equipo a los atributos temporales
     character.equipment.forEach(slot => {
         if (slot.item) {
-            slot.item.effects.forEach(effect => {
-                const [type, key, value] = effect.split(':');
-                if (type === 'attr' && tempAttributes[key]) {
-                    tempAttributes[key].value += parseFloat(value);
+            let equipBonus = {};
+            if (slot.item.equipmentBonus) {
+                if (typeof slot.item.equipmentBonus === 'string') {
+                    try { equipBonus = JSON.parse(slot.item.equipmentBonus); } catch(e) { equipBonus = {}; }
+                } else {
+                    equipBonus = slot.item.equipmentBonus;
                 }
-            });
+            }
+            
+            for (const [key, value] of Object.entries(equipBonus)) {
+                if (tempAttributes[key]) {
+                    tempAttributes[key].value += value;
+                } else if (tempStats[key]) {
+                    tempStats[key].base += value;
+                }
+            }
+            
+            if (slot.item.effects && Array.isArray(slot.item.effects)) {
+                slot.item.effects.forEach(effect => {
+                    const [type, key, value] = effect.split(':');
+                    if (type === 'attr' && tempAttributes[key]) {
+                        tempAttributes[key].value += parseFloat(value);
+                    }
+                });
+            }
         }
     });
 
-    // 2. Aplicar bonificaciones de estados (continuos) a los atributos temporales
     character.statusEffects.forEach(status => {
         status.linkedEffects.forEach(effect => {
             if (effect.applyOn === 'continuo' && effect.target === 'self') {
@@ -985,7 +1181,6 @@ function calculateDerivedStats() {
         });
     });
 
-    // Calcular modificadores con atributos ya bonificados
     const mods = {
         FUE: getModifier(tempAttributes.FUE.value), AGI: getModifier(tempAttributes.AGI.value),
         MET: getModifier(tempAttributes.MET.value), INT: getModifier(tempAttributes.INT.value),
@@ -993,20 +1188,16 @@ function calculateDerivedStats() {
     };
     const level = character.stats.level.current;
 
-    // 3. Calcular estadísticas base derivadas
     let maxHealth = tempStats.health.base + (mods.MET * level);
-    // CORRECCIÓN: Usar el valor base del personaje en lugar de un número fijo.
     let armor = tempStats.armor.base + mods.AGI + mods.MET;
     let maxMana = tempStats.mana.base * Math.max(1, mods.INT) * Math.max(1, mods.APM);
     let actions = tempStats.actions.base + mods.AGI + level;
     let movement = tempStats.movement.base + (mods.AGI * 5);
-    // CORRECCIÓN: Usar el valor base del personaje en lugar de un número fijo.
     let magicSave = tempStats.magicSave.base + mods.APM + mods.MET;
     let load = tempStats.load.base + (mods.FUE * 2);
     let wisdom = level + mods.INT;
     let resistance = level + mods.MET;
     
-    // 4. Aplicar bonificaciones de equipo a las estadísticas
     character.equipment.forEach(slot => {
         if (slot.item) {
             slot.item.effects.forEach(effect => {
@@ -1026,7 +1217,6 @@ function calculateDerivedStats() {
         }
     });
 
-    // 5. Aplicar bonificaciones de estados (continuos) a las estadísticas
     character.statusEffects.forEach(status => {
         status.linkedEffects.forEach(effect => {
             if (effect.applyOn === 'continuo' && effect.target === 'self') {
@@ -1037,7 +1227,6 @@ function calculateDerivedStats() {
                     else if (keys[1] === 'mana') statToModify = 'maxMana';
                     else statToModify = keys[1];
 
-                    // Objeto para mapear nombres de variables locales
                     const statMap = { maxHealth, armor, maxMana, actions, movement, magicSave, load, wisdom, resistance };
 
                     if (statMap.hasOwnProperty(statToModify)) {
@@ -1046,7 +1235,6 @@ function calculateDerivedStats() {
                         } else { // Porcentaje
                             statMap[statToModify] *= (1 + effect.value / 100);
                         }
-                        // Reasignar el valor modificado a la variable local
                         if (statToModify === 'maxHealth') maxHealth = statMap.maxHealth;
                         if (statToModify === 'maxMana') maxMana = statMap.maxMana;
                         if (statToModify === 'armor') armor = statMap.armor;
@@ -1062,7 +1250,6 @@ function calculateDerivedStats() {
         });
     });
 
-    // 6. Asignar los valores finales al objeto `character`
     character.stats.health.max = Math.round(maxHealth);
     character.stats.mana.max = Math.round(maxMana);
     character.stats.armor.current = Math.round(armor);
@@ -1073,11 +1260,9 @@ function calculateDerivedStats() {
     character.stats.wisdom.current = Math.round(wisdom);
     character.stats.resistance.current = Math.round(resistance);
     
-    // Restaurar vida/maná actuales, ajustando al nuevo máximo
     character.stats.health.current = Math.min(tempHealth, character.stats.health.max);
     character.stats.mana.current = Math.min(tempMana, character.stats.mana.max);
     
-    // Restaurar PA, ajustando al nuevo máximo
     character.combat.currentActions = Math.min(character.combat.currentActions, character.stats.actions.current);
 }
 
@@ -1089,7 +1274,6 @@ function calculateDerivedStats() {
 function updateUI() {
     if (!character) return;
 
-    // Identity
     document.getElementById('char-name').value = character.identity.name;
     document.getElementById('char-race').value = character.identity.race;
     document.getElementById('char-notes').value = character.identity.notes;
@@ -1099,18 +1283,34 @@ function updateUI() {
     document.getElementById('char-spirits').value = character.identity.spirits;
     document.getElementById('char-size').value = character.identity.size;
 
-    // Attributes
     const attributesContainer = document.getElementById('attributes-container');
     attributesContainer.innerHTML = '';
     let baseAttributes = JSON.parse(JSON.stringify(character.attributes));
     let finalAttributes = JSON.parse(JSON.stringify(character.attributes));
 
-    // Aplicar bonos de equipo y estados para la visualización
     character.equipment.forEach(slot => {
-        if (slot.item) slot.item.effects.forEach(effect => {
-            const [type, effectKey, value] = effect.split(':');
-            if (type === 'attr' && finalAttributes[effectKey]) finalAttributes[effectKey].value += parseFloat(value);
-        });
+        if (slot.item) {
+            let equipBonus = {};
+            if (slot.item.equipmentBonus) {
+                if (typeof slot.item.equipmentBonus === 'string') {
+                    try { equipBonus = JSON.parse(slot.item.equipmentBonus); } catch(e) { equipBonus = {}; }
+                } else {
+                    equipBonus = slot.item.equipmentBonus;
+                }
+            }
+            for (const [key, value] of Object.entries(equipBonus)) {
+                if (finalAttributes[key]) {
+                    finalAttributes[key].value += value;
+                }
+            }
+            
+            if (slot.item.effects && Array.isArray(slot.item.effects)) {
+                slot.item.effects.forEach(effect => {
+                    const [type, effectKey, value] = effect.split(':');
+                    if (type === 'attr' && finalAttributes[effectKey]) finalAttributes[effectKey].value += parseFloat(value);
+                });
+            }
+        }
     });
     character.statusEffects.forEach(status => {
         status.linkedEffects.forEach(effect => {
@@ -1156,7 +1356,6 @@ function updateUI() {
         attributesContainer.appendChild(div);
     }
     
-    // XP, Level & Skill Points
     document.getElementById('skill-points-display').textContent = character.skillPoints;
     const xpNeeded = getXpForNextLevel();
     document.getElementById('level-display').textContent = character.stats.level.current;
@@ -1166,7 +1365,6 @@ function updateUI() {
     document.getElementById('xp-bar').style.width = `${Math.min(xpPercentage, 100)}%`;
 
 
-    // Stats
     const statsContainer = document.getElementById('stats-container');
     statsContainer.innerHTML = '';
     const statsToDisplay = {
@@ -1213,11 +1411,9 @@ function updateUI() {
         }
     }
 
-    // Combat
     document.getElementById('current-actions').textContent = character.combat.currentActions;
     document.getElementById('max-actions').textContent = character.stats.actions.current;
     
-    // Technique Slots
     const level = character.stats.level.current;
     let slots = 0;
     if (level >= 1 && level <= 4) slots = 3;
@@ -1262,7 +1458,6 @@ function renderElements() {
 }
 
 function addEventListeners() {
-    // Attributes
     for (const key in character.attributes) {
         const input = document.getElementById(`attr-${key}`);
         if(input) {
@@ -1273,7 +1468,6 @@ function addEventListeners() {
         }
     }
     
-    // Stats
     ['health', 'mana'].forEach(key => {
         const input = document.getElementById(`stat-${key}-current`);
         if(input) {
@@ -1287,13 +1481,11 @@ function addEventListeners() {
         }
     });
 
-    // Identity fields
     ['char-name', 'char-race', 'char-notes', 'char-personality', 'char-titles', 'char-spirits', 'char-size'].forEach(id => {
         const input = document.getElementById(id);
         if(input) input.onblur = saveCharacterToLocalStorage;
     });
 
-    // Spirit Relations listeners
     for (const key in character.spiritRelations) {
         const relationInput = document.getElementById(`relation-${key}`);
         if (relationInput) {
@@ -1306,6 +1498,23 @@ function addEventListeners() {
                 saveCharacterToLocalStorage();
             };
         }
+    }
+
+    const addSkillBtn = document.getElementById('add-skill-btn');
+    if (addSkillBtn) {
+        addSkillBtn.addEventListener('click', () => openInventoryForm('skills'));
+    }
+    const addTechBtn = document.getElementById('add-technique-btn');
+    if (addTechBtn) {
+        addTechBtn.addEventListener('click', () => openInventoryForm('techniques'));
+    }
+    const addItemBtn = document.getElementById('add-item-btn');
+    if (addItemBtn) {
+        addItemBtn.addEventListener('click', () => openInventoryForm('items'));
+    }
+    const addPetBtn = document.getElementById('add-pet-btn');
+    if (addPetBtn) {
+        addPetBtn.addEventListener('click', () => openPetForm());
     }
 }
 
@@ -1324,10 +1533,6 @@ function renderList(type, list, renderer) {
         container.appendChild(renderer(item, index));
     });
 }
-
-// ===================================================================================
-// LÓGICA DE MODALES
-// ===================================================================================
 
 const modal = document.getElementById('modal');
 const modalContent = document.getElementById('modal-content');
@@ -1389,24 +1594,51 @@ function showNotification(title, message) {
     document.getElementById('notification-modal').classList.add('active');
 }
 
-// Tirada de atributo en modo combate con dice roll
 function rollAttributeCheckCombat(key) {
-    const attr = character.attributes[key];
-    if (!attr) return;
+    const finalAttributes = JSON.parse(JSON.stringify(character.attributes));
     
+    character.equipment.forEach(slot => {
+        if (slot.item) {
+            let equipBonus = {};
+            if (slot.item.equipmentBonus) {
+                if (typeof slot.item.equipmentBonus === 'string') {
+                    try { equipBonus = JSON.parse(slot.item.equipmentBonus); } catch(e) { equipBonus = {}; }
+                } else {
+                    equipBonus = slot.item.equipmentBonus;
+                }
+            }
+            for (const [bkey, value] of Object.entries(equipBonus)) {
+                if (finalAttributes[bkey]) {
+                    finalAttributes[bkey].value += value;
+                }
+            }
+        }
+    });
+    
+    character.statusEffects.forEach(status => {
+        status.linkedEffects.forEach(effect => {
+            if (effect.applyOn === 'continuo' && effect.target === 'self' && effect.attribute.startsWith('attributes.')) {
+                const attrKey = effect.attribute.split('.')[1];
+                if (finalAttributes[attrKey]) {
+                    if (effect.modification === 'fijo') finalAttributes[attrKey].value += effect.value || 0;
+                    else finalAttributes[attrKey].value *= (1 + (effect.value || 0) / 100);
+                }
+            }
+        });
+    });
+    
+    const mod = getModifier(finalAttributes[key].value);
     const d20 = Math.floor(Math.random() * 20) + 1;
-    const mod = getModifier(attr.value);
     const total = d20 + mod;
     
-    const message = `<strong>${attr.name}:</strong><br>
+    const message = `<strong>${finalAttributes[key].name}:</strong><br>
         🎲 D20: ${d20}<br>
         Modificador: ${mod >= 0 ? '+' : ''}${mod}<br>
         <strong>Total: ${total}</strong>`;
     
-    showNotification(`Tirada de ${attr.name}`, message);
+    showNotification(`Tirada de ${finalAttributes[key].name}`, message);
 }
 
-// Usar acción de combate con costo
 function useCombatAction(actionName, cost) {
     if (character.combat.currentActions < cost) {
         showNotification('Acción No Disponible', `No tienes suficientes acciones. Necesitas ${cost}, tienes ${character.combat.currentActions}`);
@@ -1420,39 +1652,32 @@ function useCombatAction(actionName, cost) {
     refreshCombatVitals();
 }
 
-// Actualizar solo los vitales en el modo combate sin reabrirlo
 function refreshCombatVitals() {
-    // Actualizar Vida
     const healthValue = document.querySelector('.vital-health .combat-stat-value');
     if (healthValue) {
         healthValue.textContent = `${character.stats.health.current}/${character.stats.health.max}`;
     }
     
-    // Actualizar Místyculas
     const manaValue = document.querySelector('.vital-mana .combat-stat-value');
     if (manaValue) {
         manaValue.textContent = `${character.stats.mana.current}/${character.stats.mana.max}`;
     }
     
-    // Actualizar Armadura
     const armorValue = document.querySelector('.vital-armor .combat-stat-value');
     if (armorValue) {
         armorValue.textContent = `${character.stats.armor.current}`;
     }
     
-    // Actualizar Acciones
     const actionsValue = document.querySelector('.vital-actions .combat-stat-value');
     if (actionsValue) {
         actionsValue.textContent = `${character.combat.currentActions}`;
     }
 }
 
-// Actualizar equipamiento en el modo combate
 function refreshCombatEquipment() {
     const equipmentContainer = document.querySelector('.combat-col-right');
     if (!equipmentContainer) return;
     
-    // Encontrar la sección de equipo
     const equipmentSections = equipmentContainer.querySelectorAll('.combat-section');
     const equipmentSection = Array.from(equipmentSections).find(section => 
         section.querySelector('.combat-section-title')?.textContent.includes('Equipo')
@@ -1460,7 +1685,6 @@ function refreshCombatEquipment() {
     
     if (!equipmentSection) return;
     
-    // Reconstruir el equipo
     let equipHTML = '<div class="space-y-1.5 max-h-40 overflow-y-auto">';
     
     character.equipment.forEach((slot, idx) => {
@@ -1487,14 +1711,12 @@ function refreshCombatEquipment() {
     
     equipHTML += '</div>';
     
-    // Reemplazar el contenido
     const equipContentDiv = equipmentSection.querySelector('.space-y-1\\.5');
     if (equipContentDiv) {
         equipContentDiv.outerHTML = equipHTML;
     }
 }
 
-// Actualizar estados en el modo combate
 function refreshCombatStates() {
     const statesContainer = document.querySelector('.combat-col-right');
     if (!statesContainer) return;
@@ -1572,7 +1794,6 @@ function saveVitalEdit(vitalType) {
     character.stats[vitalType].current = Math.min(newCurrent, newMax);
     character.stats[vitalType].max = newMax;
     
-    // Sincronizar en combat mode también
     if (vitalType === 'actions') {
         character.combat.currentActions = character.stats.actions.current;
     }
@@ -1580,11 +1801,9 @@ function saveVitalEdit(vitalType) {
     saveAndRefresh();
     closeModal(1); // Solo cerrar modal de edición, NO el modo combate
     
-    // Actualizar solo los vitales en el HTML del modo combate sin cerrar la ventana
     refreshCombatVitals();
 }
 
-// Añadir estado en modo combate
 function saveStatusEffect() {
     const name = document.getElementById('status-name').value.trim();
     if (!name) {
@@ -1606,12 +1825,10 @@ function saveStatusEffect() {
     refreshCombatStates();
 }
 
-// Equipar objeto desde inventario
 function equipItemFromInventory(itemIndex) {
     const item = character.inventory.items[itemIndex];
     if (!item) return;
     
-    // Buscar un slot vacío o crear uno nuevo
     let equipped = false;
     for (let i = 0; i < character.equipment.length; i++) {
         if (!character.equipment[i].item) {
@@ -1631,15 +1848,91 @@ function equipItemFromInventory(itemIndex) {
     refreshCombatEquipment();
 }
 
-// ===================================================================================
-// SISTEMA DE PUNTOS DE HABILIDAD (PH)
-// ===================================================================================
 function getUpgradeCost(currentUpgrades) {
     if (currentUpgrades <= 1) return 2;
     if (currentUpgrades <= 4) return 3;
     if (currentUpgrades <= 7) return 4;
     if (currentUpgrades <= 9) return 5;
     return Infinity; // Max 10 upgrades
+}
+
+function calculateTotalPHSpentForUpgrades(upgradesCount) {
+    let total = 0;
+    for (let i = 0; i < upgradesCount; i++) {
+        total += getUpgradeCost(i);
+    }
+    return total;
+}
+
+function reduceSkillLevel(index) {
+    const skill = character.inventory.skills[index];
+    if (!skill) {
+        console.error('Skill not found at index:', index);
+        showNotification('Error', 'No se pudo encontrar la habilidad.');
+        return;
+    }
+    if (!skill.upgrades || skill.upgrades <= 0) {
+        showNotification('Reducir Nivel', 'Esta habilidad no tiene niveles para reducir.');
+        return;
+    }
+    const lastUpgradeIndex = skill.upgrades - 1;
+    const refund = getUpgradeCost(lastUpgradeIndex);
+    skill.upgrades = Math.max(0, skill.upgrades - 1);
+    skill.level = Math.max(0, (skill.level || 0) - 1);
+    character.skillPoints = (character.skillPoints || 0) + refund;
+    saveAndRefresh();
+    showNotification('PH Recuperado', `Has recuperado ${refund} PH al reducir el nivel de ${skill.name}.`);
+}
+
+function reduceTechniqueLevel(index) {
+    const tech = character.inventory.techniques[index];
+    if (!tech) {
+        console.error('Technique not found at index:', index);
+        showNotification('Error', 'No se pudo encontrar la técnica/hechizo.');
+        return;
+    }
+    if (!tech.upgrades || tech.upgrades <= 0) {
+        showNotification('Reducir Nivel', 'Esta técnica/hechizo no tiene niveles para reducir.');
+        return;
+    }
+    const lastUpgradeIndex = tech.upgrades - 1;
+    const refund = getUpgradeCost(lastUpgradeIndex);
+    tech.upgrades = Math.max(0, tech.upgrades - 1);
+    tech.level = Math.max(0, (tech.level || 0) - 1);
+    character.skillPoints = (character.skillPoints || 0) + refund;
+    saveAndRefresh();
+    showNotification('PH Recuperado', `Has recuperado ${refund} PH al reducir el nivel de ${tech.name}.`);
+}
+
+function reduceStat(type, keyOrIndex) {
+    let item;
+    if (type === 'skill') item = character.inventory.skills[keyOrIndex];
+    else if (type === 'technique') item = character.inventory.techniques[keyOrIndex];
+    else if (type === 'attribute') item = character.attributes[keyOrIndex];
+    
+    if (!item) return;
+    if (!item.upgrades || item.upgrades <= 0) {
+        showNotification('Reducir', 'No hay niveles para reducir.');
+        return;
+    }
+    
+    const lastUpgradeIndex = item.upgrades - 1;
+    const refund = getUpgradeCost(lastUpgradeIndex);
+    item.upgrades = Math.max(0, item.upgrades - 1);
+    
+    if (type === 'attribute') item.value = Math.max(0, item.value - 1);
+    else item.level = Math.max(0, (item.level || 0) - 1);
+    
+    character.skillPoints = (character.skillPoints || 0) + refund;
+    saveAndRefresh();
+    
+    const itemName = item.name || keyOrIndex;
+    showNotification('PH Recuperado', `Has recuperado ${refund} PH al reducir ${itemName}.`);
+    openSpendSkillPointsModal();
+}
+
+function reduceAttribute(attributeKey) {
+    reduceStat('attribute', attributeKey);
 }
 
 function openSpendSkillPointsModal() {
@@ -1655,11 +1948,30 @@ function openSpendSkillPointsModal() {
                     <p class="font-semibold">${name} ${levelInfo} <span class="text-xs text-gray-500 dark:text-gray-400">(${item.upgrades}/${upgradeLimit})</span></p>
                     <p class="text-xs text-gray-600 dark:text-gray-400">Coste: ${isFinite(cost) ? `${cost} PH` : 'MAX'}</p>
                 </div>
-                <button class="btn btn-primary" onclick="upgradeStat('${type}', '${index}')" ${character.skillPoints < cost || item.upgrades >= upgradeLimit ? 'disabled' : ''}>+1</button>
+                <div class="flex space-x-2">
+                    <button class="btn btn-warning" onclick="reduceStat('${type}', '${index}')" ${item.upgrades <= 0 ? 'disabled' : ''}>${String.fromCharCode(8722)}1</button>
+                    <button class="btn btn-primary" onclick="upgradeStat('${type}', '${index}')" ${character.skillPoints < cost || item.upgrades >= upgradeLimit ? 'disabled' : ''}>+1</button>
+                </div>
             </div>`;
     };
 
-    const attributesHtml = Object.keys(character.attributes).map(key => generateUpgradeRow(character.attributes[key], 'attribute', key)).join('');
+    const attributesHtml = Object.keys(character.attributes).map(key => {
+        const attr = character.attributes[key];
+        const cost = getUpgradeCost(attr.upgrades);
+        const name = key.charAt(0).toUpperCase() + key.slice(1);
+        const upgradeLimit = 10;
+        return `
+            <div class="flex justify-between items-center p-2 border-b border-gray-200 dark:border-gray-700">
+                <div>
+                    <p class="font-semibold">${name} (${attr.value}) <span class="text-xs text-gray-500 dark:text-gray-400">(${attr.upgrades}/${upgradeLimit})</span></p>
+                    <p class="text-xs text-gray-600 dark:text-gray-400">Coste: ${isFinite(cost) ? `${cost} PH` : 'MAX'}</p>
+                </div>
+                <div class="flex space-x-2">
+                    <button class="btn btn-warning" onclick="reduceAttribute('${key}')" ${attr.upgrades <= 0 ? 'disabled' : ''}>−1</button>
+                    <button class="btn btn-primary" onclick="upgradeStat('attribute', '${key}')" ${character.skillPoints < cost || attr.upgrades >= upgradeLimit ? 'disabled' : ''}> +1</button>
+                </div>
+            </div>`;
+    }).join('');
     const skillsHtml = character.inventory.skills.map((skill, i) => generateUpgradeRow(skill, 'skill', i)).join('') || '<p class="text-xs text-gray-500 dark:text-gray-400 p-2">No hay habilidades para mejorar.</p>';
     const techniquesHtml = character.inventory.techniques.map((tech, i) => generateUpgradeRow(tech, 'technique', i)).join('') || '<p class="text-xs text-gray-500 dark:text-gray-400 p-2">No hay técnicas/hechizos para mejorar.</p>';
 
@@ -1722,9 +2034,6 @@ function upgradeStat(type, keyOrIndex) {
     }
 }
 
-// ===================================================================================
-// AFINIDAD ELEMENTAL, FUSIÓN Y ESPÍRITUS
-// ===================================================================================
 function getBonusForRelation(value) {
     if (value <= 19) return -10;
     if (value <= 39) return -8;
@@ -1820,7 +2129,25 @@ function renderSpiritAmulet() {
     if (level >= 15) charges = 4;
     if (level >= 20) charges = 5;
     
-    container.innerHTML = `<p class="text-center font-medium">Cargas de Amuleto Elemental: <span class="font-bold text-xl">${charges}</span></p>`;
+    if (!character.favores) character.favores = { current: 0 };
+    character.favores.max = charges;
+    
+    container.innerHTML = `
+        <div class="space-y-4">
+            <p class="text-center font-medium">Cargas de Amuleto Elemental: <span class="font-bold text-xl">${charges}</span></p>
+            
+            <div class="border-t pt-4 mt-4">
+                <div class="flex items-center justify-between">
+                    <label class="font-semibold">Cargas Usadas</label>
+                    <div class="flex gap-2 items-center">
+                        <input type="number" id="favores-current" class="input-field w-14 text-center text-sm" value="${character.favores.current}" min="0" max="${charges}" onchange="updateFavoresCurrent(Math.min(Math.max(0, parseInt(this.value)), ${charges}))">
+                        <span class="text-sm font-medium">/</span>
+                        <span class="text-sm font-medium">${charges}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
 }
 
 function askSpiritFavor(elementKey) {
@@ -1837,24 +2164,17 @@ function askSpiritFavor(elementKey) {
     const favorResult = getFavorInfoByRoll(roll); // Determine favor type from the raw roll regardless of outcome
 
     if (totalRoll < relationThreshold) {
-        // The favor is granted, but as a lesser favor because the relationship helped.
         showNotification(`Petición a ${elementName} - Favor Reforzado`, 
             `Tirada: ${roll} ${bonusString} (Bono) = ${totalRoll}\n\nAunque la tirada fue menor que tu relación (${relationThreshold}), tu vínculo con el espíritu reforzó la petición.\n\n**Se concede un ${favorResult.name}.**`
         );
     } else {
-        // Success
         showNotification(`Petición a ${elementName} Exitosa!`, 
             `Tirada: ${roll} ${bonusString} (Bono) = ${totalRoll} (Supera o iguala ${relationThreshold})\n\nResultado: ${favorResult.name}\n${favorResult.description}`
         );
     }
-    // No change to relation value in either case.
     saveCharacterToLocalStorage(); // Save just in case.
 };
 
-
-// ===================================================================================
-// LÓGICA DE INVENTARIO
-// ===================================================================================
 
 function createRaritySelector(selectedRarity = 'Común') {
     return `
@@ -1867,66 +2187,899 @@ function createRaritySelector(selectedRarity = 'Común') {
     `;
 }
 
-// --- Habilidades ---
-document.getElementById('add-skill-btn').addEventListener('click', () => openSkillForm());
+const INVENTORY_CONFIG = {
+    skills: {
+        label: 'Habilidad',
+        typeField: 'Activa/Pasiva',
+        typeOptions: [{val: 'Activa', label: 'Activa'}, {val: 'Pasiva', label: 'Pasiva'}],
+        costTypes: ['PA', 'MP', 'HP', 'Movimiento', 'Recursos'],
+        hasFormulas: true,
+        hasEffects: false,
+        saveFn: (item, index) => {
+            character.inventory.skills[index === -1 ? character.inventory.skills.length - 1 : index] = item;
+        }
+    },
+    techniques: {
+        label: 'Técnica/Hechizo',
+        typeField: 'Técnica/Hechizo',
+        typeOptions: [
+            {val: 'Técnica', label: 'Técnica'}, 
+            {val: 'Hechizo', label: 'Hechizo'}
+        ],
+        costTypes: ['PA', 'MP'],
+        hasFormulas: true,
+        hasEffects: false,
+        saveFn: (item, index) => {
+            character.inventory.techniques[index === -1 ? character.inventory.techniques.length - 1 : index] = item;
+        }
+    },
+    items: {
+        label: 'Objeto',
+        typeField: 'Tipo',
+        typeOptions: [
+            {val: 'arma', label: 'Arma'},
+            {val: 'armadura', label: 'Armadura'},
+            {val: 'accesorio', label: 'Accesorio'},
+            {val: 'consumible', label: 'Consumible'},
+            {val: 'otro', label: 'Otro'}
+        ],
+        costTypes: [],
+        hasFormulas: true,
+        hasEffects: false,
+        saveFn: (item, index) => {
+            character.inventory.items[index === -1 ? character.inventory.items.length - 1 : index] = item;
+        }
+    }
+};
 
-function openSkillForm(skill = null, index = -1) {
-    const isEditing = skill !== null;
-    const title = isEditing ? 'Editar Habilidad' : 'Añadir Habilidad';
-    const btnText = isEditing ? 'Guardar Cambios' : 'Crear Habilidad';
+function openInventoryForm(type = 'skills', item = null, index = -1) {
+    const isEditing = item !== null;
+    const config = INVENTORY_CONFIG[type];
+    const title = isEditing ? `Editar ${config.label}` : `Añadir ${config.label}`;
+    const btnText = isEditing ? 'Guardar Cambios' : `Crear ${config.label}`;
+    
+    let costs = [];
+    if (item && item.costs && typeof item.costs === 'string') {
+        try { costs = JSON.parse(item.costs); } catch(e) { costs = []; }
+    } else if (item && item.costs) {
+        costs = Array.isArray(item.costs) ? item.costs : [];
+    }
+    if (!costs.length && item) {
+        if (item.costPA) costs.push({type: 'PA', value: item.costPA});
+        if (item.costMP) costs.push({type: 'MP', value: item.costMP});
+        if (item.costHP) costs.push({type: 'HP', value: item.costHP});
+        if (item.costMovement) costs.push({type: 'Movimiento', value: item.costMovement});
+        if (item.costResources) costs.push({type: 'Recursos', value: item.costResources});
+    }
+    
+    let formulas = [];
+    if (item && item.formulas && typeof item.formulas === 'string') {
+        try { 
+            const parsed = JSON.parse(item.formulas);
+            formulas = Array.isArray(parsed) ? parsed.map((f, idx) => {
+                return typeof f === 'string' ? {titulo: '', formula: f, editando: idx === 0} : {...f, editando: f.editando || idx === 0};
+            }) : [];
+        } catch(e) { formulas = []; }
+    } else if (item && item.formulas) {
+        formulas = Array.isArray(item.formulas) ? item.formulas.map((f, idx) => ({...f, editando: f.editando || idx === 0})) : [];
+    }
+    if (!formulas.length && item && item.formula) {
+        formulas = [{titulo: '', formula: item.formula, editando: true}];
+    }
+    
+    const formulasHtml = formulas.map((f, i) => {
+        const formula = typeof f === 'string' ? {titulo: '', formula: f, editando: false, isWeaponBoosted: false} : f;
+        
+        const weaponBoostBtnClass = formula.isWeaponBoosted ? 'formula-weapon-active bg-orange-500 hover:bg-orange-600' : 'bg-gray-400 hover:bg-gray-500';
+        const weaponBoostBtnIcon = formula.isWeaponBoosted ? '⚔️ ON' : '⚔️ OFF';
+        
+        return `
+        <div class="mb-4 p-4 border-l-4 ${formula.editando ? 'border-indigo-600 bg-indigo-50 dark:bg-indigo-900/30' : 'border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800'} rounded-lg shadow-md hover:shadow-lg transition-all" id="formula-row-${i}">
+            <div class="flex items-start justify-between mb-3">
+                <div class="flex items-center gap-2">
+                    <label class="flex items-center cursor-pointer" title="Selecciona para editar">
+                        <input type="checkbox" class="formula-check w-4 h-4 cursor-pointer accent-indigo-500 rounded" ${formula.editando ? 'checked' : ''} onchange="setActiveFormula('formula-row-${i}')">
+                    </label>
+                    <input type="text" class="input-field formula-title font-bold text-sm w-40" placeholder="Nombre" value="${formula.titulo || ''}">
+                </div>
+                <div class="flex gap-2">
+                    <button class="btn weapon-boost-btn text-xs px-3 py-2 font-semibold ${weaponBoostBtnClass} text-white transition-all rounded-md" title="Toggle: Potencia con Arma" onclick="toggleFormulaWeaponBoost('formula-row-${i}')">${weaponBoostBtnIcon}</button>
+                    <button class="btn btn-danger text-xs px-3 py-1" onclick="document.getElementById('formula-row-${i}').remove()">✕</button>
+                </div>
+            </div>
+            
+            <div class="w-full">
+                <label class="text-xs font-semibold text-gray-600 dark:text-gray-400 mb-1 block">Fórmula</label>
+                <textarea class="input-field formula-input font-mono text-sm w-full bg-white-50 dark:bg-white-701 border-2 border-black-200 dark:border-black-700" placeholder="Ej: (FUE)d6 + (Mod.MET)" rows="2" onblur="updateFormulaResult('formula-row-${i}')" oninput="updateFormulaResult('formula-row-${i}')">${formula.formula}</textarea>
+            </div>
+        </div>\n    `}).join('');
+    
+    const costsHtml = costs.map((cost, i) => `
+        <div class="flex gap-2 items-end mb-2" id="cost-row-${i}">
+            <select class="input-field flex-1 cost-type">
+                ${config.costTypes.map(ct => `<option value="${ct}" ${cost.type === ct ? 'selected' : ''}>${ct}</option>`).join('')}
+            </select>
+            <input type="text" class="input-field flex-1 cost-value" placeholder="Valor" value="${cost.value}">
+            <button class="btn btn-danger text-xs" onclick="document.getElementById('cost-row-${i}').remove()">✕</button>
+        </div>
+    `).join('');
+    
+    const typeFieldHtml = `
+        <select id="item-type-field" class="input-field">
+            ${config.typeOptions.map(opt => `<option value="${opt.val}" ${item?.type === opt.val ? 'selected' : ''}>${opt.label}</option>`).join('')}
+        </select>
+    `;
+    
+    const costsSection = config.costTypes.length > 0 ? `
+        <div class="border p-4 rounded-md border-gray-200 dark:border-gray-600">
+            <div class="flex justify-between items-center mb-2">
+                <label class="font-semibold">Costes</label>
+                <button class="btn btn-secondary text-xs" onclick="addInventoryCostRow('item-costs-container', '${config.label.replace(/'/g, "\\'")}')">+ Agregar Coste</button>
+            </div>
+            <div id="item-costs-container" class="space-y-2">${costsHtml || '<p class="text-xs text-gray-500">Sin costes</p>'}</div>
+        </div>
+    ` : '';
+    
+    const formulasSection = config.hasFormulas ? `
+        <div class="bg-gradient-to-br from-white-50 to-blue-50 dark:from-grey-900/20 dark:to-blue-900/20 border-2 border-blue-300 dark:border-black-600 p-5 rounded-lg">
+            <div class="flex items-center gap-2 mb-4 pb-3 border-b border-white-200 dark:border-white-700">
+                <span class="text-2xl">⚡</span>
+                <h3 class="font-bold text-lg text-black-900 dark:text-black-100">Fórmulas</h3>
+            </div>
+            
+            <div id="formula-builder-container" class="mb-4 p-3 bg-white dark:bg-white-800 rounded border border-black-200 dark:border-black-700"></div>
+            
+            <div id="item-formulas-container" class="space-y-3 mb-4">
+                ${formulasHtml || '<p class="text-center py-4 text-gray-500 dark:text-gray-400 text-sm italic">Sin fórmulas</p>'}
+            </div>
+            
+            <button class="btn w-full text-white font-bold py-2 rounded-lg bg-indigo-500 hover:bg-indigo-600 transition-all" onclick="addInventoryFormulaRow()">+ Agregar Fórmula</button>
+        </div>
+    ` : '';
+    
+    let linkedEffects = [];
+    if (item && item.linkedEffects && typeof item.linkedEffects === 'string') {
+        try { linkedEffects = JSON.parse(item.linkedEffects); } catch(e) { linkedEffects = []; }
+    } else if (item && item.linkedEffects) {
+        linkedEffects = Array.isArray(item.linkedEffects) ? item.linkedEffects : [];
+    }
+    
+    const effectsHtml = linkedEffects.map((effect, i) => `
+        <div class="grid grid-cols-12 gap-2 items-end mb-2 p-2 border rounded" id="effect-row-${i}">
+            <select class="input-field col-span-2 effect-target">
+                <option value="self" ${effect.target === 'self' ? 'selected' : ''}>Propio</option>
+                <option value="target" ${effect.target === 'target' ? 'selected' : ''}>Objetivo</option>
+            </select>
+            <input type="text" class="input-field col-span-3 effect-attribute" placeholder="Atributo (ej: stats.health.current)" value="${effect.attribute || ''}">
+            <select class="input-field col-span-2 effect-modification">
+                <option value="fijo" ${effect.modification === 'fijo' ? 'selected' : ''}>Fijo</option>
+                <option value="porcentaje" ${effect.modification === 'porcentaje' ? 'selected' : ''}>Porcentaje</option>
+            </select>
+            <input type="number" class="input-field col-span-1 effect-value" placeholder="Valor" value="${effect.value || 0}">
+            <select class="input-field col-span-2 effect-applyOn">
+                <option value="continuo" ${effect.applyOn === 'continuo' ? 'selected' : ''}>Continuo</option>
+                <option value="ciclo" ${effect.applyOn === 'ciclo' ? 'selected' : ''}>Ciclo</option>
+                <option value="inicio" ${effect.applyOn === 'inicio' ? 'selected' : ''}>Inicio</option>
+                <option value="fin" ${effect.applyOn === 'fin' ? 'selected' : ''}>Fin</option>
+            </select>
+            <input type="text" class="input-field col-span-1 effect-condition" placeholder="Condición" value="${effect.condition || ''}">
+            <button class="btn btn-danger text-xs col-span-1" onclick="document.getElementById('effect-row-${i}').remove()">✕</button>
+        </div>
+    `).join('');
+    
+    const effectsSection = config.hasEffects ? `
+        <div class="border p-4 rounded-md border-gray-200 dark:border-gray-600">
+            <div class="flex justify-between items-center mb-2">
+                <label class="font-semibold">Efectos</label>
+                <button class="btn btn-secondary text-xs" onclick="addInventoryEffectRow()">+ Agregar Efecto</button>
+            </div>
+            <div id="item-effects-container" class="space-y-2">${effectsHtml || '<p class="text-xs text-gray-500">Sin efectos</p>'}</div>
+        </div>
+    ` : '';
+    
+    let equipmentBonus = {};
+    if (item && item.equipmentBonus && typeof item.equipmentBonus === 'string') {
+        try { equipmentBonus = JSON.parse(item.equipmentBonus); } catch(e) { equipmentBonus = {}; }
+    } else if (item && item.equipmentBonus) {
+        equipmentBonus = item.equipmentBonus;
+    }
+    
+    const equipmentBonusSection = type === 'items' ? `
+        <div class="bg-gradient-to-br from-amber-50 to-orange-50 dark:from-amber-900/20 dark:to-orange-900/20 border-2 border-amber-200 dark:border-amber-800 p-5 rounded-lg shadow-sm">
+            <div class="flex items-center gap-2 mb-4">
+                <span class="text-xl">🛡️</span>
+                <h3 class="font-bold text-lg text-amber-900 dark:text-amber-300">Bonificaciones de Equipo</h3>
+            </div>
+            <div id="equipment-bonus-container" class="space-y-3">
+                ${Object.entries(equipmentBonus).map(([key, value]) => {
+                    const isAttr = Object.keys(character.attributes || {}).includes(key);
+                    return `
+                    <div class="flex gap-2 items-end p-3 bg-white dark:bg-gray-800 rounded border border-amber-200 dark:border-amber-700" id="bonus-${key}">
+                        <select class="input-field bonus-key flex-1" onchange="updateBonusKey(this, '${key}')">
+                            <option value="">-- Seleccionar Stat/Attr --</option>
+                            ${Object.keys(character.attributes || {}).map(k => `<option value="${k}" ${key === k ? 'selected' : ''}>ATR: ${k}</option>`).join('')}
+                            ${['health', 'mana', 'armor', 'actions', 'movement', 'magicSave', 'load', 'wisdom', 'resistance'].map(k => `<option value="${k}" ${key === k ? 'selected' : ''}>STAT: ${k}</option>`).join('')}
+                        </select>
+                        <input type="number" class="input-field bonus-value w-20" placeholder="Valor" value="${value}">
+                        <button class="btn btn-danger text-xs" onclick="document.getElementById('bonus-${key}').remove()">✕</button>
+                    </div>
+                    `;
+                }).join('') || '<p class="text-xs text-gray-500 italic">Sin bonificaciones - Haz clic en el botón para agregar</p>'}
+            </div>
+            <button class="btn btn-secondary w-full mt-3 text-sm" onclick="addEquipmentBonusRow()">➕ Agregar Bonificación</button>
+        </div>
+    ` : '';
+    
     const content = `
         <h3 class="text-2xl font-bold mb-4">${title}</h3>
-        <div class="modal-scrollable-content"><div class="space-y-4">
-            <input id="skill-name" class="input-field" placeholder="Nombre" value="${skill?.name || ''}">
-            <textarea id="skill-description" class="input-field" placeholder="Descripción..." rows="3">${skill?.description || ''}</textarea>
-            <select id="skill-type" class="input-field">
-                <option value="Activa" ${skill?.type === 'Activa' ? 'selected' : ''}>Activa</option>
-                <option value="Pasiva" ${skill?.type === 'Pasiva' ? 'selected' : ''}>Pasiva</option>
-            </select>
-            <input id="skill-cost-pa" type="number" class="input-field" placeholder="Coste PA" value="${skill?.costPA || 0}">
-            <input id="skill-cost-mp" type="number" class="input-field" placeholder="Coste Místyculas" value="${skill?.costMP || 0}">
-            <div class="border p-4 rounded-md mt-4 border-gray-200 dark:border-gray-600">
-                <label for="skill-formula" class="font-semibold">Fórmula</label>
-                <textarea id="skill-formula" class="input-field mt-1" placeholder="Ej: (FUE)d(6)" rows="2">${skill?.formula || ''}</textarea>
-                <div id="formula-builder-container" class="mt-2"></div>
+        <div class="modal-scrollable-content">
+            <div class="space-y-4">
+                <input id="item-name" class="input-field" placeholder="Nombre" value="${item?.name || ''}">
+                ${typeFieldHtml}
+                <textarea id="item-description" class="input-field" placeholder="Descripción..." rows="3">${item?.description || ''}</textarea>
+                ${equipmentBonusSection}
+                ${costsSection}
+                ${formulasSection}
+                ${effectsSection}
             </div>
-        </div></div>
+        </div>
         <div class="flex justify-end space-x-2 mt-6 pt-4 border-t dark:border-gray-600">
             <button class="btn btn-secondary" onclick="closeModal()">Cancelar</button>
-            <button id="save-skill-btn" class="btn btn-primary">${btnText}</button>
+            <button id="save-item-btn" class="btn btn-primary">${btnText}</button>
         </div>`;
     openModal(content);
-    renderFormulaBuilder('formula-builder-container', 'skill-formula');
-    document.getElementById('save-skill-btn').onclick = () => saveSkill(index);
+    
+    if (config.hasFormulas) {
+        setTimeout(() => {
+            renderFormulaBuilder('formula-builder-container', 'formula-new-input');
+        }, 100);
+    }
+    
+    document.getElementById('save-item-btn').onclick = () => saveInventoryItem(type, index);
 }
 
-function saveSkill(index) {
-    const isEditing = index !== undefined && index !== -1;
-    const newSkill = {
-        name: document.getElementById('skill-name').value,
-        description: document.getElementById('skill-description').value,
-        type: document.getElementById('skill-type').value,
-        costPA: parseInt(document.getElementById('skill-cost-pa').value) || 0,
-        costMP: parseInt(document.getElementById('skill-cost-mp').value) || 0,
-        formula: document.getElementById('skill-formula').value,
-        rarity: isEditing ? character.inventory.skills[index].rarity : 'Común',
-        isDamageFormulaActive: isEditing ? character.inventory.skills[index].isDamageFormulaActive : false,
-        level: isEditing ? character.inventory.skills[index].level : 0, // CORRECCIÓN: Inicia en nivel 0
-        upgrades: isEditing ? character.inventory.skills[index].upgrades : 0,
-    };
-    if (index === -1) character.inventory.skills.push(newSkill);
-    else character.inventory.skills[index] = newSkill;
-    closeModal();
-    saveAndRefresh();
+function addInventoryCostRow(containerId, inventoryLabel) {
+    const container = document.getElementById(containerId);
+    
+    let costTypes = [];
+    for (const [type, config] of Object.entries(INVENTORY_CONFIG)) {
+        if (config.label === inventoryLabel) {
+            costTypes = config.costTypes;
+            break;
+        }
+    }
+    
+    if (!costTypes.length) costTypes = ['PA', 'MP'];
+    
+    const id = 'cost-' + Date.now();
+    const row = document.createElement('div');
+    row.className = 'flex gap-2 items-end mb-2';
+    row.id = id;
+    row.innerHTML = `
+        <select class="input-field flex-1 cost-type">
+            ${costTypes.map(ct => `<option value="${ct}">${ct}</option>`).join('')}
+        </select>
+        <input type="text" class="input-field flex-1 cost-value" placeholder="Valor">
+        <button class="btn btn-danger text-xs" onclick="document.getElementById('${id}').remove()">✕</button>
+    `;
+    container.appendChild(row);
 }
+
+function addInventoryFormulaRow() {
+    const container = document.getElementById('item-formulas-container');
+    if (!container) return;
+    
+    const id = 'formula-' + Date.now();
+    const row = document.createElement('div');
+    row.className = 'p-4 border-l-4 border-indigo-600 bg-indigo-50 dark:bg-indigo-900/30 rounded-lg shadow-md hover:shadow-lg transition-all mb-3';
+    row.id = id;
+    
+    row.innerHTML = `
+        <div class="flex items-start justify-between mb-3">
+            <div class="flex items-center gap-2">
+                <label class="flex items-center cursor-pointer" title="Selecciona para editar">
+                    <input type="checkbox" class="formula-check w-4 h-4 cursor-pointer accent-indigo-600 rounded" onchange="setActiveFormula('${id}')">
+                </label>
+                <input type="text" class="input-field formula-title font-bold text-sm w-40" placeholder="Nombre">
+            </div>
+            <div class="flex gap-2">
+                <button class="btn text-xs px-3 py-2 font-semibold bg-gray-400 hover:bg-gray-500 text-white transition-all rounded-md weapon-boost-btn" title="Toggle: Potencia con Arma" onclick="toggleFormulaWeaponBoost('${id}')">⚔️ OFF</button>
+                <button class="btn btn-danger text-xs px-3 py-1" onclick="document.getElementById('${id}').remove()" title="Eliminar fórmula">✕</button>
+            </div>
+        </div>
+        
+        <div class="w-full">
+            <label class="text-xs font-semibold text-gray-600 dark:text-gray-400 mb-1 block">Fórmula</label>
+            <textarea class="input-field formula-input font-mono text-sm w-full bg-white-50 dark:bg-white-700 border-2 border-black-200 dark:border-blue-700" placeholder="Ej: (FUE)d6 + (Mod.MET)" rows="2"></textarea>
+        </div>
+    `;
+    
+    container.appendChild(row);
+    
+    const textarea = row.querySelector('textarea');
+    const checkbox = row.querySelector('.formula-check');
+    
+    textarea.focus();
+    textarea.addEventListener('blur', () => updateFormulaResult(id));
+    textarea.addEventListener('input', () => updateFormulaResult(id));
+    checkbox.addEventListener('change', () => setActiveFormula(id));
+}
+
+function addEquipmentBonusRow() {
+    const container = document.getElementById('equipment-bonus-container');
+    if (!container) return;
+    
+    const id = 'bonus-' + Date.now();
+    const row = document.createElement('div');
+    row.className = 'flex gap-2 items-end p-3 bg-white dark:bg-gray-800 rounded border border-amber-200 dark:border-amber-700';
+    row.id = id;
+    row.innerHTML = `
+        <select class="input-field bonus-key flex-1">
+            <option value="">-- Seleccionar Stat/Attr --</option>
+            ${Object.keys(character.attributes || {}).map(k => `<option value="${k}">ATR: ${k}</option>`).join('')}
+            ${['health', 'mana', 'armor', 'actions', 'movement', 'magicSave', 'load', 'wisdom', 'resistance'].map(k => `<option value="${k}">STAT: ${k}</option>`).join('')}
+        </select>
+        <input type="number" class="input-field bonus-value w-20" placeholder="Valor" value="0">
+        <button class="btn btn-danger text-xs" onclick="document.getElementById('${id}').remove()">✕</button>
+    `;
+    container.appendChild(row);
+}
+
+function updateBonusKey(selectElement, oldKey) {
+}
+
+function addInventoryEffectRow() {
+    const container = document.getElementById('item-effects-container');
+    const id = 'effect-' + Date.now();
+    const row = document.createElement('div');
+    row.className = 'grid grid-cols-12 gap-2 items-end mb-2 p-2 border rounded';
+    row.id = id;
+    row.innerHTML = `
+        <select class="input-field col-span-2 effect-target">
+            <option value="self">Propio</option>
+            <option value="target">Objetivo</option>
+        </select>
+        <input type="text" class="input-field col-span-3 effect-attribute" placeholder="Atributo (ej: stats.health.current)">
+        <select class="input-field col-span-2 effect-modification">
+            <option value="fijo">Fijo</option>
+            <option value="porcentaje">Porcentaje</option>
+        </select>
+        <input type="number" class="input-field col-span-1 effect-value" placeholder="Valor">
+        <select class="input-field col-span-2 effect-applyOn">
+            <option value="continuo">Continuo</option>
+            <option value="ciclo">Ciclo</option>
+            <option value="inicio">Inicio</option>
+            <option value="fin">Fin</option>
+        </select>
+        <input type="text" class="input-field col-span-1 effect-condition" placeholder="Condición">
+        <button class="btn btn-danger text-xs col-span-1" onclick="document.getElementById('${id}').remove()">✕</button>
+    `;
+    container.appendChild(row);
+}
+
+function saveInventoryItem(type, index) {
+    const isEditing = index !== undefined && index !== -1;
+    const config = INVENTORY_CONFIG[type];
+    
+    try {
+        const nameInput = document.getElementById('item-name');
+        if (!nameInput || !nameInput.value.trim()) {
+            showNotification('Error', 'El nombre es obligatorio');
+            return;
+        }
+        
+        const costs = [];
+        const costsContainer = document.getElementById('item-costs-container');
+        if (costsContainer) {
+            Array.from(costsContainer.children).forEach(row => {
+                const typeEl = row.querySelector('.cost-type');
+                const valueEl = row.querySelector('.cost-value');
+                if (typeEl && valueEl && valueEl.value) {
+                    costs.push({ 
+                        type: typeEl.value, 
+                        value: valueEl.value 
+                    });
+                }
+            });
+        }
+        
+        const formulas = [];
+        const formulasContainer = document.getElementById('item-formulas-container');
+        if (formulasContainer) {
+            formulasContainer.querySelectorAll('[id^="formula-row"], [id^="formula-"]').forEach(row => {
+                if (row.tagName === 'BUTTON') return;  // Ignorar botones
+                
+                const titleEl = row.querySelector('.formula-title');
+                const formulaEl = row.querySelector('.formula-input');
+                const weaponBoostBtn = row.querySelector('button[title*="Potenciable"]');
+                const isWeaponBoosted = weaponBoostBtn ? weaponBoostBtn.classList.contains('formula-weapon-active') : false;
+                
+                if (formulaEl && formulaEl.value.trim()) {
+                    formulas.push({
+                        titulo: titleEl?.value || '',
+                        formula: formulaEl.value.trim(),
+                        isWeaponBoosted: isWeaponBoosted || false
+                    });
+                }
+            });
+        }
+        
+        let costPA = 0, costMP = 0, costHP = 0, costMovement = 0, costResources = '';
+        costs.forEach(cost => {
+            switch(cost.type) {
+                case 'PA': costPA = parseInt(cost.value) || 0; break;
+                case 'MP': costMP = parseInt(cost.value) || 0; break;
+                case 'HP': costHP = parseInt(cost.value) || 0; break;
+                case 'Movimiento': costMovement = parseInt(cost.value) || 0; break;
+                case 'Recursos': costResources = cost.value; break;
+            }
+        });
+        
+        const firstFormula = formulas[0] || null;
+        
+        const equipmentBonus = {};
+        const bonusContainer = document.getElementById('equipment-bonus-container');
+        if (bonusContainer && type === 'items') {
+            Array.from(bonusContainer.querySelectorAll('[id^="bonus-"]')).forEach(row => {
+                const keyEl = row.querySelector('.bonus-key');
+                const valueEl = row.querySelector('.bonus-value');
+                if (keyEl && keyEl.value && valueEl) {
+                    equipmentBonus[keyEl.value] = parseFloat(valueEl.value) || 0;
+                }
+            });
+        }
+        
+        let newItem;
+        
+        if (isEditing) {
+            newItem = {
+                ...character.inventory[type][index],  // Preservar datos existentes
+                name: nameInput.value.trim(),
+                type: document.getElementById('item-type-field')?.value || character.inventory[type][index].type,
+                description: document.getElementById('item-description')?.value || '',
+                costs: JSON.stringify(costs),
+                formulas: JSON.stringify(formulas),
+                equipmentBonus: JSON.stringify(equipmentBonus),
+                costPA: costPA,
+                costMP: costMP,
+                costHP: costHP,
+                costMovement: costMovement,
+                costResources: costResources,
+                formula: firstFormula?.formula || '',
+                damageFormula: firstFormula?.formula || '',
+                effects: [],
+                lastModified: new Date().toISOString()
+            };
+        } else {
+            const defaultItem = createNewInventoryItem(type);
+            newItem = {
+                ...defaultItem,  // Usar template con todos los campos inicializados
+                name: nameInput.value.trim(),
+                type: document.getElementById('item-type-field')?.value || defaultItem.type,
+                description: document.getElementById('item-description')?.value || '',
+                costs: JSON.stringify(costs),
+                formulas: JSON.stringify(formulas),
+                equipmentBonus: JSON.stringify(equipmentBonus),
+                damageFormula: firstFormula?.formula || '',
+                effects: [],
+                costPA: costPA,
+                costMP: costMP,
+                costHP: costHP,
+                costMovement: costMovement,
+                costResources: costResources,
+                formula: firstFormula?.formula || ''
+            };
+        }
+        
+        const validation = validateInventoryItem(newItem, type);
+        if (!validation.valid) {
+            showNotification('Error de Validación', validation.errors.join('\n'));
+            return;
+        }
+        
+        if (index === -1) {
+            character.inventory[type].push(newItem);
+            console.log(`✓ ${config.label} "${newItem.name}" creado y agregado al inventario`);
+        } else {
+            character.inventory[type][index] = newItem;
+            console.log(`✓ ${config.label} "${newItem.name}" actualizado en el inventario`);
+        }
+        
+        closeModal();
+        saveCharacterToLocalStorage();
+        updateUI();
+        renderInventory();
+        
+        setTimeout(() => {
+            showNotification(
+                '¡Éxito!',
+                `${config.label} "${newItem.name}" ${isEditing ? 'actualizado' : 'creado'} correctamente`
+            );
+        }, 100);
+        
+    } catch (error) {
+        console.error('Error al guardar item:', error);
+        showNotification('Error', `Error al guardar: ${error.message}`);
+    }
+}
+
+// NOTE: openSkillForm was removed - use openInventoryForm('skills', ...) instead
+
+function addCostRow() {
+    const container = document.getElementById('costs-container');
+    const id = 'cost-' + Date.now();
+    const row = document.createElement('div');
+    row.className = 'flex gap-2 items-end mb-2';
+    row.id = id;
+    row.innerHTML = `
+        <select class="input-field flex-1 cost-type">
+            <option value="PA">PA</option>
+            <option value="MP">MP</option>
+            <option value="HP">HP</option>
+            <option value="Movimiento">Movimiento</option>
+            <option value="Recursos">Recursos</option>
+        </select>
+        <input type="text" class="input-field flex-1 cost-value" placeholder="Valor">
+        <button class="btn btn-danger text-xs" onclick="document.getElementById('${id}').remove()">✕</button>
+    `;
+    container.appendChild(row);
+}
+
+function addFormulaRow() {
+    const container = document.getElementById('formulas-container');
+    const id = 'formula-' + Date.now();
+    const row = document.createElement('div');
+    row.className = 'grid grid-cols-12 gap-2 items-end mb-3 p-3 border rounded bg-gray-50 dark:bg-gray-700';
+    row.id = id;
+    
+    row.innerHTML = `
+        <input type="checkbox" class="formula-check col-span-1" title="Seleccionar como fórmula activa" onchange="setActiveFormula('${id}')">
+        <input type="text" class="input-field col-span-2 formula-title text-sm" placeholder="Título (ej: Daño)">
+        <textarea class="input-field col-span-7 formula-input" placeholder="Ej: (FUE)d6 + (Mod.MET)" rows="2"></textarea>
+        <div class="col-span-1 text-xs font-mono text-center p-2 bg-blue-100 dark:bg-blue-900 rounded formula-result" title="Resultado de la fórmula">-</div>
+        <button class="btn btn-danger text-xs col-span-1" onclick="document.getElementById('${id}').remove()">✕</button>
+    `;
+    container.insertBefore(row, container.lastElementChild);
+    
+    const textarea = row.querySelector('textarea');
+    textarea.focus();
+    textarea.addEventListener('blur', () => updateFormulaResult(id));
+    textarea.addEventListener('input', () => updateFormulaResult(id));
+}
+
+function setActiveFormula(rowId) {
+    let container = document.getElementById('item-formulas-container');
+    
+    if (!container) {
+        container = document.getElementById('formulas-container');
+    }
+    
+    if (!container) return;
+    
+    const allCheckboxes = container.querySelectorAll('.formula-check');
+    allCheckboxes.forEach(cb => cb.checked = false);
+    
+    const row = document.getElementById(rowId);
+    if (row) {
+        const checkbox = row.querySelector('.formula-check');
+        if (checkbox) checkbox.checked = true;
+    }
+}
+
+function toggleFormulaWeaponBoost(rowId) {
+    const row = document.getElementById(rowId);
+    if (!row) return;
+    
+    const boostBtn = row.querySelector('.weapon-boost-btn');
+    if (!boostBtn) return;
+    
+    const isActive = boostBtn.classList.contains('formula-weapon-active');
+    
+    if (isActive) {
+        boostBtn.classList.remove('formula-weapon-active', 'bg-orange-500', 'hover:bg-orange-600');
+        boostBtn.classList.add('bg-gray-400', 'hover:bg-gray-500');
+        boostBtn.textContent = '⚔️ OFF';
+    } else {
+        boostBtn.classList.add('formula-weapon-active', 'bg-orange-500', 'hover:bg-orange-600');
+        boostBtn.classList.remove('bg-gray-400', 'hover:bg-gray-500');
+        boostBtn.textContent = '⚔️ ON';
+    }
+}
+
+function updateFormulaResult(rowId) {
+    const row = document.getElementById(rowId);
+    if (!row) return;
+    
+    const formulaInput = row.querySelector('.formula-input');
+    const resultEl = row.querySelector('.formula-result');
+    
+    if (!formulaInput || !formulaInput.value.trim()) {
+        resultEl.textContent = '-';
+        return;
+    }
+    
+    try {
+        const result = safeEvaluateFormula(formulaInput.value, character);
+        resultEl.textContent = result;
+        resultEl.className = 'col-span-1 text-xs font-mono text-center p-2 bg-green-100 dark:bg-green-900 rounded formula-result font-bold';
+    } catch (e) {
+        resultEl.textContent = 'ERR';
+        resultEl.className = 'col-span-1 text-xs font-mono text-center p-2 bg-red-100 dark:bg-red-900 rounded formula-result';
+    }
+}
+
+function renderFormulaBuilder(containerId, textareaId) {
+    const container = document.getElementById(containerId);
+    if (!container) return;
+    
+    container.innerHTML = `
+        <div class="formula-builder space-y-3">
+            <!-- ATRIBUTOS -->
+            <div class="formula-section">
+                <div class="text-xs font-bold text-gray-700 dark:text-gray-300 mb-1">Atributos</div>
+                <div class="grid grid-cols-5 gap-1">
+                    <button class="formula-btn text-xs" onclick="addToFormula('(FUE)', '${textareaId}')">FUE</button>
+                    <button class="formula-btn text-xs" onclick="addToFormula('(AGI)', '${textareaId}')">AGI</button>
+                    <button class="formula-btn text-xs" onclick="addToFormula('(MET)', '${textareaId}')">MET</button>
+                    <button class="formula-btn text-xs" onclick="addToFormula('(INT)', '${textareaId}')">INT</button>
+                    <button class="formula-btn text-xs" onclick="addToFormula('(APM)', '${textareaId}')">APM</button>
+                </div>
+            </div>
+            
+            <!-- MODIFICADORES -->
+            <div class="formula-section">
+                <div class="text-xs font-bold text-gray-700 dark:text-gray-300 mb-1">Modificadores</div>
+                <div class="grid grid-cols-5 gap-1">
+                    <button class="formula-btn text-xs" onclick="addToFormula('(Mod.FUE)', '${textareaId}')">Mod.FUE</button>
+                    <button class="formula-btn text-xs" onclick="addToFormula('(Mod.AGI)', '${textareaId}')">Mod.AGI</button>
+                    <button class="formula-btn text-xs" onclick="addToFormula('(Mod.MET)', '${textareaId}')">Mod.MET</button>
+                    <button class="formula-btn text-xs" onclick="addToFormula('(Mod.INT)', '${textareaId}')">Mod.INT</button>
+                    <button class="formula-btn text-xs" onclick="addToFormula('(Mod.APM)', '${textareaId}')">Mod.APM</button>
+                </div>
+            </div>
+            
+            <!-- ESTADÍSTICAS -->
+            <div class="formula-section">
+                <div class="text-xs font-bold text-gray-700 dark:text-gray-300 mb-1">Estadísticas</div>
+                <div class="grid grid-cols-4 gap-1">
+                    <button class="formula-btn text-xs" onclick="addToFormula('(Nivel)', '${textareaId}')">Nivel</button>
+                    <button class="formula-btn text-xs" onclick="addToFormula('(Vida)', '${textareaId}')">Vida</button>
+                    <button class="formula-btn text-xs" onclick="addToFormula('(Armadura)', '${textareaId}')">Armadura</button>
+                    <button class="formula-btn text-xs" onclick="addToFormula('(Mistycals)', '${textareaId}')">Mistycals</button>
+                    <button class="formula-btn text-xs" onclick="addToFormula('(Acciones)', '${textareaId}')">Acciones</button>
+                    <button class="formula-btn text-xs" onclick="addToFormula('(Movimiento)', '${textareaId}')">Movimiento</button>
+                    <button class="formula-btn text-xs" onclick="addToFormula('(SalvacionMagia)', '${textareaId}')">SalvacionMagia</button>
+                    <button class="formula-btn text-xs" onclick="addToFormula('(Carga)', '${textareaId}')">Carga</button>
+                    <button class="formula-btn text-xs" onclick="addToFormula('(Resistencia)', '${textareaId}')">Resistencia</button>
+                    <button class="formula-btn text-xs" onclick="addToFormula('(Sabiduria)', '${textareaId}')">Sabiduria</button>
+                </div>
+            </div>
+            
+            <!-- DADOS -->
+            <div class="formula-section">
+                <div class="text-xs font-bold text-gray-700 dark:text-gray-300 mb-1">Dados</div>
+                <div class="grid grid-cols-7 gap-1 mb-1">
+                    <button class="formula-btn text-xs" onclick="addToFormula('1d4', '${textareaId}')">1d4</button>
+                    <button class="formula-btn text-xs" onclick="addToFormula('1d6', '${textareaId}')">1d6</button>
+                    <button class="formula-btn text-xs" onclick="addToFormula('1d8', '${textareaId}')">1d8</button>
+                    <button class="formula-btn text-xs" onclick="addToFormula('1d10', '${textareaId}')">1d10</button>
+                    <button class="formula-btn text-xs" onclick="addToFormula('1d12', '${textareaId}')">1d12</button>
+                    <button class="formula-btn text-xs" onclick="addToFormula('1d20', '${textareaId}')">1d20</button>
+                    <button class="formula-btn text-xs" onclick="addToFormula('1d100', '${textareaId}')">1d100</button>
+                </div>
+                <button class="formula-btn-advanced text-xs w-full" onclick="openAdvancedDiceModal('${textareaId}')">()d() - Avanzado</button>
+            </div>
+            
+            <!-- OPERADORES -->
+            <div class="formula-section">
+                <div class="text-xs font-bold text-gray-700 dark:text-gray-300 mb-1">Operadores</div>
+                <div class="grid grid-cols-6 gap-1">
+                    <button class="formula-btn text-xs" onclick="addToFormula(' + ', '${textareaId}')">+</button>
+                    <button class="formula-btn text-xs" onclick="addToFormula(' - ', '${textareaId}')">-</button>
+                    <button class="formula-btn text-xs" onclick="addToFormula(' * ', '${textareaId}')">*</button>
+                    <button class="formula-btn text-xs" onclick="addToFormula(' / ', '${textareaId}')"> / </button>
+                    <button class="formula-btn text-xs" onclick="addToFormula('(', '${textareaId}')">(</button>
+                    <button class="formula-btn text-xs" onclick="addToFormula(')', '${textareaId}')">)</button>
+                </div>
+            </div>
+        </div>
+        <style>
+            .formula-section { padding: 0.5rem; background: rgba(107, 114, 128, 0.05); border-radius: 0.375rem; }
+            .formula-btn { 
+                padding: 0.4rem 0.3rem; 
+                background: #3b82f6; 
+                color: white; 
+                border: none; 
+                border-radius: 0.25rem; 
+                cursor: pointer; 
+                font-weight: 500;
+                transition: all 0.2s;
+            }
+            .formula-btn:hover { background: #2563eb; transform: scale(1.05); }
+            .formula-btn-advanced { 
+                padding: 0.5rem; 
+                background: #8b5cf6; 
+                color: white; 
+                border: none; 
+                border-radius: 0.375rem; 
+                cursor: pointer;
+                transition: all 0.2s;
+            }
+            .formula-btn-advanced:hover { background: #7c3aed; }
+        </style>
+    `;
+}
+
+function addToFormula(text, textareaId) {
+    let textarea = null;
+    
+    const checkedCheckbox = document.querySelector('.formula-check:checked');
+    if (checkedCheckbox) {
+        const checkedRow = checkedCheckbox.closest('[id^="formula-row"], [id^="formula-"]');
+        if (checkedRow) {
+            textarea = checkedRow.querySelector('textarea.formula-input');
+            if (textarea) {
+                const start = textarea.selectionStart;
+                const end = textarea.selectionEnd;
+                const before = textarea.value.substring(0, start);
+                const after = textarea.value.substring(end);
+                textarea.value = before + text + after;
+                textarea.selectionStart = textarea.selectionEnd = start + text.length;
+                textarea.dispatchEvent(new Event('input', { bubbles: true }));
+                textarea.focus();
+                return; // SALIR - Solo agregar a la activa
+            }
+        }
+    }
+    
+    if (!textarea) {
+        const container = document.getElementById('item-formulas-container');
+        if (container) {
+            const textareas = container.querySelectorAll('textarea.formula-input');
+            if (textareas.length > 0) {
+                textarea = textareas[textareas.length - 1];
+            }
+        }
+    }
+    
+    if (!textarea) {
+        const container = document.getElementById('formulas-container');
+        if (container) {
+            const textareas = container.querySelectorAll('textarea.formula-input');
+            if (textareas.length > 0) {
+                textarea = textareas[textareas.length - 1];
+            }
+        }
+    }
+    
+    if (!textarea) return;
+    
+    const start = textarea.selectionStart;
+    const end = textarea.selectionEnd;
+    const before = textarea.value.substring(0, start);
+    const after = textarea.value.substring(end);
+    textarea.value = before + text + after;
+    textarea.selectionStart = textarea.selectionEnd = start + text.length;
+    textarea.dispatchEvent(new Event('input', { bubbles: true }));
+    textarea.focus();
+}
+function openAdvancedDiceModal(textareaId) {
+    const content = `
+        <h3 class="text-xl font-bold mb-4">Constructor Avanzado de Dados</h3>
+        <div class="space-y-4">
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label class="text-sm font-semibold block mb-2">Cantidad de dados</label>
+                    <input type="text" id="dice-qty" class="input-field" placeholder="Ej: 2 o (FUE)" value="1">
+                </div>
+                <div>
+                    <label class="text-sm font-semibold block mb-2">Tipo de dado</label>
+                    <input type="text" id="dice-type" class="input-field" placeholder="Ej: 6 o (INT)" value="6">
+                </div>
+            </div>
+            <div class="bg-gray-100 dark:bg-gray-700 p-3 rounded">
+                <p class="text-sm font-mono">Resultado: <span id="dice-preview">(1)d(6)</span></p>
+            </div>
+            <div class="flex justify-end gap-2">
+                <button class="btn btn-secondary" onclick="closeModal()">Cancelar</button>
+                <button class="btn btn-primary" onclick="insertAdvancedDice('${textareaId}')">Insertar</button>
+            </div>
+        </div>
+    `;
+    openModal(content);
+    
+    document.getElementById('dice-qty').addEventListener('input', updateDicePreview);
+    document.getElementById('dice-type').addEventListener('input', updateDicePreview);
+}
+
+function updateDicePreview() {
+    const qty = document.getElementById('dice-qty').value || '1';
+    const type = document.getElementById('dice-type').value || '6';
+    document.getElementById('dice-preview').textContent = `(${qty})d(${type})`;
+}
+
+function insertAdvancedDice(textareaId) {
+    const qty = document.getElementById('dice-qty').value || '1';
+    const type = document.getElementById('dice-type').value || '6';
+    const formula = `(${qty})d(${type})`;
+    addToFormula(formula, textareaId);
+    closeModal();
+}
+
+function safeEvaluateFormula(formula, characterData) {
+    if (!formula || !characterData) return 0;
+    
+    try {
+        let expr = formula;
+        
+        expr = expr.replace(/\(FUE\)/g, characterData.attributes.FUE?.value || 10);
+        expr = expr.replace(/\(AGI\)/g, characterData.attributes.AGI?.value || 10);
+        expr = expr.replace(/\(MET\)/g, characterData.attributes.MET?.value || 10);
+        expr = expr.replace(/\(INT\)/g, characterData.attributes.INT?.value || 10);
+        expr = expr.replace(/\(APM\)/g, characterData.attributes.APM?.value || 10);
+        
+        const getMod = (val) => Math.floor((val - 10) / 2);
+        expr = expr.replace(/\(Mod\.FUE\)/g, getMod(characterData.attributes.FUE?.value || 10));
+        expr = expr.replace(/\(Mod\.AGI\)/g, getMod(characterData.attributes.AGI?.value || 10));
+        expr = expr.replace(/\(Mod\.MET\)/g, getMod(characterData.attributes.MET?.value || 10));
+        expr = expr.replace(/\(Mod\.INT\)/g, getMod(characterData.attributes.INT?.value || 10));
+        expr = expr.replace(/\(Mod\.APM\)/g, getMod(characterData.attributes.APM?.value || 10));
+        
+        expr = expr.replace(/\(Nivel\)/g, characterData.stats.level.current);
+        expr = expr.replace(/\(Vida\)/g, characterData.stats.health.current);
+        expr = expr.replace(/\(Armadura\)/g, characterData.stats.armor.current);
+        expr = expr.replace(/\(Mistycals\)/g, characterData.stats.mana.current);
+        expr = expr.replace(/\(Acciones\)/g, characterData.stats.actions.current);
+        expr = expr.replace(/\(Movimiento\)/g, characterData.stats.movement.current);
+        expr = expr.replace(/\(SalvacionMagia\)/g, characterData.stats.magicSave.current);
+        expr = expr.replace(/\(Carga\)/g, characterData.stats.load.current);
+        expr = expr.replace(/\(Resistencia\)/g, characterData.stats.resistance.current);
+        expr = expr.replace(/\(Sabiduria\)/g, characterData.stats.wisdom.current);
+        
+        expr = expr.replace(/(\d+)d(\d+)/g, (match, qty, sides) => {
+            let total = 0;
+            for (let i = 0; i < parseInt(qty); i++) {
+                total += Math.floor(Math.random() * parseInt(sides)) + 1;
+            }
+            return total;
+        });
+        
+        const result = Function('"use strict"; return (' + expr + ')')();
+        return Math.floor(result);
+    } catch (error) {
+        console.error('Error evaluating formula:', error);
+        return 0;
+    }
+}
+
 
 function renderSkillCard(skill, index) {
     const card = document.createElement('div');
     card.className = 'p-4 rounded-lg item-card';
     card.dataset.rarity = skill.rarity || 'Común';
     const rarityOptions = RARITIES.map(r => `<option value="${r}" ${skill.rarity === r ? 'selected' : ''}>${r}</option>`).join('');
+    
+    let costs = [];
+    if (skill.costs && typeof skill.costs === 'string') {
+        try { costs = JSON.parse(skill.costs); } catch(e) { }
+    }
+    const costsHtml = costs.map(c => `${c.value} ${c.type}`).join(' / ') || 'Sin costes';
+    
+    let formulas = [];
+    if (skill.formulas && typeof skill.formulas === 'string') {
+        try { 
+            const parsed = JSON.parse(skill.formulas);
+            formulas = Array.isArray(parsed) ? parsed : [];
+        } catch(e) { }
+    }
+    const formulasHtml = formulas.map(f => {
+        const formulaObj = typeof f === 'string' ? {formula: f, titulo: ''} : f;
+        const displayText = formulaObj.titulo ? `${formulaObj.titulo}: ${formulaObj.formula}` : formulaObj.formula;
+        return `<code class="text-xs font-mono bg-green-100 dark:bg-green-900 px-2 py-1 rounded border border-green-300 dark:border-green-700">${displayText}</code>`;
+    }).join('');
+    
     let damageSwitch = '';
-    if (skill.formula) {
+    if (skill.formula || (formulas && formulas.length > 0)) {
         damageSwitch = `
             <div class="flex items-center space-x-2 mt-2">
                 <span class="text-xs font-medium">Potenciar con Arma</span>
@@ -1938,17 +3091,19 @@ function renderSkillCard(skill, index) {
     }
     card.innerHTML = `
         <div class="flex justify-between items-start">
-            <div>
+            <div class="flex-1">
                 <p class="font-bold">${skill.name} <span class="text-sm font-normal">(Nvl ${skill.level || 0})</span></p>
                 <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">${skill.description || 'Sin descripción.'}</p>
+                <p class="text-sm mt-1"><strong>Tipo:</strong> ${skill.type || 'Activa'}</p>
                 <select class="input-field item-rarity-select mt-2 text-sm" onchange="changeRarity('skills', ${index}, this.value)">${rarityOptions}</select>
-                <p class="text-sm mt-2">Coste: ${skill.costPA} PA / ${skill.costMP} MP</p>
-                <p class="text-sm font-mono bg-gray-200 dark:bg-gray-600 px-2 py-1 rounded mt-1 inline-block">${skill.formula || 'Sin fórmula'}</p>
+                <p class="text-sm mt-2"><strong>Costes:</strong> ${costsHtml}</p>
+                <p class="text-sm mt-1"><strong>Fórmulas:</strong> ${formulasHtml || 'Sin fórmulas'}</p>
+                <p class="text-sm mt-1">Niveles: ${skill.upgrades || 0} ${skill.upgrades && skill.upgrades>0 ? `<button class="btn btn-secondary text-xs ml-2" onclick="reduceSkillLevel(${index})">Reducir Nivel</button>` : ''}</p>
                 ${damageSwitch}
             </div>
-            <div class="flex flex-col space-y-1">
+            <div class="flex flex-col space-y-1 ml-2">
                 <button class="btn btn-primary text-xs" onclick="useAbility('skills', ${index})">Usar</button>
-                <button class="btn btn-secondary text-xs" onclick="openSkillForm(character.inventory.skills[${index}], ${index})">Editar</button>
+                <button class="btn btn-secondary text-xs" onclick="openInventoryForm('skills', character.inventory.skills[${index}], ${index})">Editar</button>
                 <button class="btn btn-danger text-xs" onclick="deleteItem('skills', ${index})">Borrar</button>
             </div>
         </div>`;
@@ -1965,65 +3120,31 @@ function toggleAbilityDamage(index, type) {
     saveCharacterToLocalStorage();
 }
 
-// --- Técnicas/Hechizos ---
-document.getElementById('add-technique-btn').addEventListener('click', () => openTechniqueForm());
-
-function openTechniqueForm(tech = null, index = -1) {
-    const isEditing = tech !== null;
-    const title = isEditing ? 'Editar Técnica/Hechizo' : 'Añadir Técnica/Hechizo';
-    const content = `
-        <h3 class="text-2xl font-bold mb-4">${title}</h3>
-        <div class="modal-scrollable-content"><div class="space-y-4">
-            <input id="tech-name" class="input-field" placeholder="Nombre" value="${tech?.name || ''}">
-            <textarea id="tech-description" class="input-field" placeholder="Descripción..." rows="3">${tech?.description || ''}</textarea>
-            <select id="tech-type" class="input-field">
-                <option value="Técnica" ${tech?.type === 'Técnica' ? 'selected' : ''}>Técnica</option>
-                <option value="Hechizo" ${tech?.type === 'Hechizo' ? 'selected' : ''}>Hechizo</option>
-            </select>
-            <input id="tech-cost-pa" type="number" class="input-field" placeholder="Coste PA" value="${tech?.costPA || 0}">
-            <input id="tech-cost-mp" type="number" class="input-field" placeholder="Coste Místyculas" value="${tech?.costMP || 0}">
-            <div class="border p-4 rounded-md mt-4 border-gray-200 dark:border-gray-600">
-                <label for="tech-formula" class="font-semibold">Fórmula</label>
-                <textarea id="tech-formula" class="input-field mt-1" placeholder="Ej: (INT)d(8)" rows="2">${tech?.formula || ''}</textarea>
-                <div id="formula-builder-container" class="mt-2"></div>
-            </div>
-        </div></div>
-        <div class="flex justify-end space-x-2 mt-6 pt-4 border-t dark:border-gray-600">
-            <button class="btn btn-secondary" onclick="closeModal()">Cancelar</button>
-            <button id="save-tech-btn" class="btn btn-primary">${isEditing ? 'Guardar' : 'Crear'}</button>
-        </div>`;
-    openModal(content);
-    renderFormulaBuilder('formula-builder-container', 'tech-formula');
-    document.getElementById('save-tech-btn').onclick = () => saveTechnique(index);
-}
-
-function saveTechnique(index) {
-    const isEditing = index !== undefined && index !== -1;
-    const newTech = {
-        name: document.getElementById('tech-name').value,
-        description: document.getElementById('tech-description').value,
-        type: document.getElementById('tech-type').value,
-        costPA: parseInt(document.getElementById('tech-cost-pa').value) || 0,
-        costMP: parseInt(document.getElementById('tech-cost-mp').value) || 0,
-        formula: document.getElementById('tech-formula').value,
-        rarity: isEditing ? character.inventory.techniques[index].rarity : 'Común',
-        isDamageFormulaActive: isEditing ? character.inventory.techniques[index].isDamageFormulaActive : false,
-        level: isEditing ? character.inventory.techniques[index].level : 0, // CORRECCIÓN: Inicia en nivel 0
-        upgrades: isEditing ? character.inventory.techniques[index].upgrades : 0,
-    };
-    if (index === -1) character.inventory.techniques.push(newTech);
-    else character.inventory.techniques[index] = newTech;
-    closeModal();
-    saveAndRefresh();
-}
 
 function renderTechniqueCard(tech, index) {
     const card = document.createElement('div');
     card.className = 'p-4 rounded-lg item-card';
     card.dataset.rarity = tech.rarity || 'Común';
     const rarityOptions = RARITIES.map(r => `<option value="${r}" ${tech.rarity === r ? 'selected' : ''}>${r}</option>`).join('');
+    
+    let costs = [];
+    if (tech.costs && typeof tech.costs === 'string') {
+        try { costs = JSON.parse(tech.costs); } catch(e) { }
+    }
+    const costsHtml = costs.map(c => `${c.value} ${c.type}`).join(' / ') || 'Sin costes';
+    
+    let formulas = [];
+    if (tech.formulas && typeof tech.formulas === 'string') {
+        try { formulas = JSON.parse(tech.formulas); } catch(e) { }
+    }
+    const formulasHtml = formulas.map(f => {
+        const formulaObj = typeof f === 'string' ? {formula: f, titulo: ''} : f;
+        const displayText = formulaObj.titulo ? `${formulaObj.titulo}: ${formulaObj.formula}` : formulaObj.formula;
+        return `<code class="text-xs font-mono bg-gray-200 dark:bg-gray-600 px-2 py-1 rounded">${displayText}</code>`;
+    }).join('');
+    
     let damageSwitch = '';
-    if (tech.formula) {
+    if (tech.formula || (formulas && formulas.length > 0)) {
         damageSwitch = `
             <div class="flex items-center space-x-2 mt-2">
                 <span class="text-xs font-medium">Potenciar con Arma</span>
@@ -2035,17 +3156,19 @@ function renderTechniqueCard(tech, index) {
     }
     card.innerHTML = `
         <div class="flex justify-between items-start">
-            <div>
+            <div class="flex-1">
                 <p class="font-bold">${tech.name} <span class="text-sm font-normal">(Nvl ${tech.level || 0})</span></p>
                 <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">${tech.description || 'Sin descripción.'}</p>
+                <p class="text-sm mt-1"><strong>Tipo:</strong> ${tech.type || 'Técnica'}</p>
                 <select class="input-field item-rarity-select mt-2 text-sm" onchange="changeRarity('techniques', ${index}, this.value)">${rarityOptions}</select>
-                <p class="text-sm mt-2">Coste: ${tech.costPA} PA / ${tech.costMP} MP</p>
-                <p class="text-sm font-mono bg-gray-200 dark:bg-gray-600 px-2 py-1 rounded mt-1 inline-block">${tech.formula || 'Sin fórmula'}</p>
+                <p class="text-sm mt-2"><strong>Costes:</strong> ${costsHtml}</p>
+                <p class="text-sm mt-1"><strong>Fórmulas:</strong> ${formulasHtml || 'Sin fórmulas'}</p>
+                <p class="text-sm mt-1">Niveles: ${tech.upgrades || 0} ${tech.upgrades && tech.upgrades>0 ? `<button class="btn btn-secondary text-xs ml-2" onclick="reduceTechniqueLevel(${index})">Reducir Nivel</button>` : ''}</p>
                 ${damageSwitch}
             </div>
-            <div class="flex flex-col space-y-1">
+            <div class="flex flex-col space-y-1 ml-2">
                 <button class="btn btn-primary text-xs" onclick="useAbility('techniques', ${index})">Usar</button>
-                <button class="btn btn-secondary text-xs" onclick="openTechniqueForm(character.inventory.techniques[${index}], ${index})">Editar</button>
+                <button class="btn btn-secondary text-xs" onclick="openInventoryForm('techniques', character.inventory.techniques[${index}], ${index})">Editar</button>
                 <button class="btn btn-danger text-xs" onclick="deleteItem('techniques', ${index})">Borrar</button>
             </div>
         </div>`;
@@ -2053,108 +3176,6 @@ function renderTechniqueCard(tech, index) {
 }
 
 
-// --- Objetos ---
-document.getElementById('add-item-btn').addEventListener('click', () => openItemForm());
-
-function openItemForm(item = null, index = -1) {
-    const isEditing = item !== null;
-    const title = isEditing ? 'Editar Objeto' : 'Añadir Objeto';
-    let structuredEffectsHtml = '';
-    let otherEffectsText = '';
-    if (item) {
-        item.effects.forEach(effect => {
-            const parts = effect.split(':');
-            if (parts.length === 3) structuredEffectsHtml += generateEffectRowHtml(parts[0], parts[1], parts[2]);
-            else otherEffectsText += effect + '\n';
-        });
-    }
-    const content = `
-        <h3 class="text-2xl font-bold mb-4">${title}</h3>
-        <div class="modal-scrollable-content"><div class="space-y-4">
-            <input id="item-name" class="input-field" placeholder="Nombre del Objeto" value="${item?.name || ''}">
-            <select id="item-type" class="input-field">
-                <option value="arma" ${item?.type === 'arma' ? 'selected' : ''}>Arma</option>
-                <option value="armadura" ${item?.type === 'armadura' ? 'selected' : ''}>Armadura</option>
-                <option value="accesorio" ${item?.type === 'accesorio' ? 'selected' : ''}>Accesorio</option>
-                <option value="consumible" ${item?.type === 'consumible' ? 'selected' : ''}>Consumible</option>
-                <option value="otro" ${item?.type === 'otro' ? 'selected' : ''}>Otro</option>
-            </select>
-            <div>
-                <h4 class="font-semibold mb-2">Efectos Estructurados</h4>
-                <div id="structured-effects-container" class="space-y-2">${structuredEffectsHtml}</div>
-                <button id="add-effect-btn" class="btn btn-secondary text-sm mt-2">Añadir Efecto</button>
-            </div>
-             <div>
-                <h4 class="font-semibold mb-2">Otros Efectos (Personalizados)</h4>
-                <textarea id="item-other-effects" class="input-field" rows="3" placeholder="Ej: Inmune al fuego">${otherEffectsText}</textarea>
-            </div>
-            <div class="border p-4 rounded-md mt-4 border-gray-200 dark:border-gray-600">
-                <label for="item-damage-formula" class="font-semibold">Fórmula de Daño/Efecto</label>
-                <textarea id="item-damage-formula" class="input-field mt-1" placeholder="Ej: 1d8 + (Mod.FUE)" rows="2">${item?.damageFormula || ''}</textarea>
-                <div id="damage-formula-builder-container" class="mt-2"></div>
-            </div>
-        </div></div>
-        <div class="flex justify-end space-x-2 mt-6 pt-4 border-t dark:border-gray-600">
-            <button class="btn btn-secondary" onclick="closeModal()">Cancelar</button>
-            <button id="save-item-btn" class="btn btn-primary">${isEditing ? 'Guardar' : 'Crear'}</button>
-        </div>`;
-    openModal(content);
-    renderFormulaBuilder('damage-formula-builder-container', 'item-damage-formula');
-    document.getElementById('save-item-btn').onclick = () => saveItem(index);
-    document.getElementById('add-effect-btn').addEventListener('click', addEffectRow);
-}
-
-function generateEffectRowHtml(type = 'attr', key = 'FUE', value = '1') {
-    const effectId = `effect-${Date.now()}-${Math.random()}`;
-    const keyOptions = type === 'attr' ? Object.keys(character.attributes) : Object.keys(character.stats).filter(k => k !== 'level' && k !== 'xp');
-    return `
-        <div id="${effectId}" class="grid grid-cols-12 gap-2 items-center">
-            <select class="input-field col-span-4 effect-type-select" onchange="updateEffectKeys(this, '${effectId}')">
-                <option value="attr" ${type === 'attr' ? 'selected' : ''}>Atributo</option>
-                <option value="stat" ${type === 'stat' ? 'selected' : ''}>Estadística</option>
-            </select>
-            <select class="input-field col-span-4 effect-key-select">
-                ${keyOptions.map(k => `<option value="${k}" ${k === key ? 'selected' : ''}>${character.attributes[k]?.name || character.stats[k]?.name}</option>`).join('')}
-            </select>
-            <input type="number" class="input-field col-span-3 effect-value-input" value="${value}">
-            <button class="btn btn-danger btn-sm !p-1.5 col-span-1" onclick="document.getElementById('${effectId}').remove()">X</button>
-        </div>`;
-}
-
-function updateEffectKeys(selectElement, rowId) {
-    const row = document.getElementById(rowId);
-    const keySelect = row.querySelector('.effect-key-select');
-    const selectedType = selectElement.value;
-    const keySource = selectedType === 'attr' ? character.attributes : Object.fromEntries(Object.entries(character.stats).filter(([k]) => k !== 'level' && k !== 'xp'));
-    keySelect.innerHTML = Object.entries(keySource).map(([key, data]) => `<option value="${key}">${data.name}</option>`).join('');
-}
-
-function addEffectRow() {
-    document.getElementById('structured-effects-container').insertAdjacentHTML('beforeend', generateEffectRowHtml());
-}
-
-function saveItem(index) {
-    const isEditing = index !== undefined && index !== -1;
-    const effects = [];
-    document.querySelectorAll('#structured-effects-container > div').forEach(row => {
-        const type = row.querySelector('.effect-type-select').value;
-        const key = row.querySelector('.effect-key-select').value;
-        const value = row.querySelector('.effect-value-input').value;
-        if (type && key && value) effects.push(`${type}:${key}:${value}`);
-    });
-    const otherEffects = document.getElementById('item-other-effects').value.split('\n').filter(e => e.trim() !== '');
-    const newItem = {
-        name: document.getElementById('item-name').value,
-        type: document.getElementById('item-type').value,
-        effects: [...effects, ...otherEffects],
-        damageFormula: document.getElementById('item-damage-formula').value,
-        rarity: isEditing ? character.inventory.items[index].rarity : 'Común',
-    };
-    if (index === -1) character.inventory.items.push(newItem);
-    else character.inventory.items[index] = newItem;
-    closeModal();
-    saveAndRefresh();
-}
 
 function renderItemCard(item, index) {
     const card = document.createElement('div');
@@ -2174,15 +3195,12 @@ function renderItemCard(item, index) {
             <div class="flex flex-col space-y-1">
                 ${item.damageFormula ? `<button class="btn btn-primary text-xs" onclick="useItemEffect(${index})">Usar Objeto</button>` : ''}
                 ${item.type !== 'consumible' && item.type !== 'otro' ? `<button class="btn btn-primary text-xs" onclick="equipItem(${index})">Equipar</button>` : ''}
-                <button class="btn btn-secondary text-xs" onclick="openItemForm(character.inventory.items[${index}], ${index})">Editar</button>
+                <button class="btn btn-secondary text-xs" onclick="openInventoryForm('items', character.inventory.items[${index}], ${index})">Editar</button>
                 <button class="btn btn-danger text-xs" onclick="deleteItem('items', ${index})">Borrar</button>
             </div>
         </div>`;
     return card;
 }
-
-// --- Mascotas ---
-document.getElementById('add-pet-btn').addEventListener('click', () => openPetForm());
 
 function calculatePetStats(pet) {
     if (!pet.attributes) return pet;
@@ -2216,45 +3234,108 @@ function calculatePetStats(pet) {
 function openPetForm(pet = null, index = -1) {
     const isEditing = pet !== null;
     const title = isEditing ? 'Editar Mascota' : 'Añadir Mascota';
+    const btnText = isEditing ? 'Guardar' : 'Crear';
+    
     const attrInputs = Object.keys(character.attributes).map(key => `
-        <div class="flex justify-between items-center">
-            <label for="pet-attr-${key}" class="font-medium">${character.attributes[key].name}</label>
-            <input type="number" id="pet-attr-${key}" class="input-field w-20 text-center" value="${pet?.attributes?.[key] || 10}">
+        <div class="flex justify-between items-center mb-2">
+            <label class="text-sm font-medium">${character.attributes[key].name}</label>
+            <input type="number" id="pet-attr-${key}" class="input-field w-20 text-center text-sm" value="${pet?.attributes?.[key] || 10}">
         </div>`).join('');
+    
     const content = `
-        <h3 class="text-2xl font-bold mb-4">${title}</h3>
-        <div class="modal-scrollable-content"><div class="space-y-4">
-            <div class="flex items-center space-x-4">
-                <img id="pet-image-preview" src="${pet?.image || 'https://placehold.co/80x80/e0e0e0/2c3e50?text=Pet'}" alt="Avatar de la Mascota" class="w-20 h-20 rounded-full object-cover border-4 border-gray-200 dark:border-gray-700">
-                <div><label for="pet-image-upload" class="btn btn-primary text-sm">Cargar Imagen</label><input type="file" id="pet-image-upload" class="hidden" accept="image/*"></div>
+        <div class="flex justify-between items-center mb-4">
+            <h3 class="text-2xl font-bold">${title}</h3>
+            <div>
+                <img id="pet-image-preview" src="${pet?.image || 'https://placehold.co/100x100/e0e0e0/2c3e50?text=Pet'}" alt="Avatar" class="w-24 h-24 rounded-lg object-cover border-2 border-gray-300">
             </div>
-            <input id="pet-name" class="input-field" placeholder="Nombre" value="${pet?.name || ''}">
-            <input id="pet-type" class="input-field" placeholder="Tipo (Ej: Bestia, Elemental)" value="${pet?.type || ''}">
-            <input id="pet-level" type="number" class="input-field" placeholder="Nivel" value="${pet?.level || 1}">
-            ${createRaritySelector(pet?.rarity || 'Común')}
-            <textarea id="pet-notes" class="input-field" rows="3" placeholder="Notas, personalidad, historia...">${pet?.notes || ''}</textarea>
-            <h4 class="font-semibold pt-2 border-t mt-4 dark:border-gray-600">Atributos Base</h4>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-2">${attrInputs}</div>
-            <h4 class="font-semibold pt-2 border-t mt-4 dark:border-gray-600">Estadísticas Base</h4>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-2">
-                 <div class="flex justify-between items-center"><label for="pet-base-health" class="font-medium">Vida Base</label><input type="number" id="pet-base-health" class="input-field w-20 text-center" value="${pet?.stats?.health?.base || 20}"></div>
-                 <div class="flex justify-between items-center"><label for="pet-base-mana" class="font-medium">Maná Base</label><input type="number" id="pet-base-mana" class="input-field w-20 text-center" value="${pet?.stats?.mana?.base || 20}"></div>
-                 <div class="flex justify-between items-center"><label for="pet-base-armor" class="font-medium">Armadura Base</label><input type="number" id="pet-base-armor" class="input-field w-20 text-center" value="${pet?.stats?.armor?.base || 10}"></div>
-                 <div class="flex justify-between items-center"><label for="pet-base-actions" class="font-medium">Acciones Base</label><input type="number" id="pet-base-actions" class="input-field w-20 text-center" value="${pet?.stats?.actions?.base || 2}"></div>
+        </div>
+        
+        <div class="border-b border-gray-200 dark:border-gray-700 mb-4">
+            <nav class="-mb-px flex space-x-4" id="pet-modal-tabs">
+                <button data-pet-tab="info" class="tab-button whitespace-nowrap py-2 px-1 border-b-2 font-medium text-sm active">Información</button>
+                <button data-pet-tab="attributes" class="tab-button whitespace-nowrap py-2 px-1 border-b-2 font-medium text-sm">Atributos</button>
+                <button data-pet-tab="stats" class="tab-button whitespace-nowrap py-2 px-1 border-b-2 font-medium text-sm">Estadísticas</button>
+            </nav>
+        </div>
+        
+        <div class="modal-scrollable-content">
+            <!-- Tab: Información -->
+            <div id="pet-tab-info" class="pet-pane active space-y-4">
+                <label class="block">
+                    <span class="text-sm font-medium mb-1 block">Cargar Imagen</span>
+                    <input type="file" id="pet-image-upload" accept="image/*" class="input-field w-full text-sm">
+                </label>
+                <input id="pet-name" class="input-field" placeholder="Nombre de la Mascota" value="${pet?.name || ''}">
+                <input id="pet-type" class="input-field" placeholder="Tipo (Ej: Bestia, Dragón, Elemental)" value="${pet?.type || ''}">
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="text-sm font-medium mb-1 block">Nivel</label>
+                        <input id="pet-level" type="number" class="input-field" value="${pet?.level || 1}">
+                    </div>
+                    <div>
+                        <label class="text-sm font-medium mb-1 block">Rareza</label>
+                        ${createRaritySelector(pet?.rarity || 'Común')}
+                    </div>
+                </div>
+                <label>
+                    <span class="text-sm font-medium mb-1 block">Notas / Personalidad</span>
+                    <textarea id="pet-notes" class="input-field" rows="4" placeholder="Descripción, historia, personalidad...">${pet?.notes || ''}</textarea>
+                </label>
             </div>
-        </div></div>
+            
+            <!-- Tab: Atributos -->
+            <div id="pet-tab-attributes" class="pet-pane hidden space-y-2">
+                ${attrInputs}
+            </div>
+            
+            <!-- Tab: Estadísticas Base -->
+            <div id="pet-tab-stats" class="pet-pane hidden space-y-3">
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="text-sm font-medium mb-1 block">Vida Base</label>
+                        <input type="number" id="pet-base-health" class="input-field" value="${pet?.stats?.health?.base || 20}">
+                    </div>
+                    <div>
+                        <label class="text-sm font-medium mb-1 block">Maná Base</label>
+                        <input type="number" id="pet-base-mana" class="input-field" value="${pet?.stats?.mana?.base || 20}">
+                    </div>
+                    <div>
+                        <label class="text-sm font-medium mb-1 block">Armadura Base</label>
+                        <input type="number" id="pet-base-armor" class="input-field" value="${pet?.stats?.armor?.base || 10}">
+                    </div>
+                    <div>
+                        <label class="text-sm font-medium mb-1 block">Acciones Base</label>
+                        <input type="number" id="pet-base-actions" class="input-field" value="${pet?.stats?.actions?.base || 2}">
+                    </div>
+                </div>
+            </div>
+        </div>
+        
         <div class="flex justify-end space-x-2 mt-6 pt-4 border-t dark:border-gray-600">
             <button class="btn btn-secondary" onclick="closeModal()">Cancelar</button>
-            <button id="save-pet-btn" class="btn btn-primary">${isEditing ? 'Guardar' : 'Crear'}</button>
-        </div>`;
+            <button id="save-pet-btn" class="btn btn-primary">${btnText}</button>
+        </div>
+    `;
     openModal(content);
-    document.getElementById('pet-image-upload').addEventListener('change', function(event) {
-        if (event.target.files && event.target.files[0]) {
+    
+    document.getElementById('pet-modal-tabs').addEventListener('click', (e) => {
+        if (e.target.dataset.petTab) {
+            const tab = e.target.dataset.petTab;
+            document.querySelectorAll('#pet-modal-tabs .tab-button').forEach(btn => btn.classList.remove('active'));
+            e.target.classList.add('active');
+            document.querySelectorAll('.pet-pane').forEach(pane => pane.classList.add('hidden'));
+            document.getElementById(`pet-tab-${tab}`).classList.remove('hidden');
+        }
+    });
+    
+    document.getElementById('pet-image-upload')?.addEventListener('change', function(event) {
+        if (event.target.files?.[0]) {
             const reader = new FileReader();
             reader.onload = (e) => document.getElementById('pet-image-preview').src = e.target.result;
             reader.readAsDataURL(event.target.files[0]);
         }
     });
+    
     document.getElementById('save-pet-btn').onclick = () => savePet(index);
 }
 
@@ -2273,7 +3354,6 @@ function savePet(index) {
     if (!petData.stats.mana) petData.stats.mana = {};
     if (!petData.stats.armor) petData.stats.armor = {};
     if (!petData.stats.actions) petData.stats.actions = {};
-    if (!petData.skills) petData.skills = [];
     Object.keys(character.attributes).forEach(key => {
         petData.attributes[key] = parseInt(document.getElementById(`pet-attr-${key}`).value) || 10;
     });
@@ -2308,25 +3388,13 @@ function renderPetCard(pet, index) {
         <div class="flex justify-between items-center text-xs"><span class="font-semibold">Maná</span><div class="flex items-center gap-1"><input type="number" value="${hydratedPet.stats.mana.current}" class="input-field !p-1 !text-xs w-12 text-center" onchange="updatePetStat(${index}, 'mana', this.value)"><span>/</span><span class="font-bold">${hydratedPet.stats.mana.max}</span></div></div>
         <div class="flex justify-between text-xs"><span class="font-semibold">Armadura</span> <span class="font-bold">${hydratedPet.stats.armor.current}</span></div>
         <div class="flex justify-between text-xs"><span class="font-semibold">Acciones</span> <span class="font-bold">${hydratedPet.stats.actions.current}</span></div>`;
-    const skillsHtml = hydratedPet.skills.map((skill, skillIndex) => `
-        <div class="p-2 border-t dark:border-gray-600 flex justify-between items-center">
-            <div>
-                <p class="font-semibold text-sm">${skill.name} <span class="text-xs font-normal text-gray-500 dark:text-gray-400">(${skill.type})</span></p>
-                <p class="text-xs">Coste: ${skill.costPA || 0} PA / ${skill.costMP || 0} MP</p>
-                <p class="text-xs font-mono bg-gray-200 dark:bg-gray-600 px-1 py-0.5 rounded mt-1 inline-block">${skill.formula || 'N/A'}</p>
-            </div>
-            <div class="flex flex-col gap-1">
-                <button class="btn btn-secondary !p-1 text-xs" onclick="openPetSkillForm(${index}, character.inventory.pets[${index}].skills[${skillIndex}], ${skillIndex})">E</button>
-                <button class="btn btn-danger !p-1 text-xs" onclick="deletePetSkill(${index}, ${skillIndex})">X</button>
-            </div>
-        </div>`).join('');
     card.innerHTML = `
         <div class="flex justify-between items-start">
             <div class="flex items-center gap-4">
                 <img src="${hydratedPet.image}" alt="Avatar" class="w-16 h-16 rounded-full object-cover border-2 border-white shadow-md">
                 <div>
                     <p class="font-bold text-lg">${hydratedPet.name}</p>
-                    <p class="text-sm rarity-text -mt-1">${hydratedPet.rarity}</p>
+                    <p class="text-sm rarity-text -mt-1">${hydratedPet.rarity}</p> 
                     <p class="text-xs text-gray-500 dark:text-gray-400">${hydratedPet.type} - Nivel ${hydratedPet.level}</p>
                 </div>
             </div>
@@ -2339,31 +3407,19 @@ function renderPetCard(pet, index) {
             <div><h4 class="font-semibold mb-1 text-sm">Atributos</h4><div class="space-y-1">${attributesHtml}</div></div>
             <div><h4 class="font-semibold mb-1 text-sm">Estadísticas</h4><div class="space-y-1">${statsHtml}</div></div>
         </div>
-        <div>
-            <div class="border-b border-gray-200 dark:border-gray-700"><nav class="-mb-px flex space-x-2">
-                <button data-pet-tab="skills" class="tab-button pet-tab-${index} whitespace-nowrap py-2 px-1 border-b-2 font-medium text-xs border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-200 active">Habilidades</button>
-                <button data-pet-tab="notes" class="tab-button pet-tab-${index} whitespace-nowrap py-2 px-1 border-b-2 font-medium text-xs border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-200">Notas</button>
-            </nav></div>
-            <div class="mt-2">
-                <div id="pet-tab-content-${index}-skills" class="pet-pane-${index} active">
-                    <div class="space-y-1 max-h-40 overflow-y-auto">${skillsHtml || '<p class="text-xs text-gray-500 dark:text-gray-400 p-2">Sin habilidades.</p>'}</div>
-                    <button class="btn btn-primary text-xs w-full mt-2" onclick="openPetSkillForm(${index})">Añadir Habilidad</button>
-                </div>
-                <div id="pet-tab-content-${index}-notes" class="pet-pane-${index} hidden">
-                    <p class="text-xs p-2 bg-gray-100 dark:bg-gray-800 rounded min-h-[4rem]">${hydratedPet.notes || 'Sin notas.'}</p>
-                </div>
-            </div>
+        <div class="border-t dark:border-gray-600 pt-3">
+            <p class="text-sm font-semibold mb-2">Notas</p>
+            <p class="text-xs p-2 bg-gray-100 dark:bg-gray-800 rounded min-h-[4rem] text-gray-700 dark:text-gray-300">${hydratedPet.notes || '(Sin notas)'}</p>
         </div>`;
-    card.querySelectorAll(`.pet-tab-${index}`).forEach(button => {
-        button.addEventListener('click', (e) => {
-            const tabName = e.target.dataset.petTab;
-            card.querySelectorAll(`.pet-tab-${index}`).forEach(btn => btn.classList.remove('active'));
-            e.target.classList.add('active');
-            card.querySelectorAll(`.pet-pane-${index}`).forEach(pane => pane.classList.add('hidden'));
-            card.querySelector(`#pet-tab-content-${index}-${tabName}`).classList.remove('hidden');
-        });
-    });
     return card;
+}
+
+function openPetSkillsMenu(petIndex) {
+    // FUNCIÓN REMOVIDA: Las habilidades de mascotas han sido eliminadas del sistema
+}
+
+function editPetSkillHandler(petIdx, skillIdx) {
+    // FUNCIÓN REMOVIDA: Las habilidades de mascotas han sido eliminadas del sistema
 }
 
 function updatePetStat(petIndex, stat, value) {
@@ -2378,67 +3434,43 @@ function updatePetStat(petIndex, stat, value) {
 }
 
 function openPetSkillForm(petIndex, skill = null, skillIndex = -1) {
-    const isEditing = skill !== null;
-    const title = isEditing ? 'Editar Habilidad de Mascota' : 'Añadir Habilidad de Mascota';
-    const content = `
-        <h3 class="text-2xl font-bold mb-4">${title}</h3>
-        <div class="modal-scrollable-content"><div class="space-y-4">
-            <input id="pet-skill-name" class="input-field" placeholder="Nombre" value="${skill?.name || ''}">
-            <select id="pet-skill-type" class="input-field">
-                <option value="Activa" ${skill?.type === 'Activa' ? 'selected' : ''}>Activa</option>
-                <option value="Pasiva" ${skill?.type === 'Pasiva' ? 'selected' : ''}>Pasiva</option>
-            </select>
-            <input id="pet-skill-cost-pa" type="number" class="input-field" placeholder="Coste PA" value="${skill?.costPA || 0}">
-            <input id="pet-skill-cost-mp" type="number" class="input-field" placeholder="Coste MP" value="${skill?.costMP || 0}">
-            <textarea id="pet-skill-formula" class="input-field" placeholder="Fórmula" rows="2">${skill?.formula || ''}</textarea>
-        </div></div>
-        <div class="flex justify-end space-x-2 mt-6 pt-4 border-t dark:border-gray-600">
-            <button class="btn btn-secondary" onclick="closeModal(2)">Cancelar</button>
-            <button id="save-pet-skill-btn" class="btn btn-primary">${isEditing ? 'Guardar' : 'Crear'}</button>
-        </div>`;
-    openModal(content, 2);
-    document.getElementById('save-pet-skill-btn').onclick = () => savePetSkill(petIndex, skillIndex);
+    // FUNCIÓN REMOVIDA: Las habilidades de mascotas han sido eliminadas del sistema
 }
 
 function savePetSkill(petIndex, skillIndex) {
-    const newSkill = {
-        name: document.getElementById('pet-skill-name').value,
-        type: document.getElementById('pet-skill-type').value,
-        costPA: parseInt(document.getElementById('pet-skill-cost-pa').value) || 0,
-        costMP: parseInt(document.getElementById('pet-skill-cost-mp').value) || 0,
-        formula: document.getElementById('pet-skill-formula').value,
-    };
-    if (skillIndex === -1) character.inventory.pets[petIndex].skills.push(newSkill);
-    else character.inventory.pets[petIndex].skills[skillIndex] = newSkill;
-    closeModal(2);
-    saveAndRefresh();
+    // FUNCIÓN REMOVIDA: Las habilidades de mascotas han sido eliminadas del sistema
 }
 
 function deletePetSkill(petIndex, skillIndex) {
-    character.inventory.pets[petIndex].skills.splice(skillIndex, 1);
-    saveAndRefresh();
+    // FUNCIÓN REMOVIDA: Las habilidades de mascotas han sido eliminadas del sistema
 }
 
-// --- Borrado genérico ---
 function deleteItem(type, index) {
+    const item = character.inventory[type] && character.inventory[type][index];
+    if (!item) return;
+    const itemName = item.name || (item.type || type) || 'Elemento';
     openModal(`
         <h3 class="text-xl font-bold mb-4">Confirmar Eliminación</h3>
-        <p>¿Seguro que quieres borrar este elemento? Esta acción no se puede deshacer.</p>
+        <p>¿Seguro que quieres borrar <strong>${itemName}</strong>? Esta acción no se puede deshacer.</p>
         <div class="flex justify-end mt-6 space-x-2">
             <button class="btn btn-secondary" onclick="closeModal()">Cancelar</button>
             <button class="btn btn-danger" id="confirm-delete-btn">Eliminar</button>
         </div>`);
     document.getElementById('confirm-delete-btn').onclick = () => {
+        if (type === 'skills' || type === 'techniques') {
+            const upgrades = item.upgrades || 0;
+            if (upgrades > 0) {
+                const refund = calculateTotalPHSpentForUpgrades(upgrades);
+                character.skillPoints = (character.skillPoints || 0) + refund;
+                showNotification('PH Recuperado', `Has recuperado ${refund} PH al eliminar ${itemName}.`);
+            }
+        }
         character.inventory[type].splice(index, 1);
         closeModal();
         saveAndRefresh();
     };
 }
 
-
-// ===================================================================================
-// LÓGICA DE EQUIPAMIENTO
-// ===================================================================================
 
 document.getElementById('manage-slots-btn').addEventListener('click', openManageSlotsModal);
 
@@ -2495,7 +3527,7 @@ function renderEquipment() {
     container.innerHTML = '';
     character.equipment.forEach((slot, index) => {
         const div = document.createElement('div');
-        div.className = 'p-3 border dark:border-gray-700 rounded-lg flex justify-between items-center';
+        div.className = 'p-4 border-2 dark:border-gray-700 rounded-lg flex flex-col gap-3';
         
         let damageSwitch = '';
         if (slot.item && slot.item.damageFormula) {
@@ -2504,6 +3536,28 @@ function renderEquipment() {
                     <span class="text-xs font-medium">Potenciar</span>
                     <label class="switch"><input type="checkbox" onchange="toggleDamageFormula(${index})" ${slot.isDamageFormulaActive ? 'checked' : ''}><span class="slider"></span></label>
                 </div>`;
+        }
+
+        let bonusesHtml = '';
+        if (slot.item && slot.item.equipmentBonus) {
+            let equipBonus = {};
+            try {
+                equipBonus = typeof slot.item.equipmentBonus === 'string' ? JSON.parse(slot.item.equipmentBonus) : slot.item.equipmentBonus;
+            } catch(e) {}
+            
+            if (Object.keys(equipBonus).length > 0) {
+                bonusesHtml = `
+                <div class="bg-gradient-to-r from-amber-50 to-orange-50 dark:from-amber-900/20 dark:to-orange-900/20 p-2 rounded border border-amber-200 dark:border-amber-700">
+                    <p class="text-xs font-bold text-amber-900 dark:text-amber-300 mb-1">📊 Bonificaciones:</p>
+                    <div class="flex flex-wrap gap-2">
+                        ${Object.entries(equipBonus).map(([key, val]) => `
+                            <span class="text-xs px-2 py-1 bg-white dark:bg-gray-800 rounded border border-amber-200 dark:border-amber-700 font-mono">
+                                <span class="font-semibold text-amber-700 dark:text-amber-300">${key}</span>: <span class="text-green-600 dark:text-green-400 font-bold">${val > 0 ? '+' : ''}${val}</span>
+                            </span>
+                        `).join('')}
+                    </div>
+                </div>`;
+            }
         }
 
         let actionButtons = '';
@@ -2515,15 +3569,18 @@ function renderEquipment() {
         }
 
         div.innerHTML = `
-            <div class="flex-grow">
-                <p class="font-semibold capitalize">${slot.slotName}</p>
-                <p class="text-sm text-gray-600 dark:text-gray-400">${slot.item ? slot.item.name : 'Vacío'}</p>
-                 ${slot.item?.damageFormula ? `<p class="text-xs font-mono bg-gray-200 dark:bg-gray-700 px-2 py-1 rounded mt-1 inline-block">${slot.item.damageFormula}</p>` : ''}
+            <div class="flex justify-between items-start">
+                <div class="flex-grow">
+                    <p class="font-semibold capitalize text-lg">${slot.slotName}</p>
+                    <p class="text-sm text-gray-600 dark:text-gray-400">${slot.item ? slot.item.name : 'Vacío'}</p>
+                    ${slot.item?.damageFormula ? `<p class="text-xs font-mono bg-gray-200 dark:bg-gray-700 px-2 py-1 rounded mt-1 inline-block">⚡ ${slot.item.damageFormula}</p>` : ''}
+                </div>
+                <div class="flex items-center">
+                     ${damageSwitch}
+                     ${actionButtons}
+                </div>
             </div>
-            <div class="flex items-center">
-                 ${damageSwitch}
-                 ${actionButtons}
-            </div>`;
+            ${bonusesHtml}`;
         container.appendChild(div);
     });
 }
@@ -2563,10 +3620,6 @@ function confirmEquip(itemIndex, slotName) {
 }
 
 
-
-// ===================================================================================
-// CONSTRUCTOR Y EVALUADOR DE FÓRMULAS
-// ===================================================================================
 
 function renderFormulaBuilder(containerId, targetTextareaId) {
     const container = document.getElementById(containerId);
@@ -2621,11 +3674,6 @@ function openDiceBuilderModal(targetTextareaId) {
     };
 }
 
-function addToFormula(text, targetTextareaId) {
-    const textarea = document.getElementById(targetTextareaId);
-    if (textarea) textarea.value += text;
-}
-
 function safeEvaluateFormula(baseFormula, options = {}) {
     const { abilityLevel = 1, isEmpowered = false } = options;
 
@@ -2664,7 +3712,6 @@ function safeEvaluateFormula(baseFormula, options = {}) {
             });
         });
 
-        // Step 1: Replace all variables with their FINAL numeric values
         for (const key in finalAttributes) {
             const attr = finalAttributes[key];
             const mod = getModifier(attr.value);
@@ -2676,7 +3723,6 @@ function safeEvaluateFormula(baseFormula, options = {}) {
         }
         processedFormula = processedFormula.replace(new RegExp(`\\(NivelHab\\)`, 'gi'), abilityLevel);
 
-        // Step 2: Iteratively resolve dice rolls.
         let diceRollsText = [];
         const diceRegex = /(\d+)\s*d\s*(\d+)/;
 
@@ -2703,7 +3749,6 @@ function safeEvaluateFormula(baseFormula, options = {}) {
             iterations++;
         }
 
-        // Step 3: Evaluate the final mathematical expression
         const finalResult = new Function(`return ${processedFormula}`)();
         
         return { total: finalResult, rolls: diceRollsText.join('; ') || 'N/A', error: null };
@@ -2717,38 +3762,143 @@ function safeEvaluateFormula(baseFormula, options = {}) {
 
 function useAbility(type, index) {
     const ability = character.inventory[type][index];
-    if (!ability.formula) { showNotification('Error', 'Esta habilidad no tiene fórmula.'); return; }
-    if (character.combat.currentActions < ability.costPA) { showNotification('Error', 'No tienes suficientes Puntos de Acción.'); return; }
-    if (character.stats.mana.current < ability.costMP) { showNotification('Error', 'No tienes suficientes Místyculas.'); return; }
     
-    const result = safeEvaluateFormula(ability.formula, { 
-        abilityLevel: ability.level, 
-        isEmpowered: ability.isDamageFormulaActive 
-    });
-
-    if (result.error) {
-        showNotification('Error de Fórmula', `No se pudo usar la habilidad.\nError: ${result.error}`);
-    } else {
-        character.stats.mana.current -= ability.costMP;
-        useAction(ability.costPA, ability.name); // Usar la función centralizada
-        
-        // Sincronizar acciones después de usar la habilidad
-        character.stats.actions.current = character.combat.currentActions;
-        
-        showNotification(`Resultado de ${ability.name}`, `Total: ${result.total}\nDetalle: ${result.rolls}`);
-        
-        // Actualizar vitales en el modo combate
-        refreshCombatVitals();
+    let formulas = [];
+    if (ability.formulas && typeof ability.formulas === 'string') {
+        try {
+            formulas = JSON.parse(ability.formulas);
+        } catch(e) { formulas = []; }
+    } else if (ability.formulas && Array.isArray(ability.formulas)) {
+        formulas = ability.formulas;
+    } else if (ability.formula) {
+        formulas = [{titulo: '', formula: ability.formula}];
     }
+    
+    if (!formulas.length) { 
+        showNotification('Error', 'Esta habilidad no tiene fórmula.'); 
+        return; 
+    }
+    
+    if (character.combat.currentActions < (ability.costPA || 0)) { 
+        showNotification('Error', 'No tienes suficientes Puntos de Acción.'); 
+        return; 
+    }
+    if (character.stats.mana.current < (ability.costMP || 0)) { 
+        showNotification('Error', 'No tienes suficientes Místyculas.'); 
+        return; 
+    }
+    if ((ability.costHP || 0) > 0 && character.stats.health.current <= (ability.costHP || 0)) { 
+        showNotification('Error', 'No tienes suficiente Vida para usar esta habilidad.'); 
+        return; 
+    }
+    if ((ability.costMovement || 0) > 0 && character.stats.movement.current < (ability.costMovement || 0)) { 
+        showNotification('Error', 'No tienes suficiente movimiento disponible.'); 
+        return;
+    }
+    
+    if (ability.costResources && ability.costResources.trim() !== '') {
+        const parts = ability.costResources.split(',').map(p => p.trim()).filter(Boolean);
+        for (const part of parts) {
+            const [rkey, ramt] = part.split(':').map(s => s.trim());
+            const amt = parseInt(ramt) || 0;
+            const resIndex = character.resources.findIndex(r => r.key === rkey || r.name === rkey);
+            if (resIndex === -1 || character.resources[resIndex].current < amt) {
+                showNotification('Error', `No tienes suficientes recursos: ${rkey}`);
+                return;
+            }
+        }
+    }
+    
+    const results = [];
+    for (const f of formulas) {
+        const formula = typeof f === 'string' ? {titulo: '', formula: f} : f;
+        const result = safeEvaluateFormula(formula.formula, { 
+            abilityLevel: ability.level, 
+            isEmpowered: ability.isDamageFormulaActive 
+        });
+        
+        if (!result.error) {
+            results.push({
+                titulo: formula.titulo || 'Efecto',
+                total: Math.round(result.total) || 0,
+                rolls: String(result.rolls) || 'N/A'
+            });
+        }
+    }
+    
+    if (results.length === 0) {
+        showNotification('Error de Fórmula', 'No se pudieron calcular las fórmulas.');
+        return;
+    }
+    
+    character.stats.mana.current -= (ability.costMP || 0);
+    if (ability.costHP) character.stats.health.current = Math.max(0, character.stats.health.current - ability.costHP);
+    if (ability.costMovement) character.stats.movement.current = Math.max(0, character.stats.movement.current - ability.costMovement);
+    if (ability.costResources && ability.costResources.trim() !== '') {
+        const parts = ability.costResources.split(',').map(p => p.trim()).filter(Boolean);
+        for (const part of parts) {
+            const [rkey, ramt] = part.split(':').map(s => s.trim());
+            const amt = parseInt(ramt) || 0;
+            const resIndex = character.resources.findIndex(r => r.key === rkey || r.name === rkey);
+            if (resIndex !== -1) {
+                character.resources[resIndex].current = Math.max(0, character.resources[resIndex].current - amt);
+            }
+        }
+    }
+    useAction((ability.costPA || 0), ability.name);
+    
+    character.stats.actions.current = character.combat.currentActions;
+    
+    const resultsHtml = results.map(r => `<strong>${r.titulo}:</strong> ${r.total} (${r.rolls})`).join('<br>');
+    showNotification(`Resultado de ${ability.name}`, resultsHtml);
+    
+    refreshCombatVitals();
+    
     saveAndRefresh();
 }
 
 function useItemEffect(itemIndex) {
     const item = character.inventory.items[itemIndex];
-    if (!item || !item.damageFormula) { showNotification('Error', 'Este objeto no tiene un efecto usable.'); return; }
-    const result = safeEvaluateFormula(item.damageFormula, {});
-    if (result.error) showNotification('Error de Fórmula', `No se pudo usar el objeto.\nError: ${result.error}`);
-    else showNotification(`Efecto de ${item.name}`, `Total: ${result.total}\nDetalle: ${result.rolls}`);
+    if (!item) { showNotification('Error', 'Objeto no encontrado.'); return; }
+    
+    let formulas = [];
+    if (item.formulas && typeof item.formulas === 'string') {
+        try {
+            formulas = JSON.parse(item.formulas);
+        } catch(e) { formulas = []; }
+    } else if (item.formulas && Array.isArray(item.formulas)) {
+        formulas = item.formulas;
+    } else if (item.damageFormula) {
+        formulas = [{titulo: '', formula: item.damageFormula}];
+    }
+    
+    if (!formulas.length) { 
+        showNotification('Error', 'Este objeto no tiene fórmulas usables.'); 
+        return; 
+    }
+    
+    const results = [];
+    for (const f of formulas) {
+        const formula = typeof f === 'string' ? {titulo: '', formula: f} : f;
+        const result = safeEvaluateFormula(formula.formula, {});
+        
+        if (!result.error) {
+            results.push({
+                titulo: formula.titulo || 'Efecto',
+                total: Math.round(result.total) || 0,
+                rolls: String(result.rolls) || 'N/A'
+            });
+        }
+    }
+    
+    if (results.length === 0) {
+        showNotification('Error de Fórmula', 'No se pudieron calcular las fórmulas del objeto.');
+        return;
+    }
+    
+    const resultsHtml = results.map(r => `<strong>${r.titulo}:</strong> ${r.total} (${r.rolls})`).join('<br>');
+    showNotification(`Efecto de ${item.name}`, resultsHtml);
+    
     saveAndRefresh();
 }
 
@@ -2767,10 +3917,6 @@ function useEquippedItem(slotIndex) {
 }
 
 
-// ===================================================================================
-// OTRAS FUNCIONALIDADES: COMBATE, GESTIÓN, ETC.
-// ===================================================================================
-
 function useAction(cost, type) {
     let message = '';
     let triggeredEffectsSummary = [];
@@ -2780,11 +3926,9 @@ function useAction(cost, type) {
         message = `Has ganado ${-cost} PA. Total: ${character.combat.currentActions} PA.`;
     } else if (character.combat.currentActions >= cost) {
         character.combat.currentActions -= cost;
-        // Sincronizar con stats
         character.stats.actions.current = character.combat.currentActions;
         message = `Usaste una Acción ${type}. Te quedan ${character.combat.currentActions} PA.`;
 
-        // Procesar efectos de estado que se activan con acciones
         const { summary, effectsToKeep } = processStatusEffectsByTrigger('accion');
         triggeredEffectsSummary = summary;
         character.statusEffects = effectsToKeep;
@@ -2859,12 +4003,30 @@ function processStatusEffectsByTrigger(triggerType) {
 
 function rollAttributeCheck(attributeKey) {
     const finalAttributes = JSON.parse(JSON.stringify(character.attributes));
+    
     character.equipment.forEach(slot => {
-        if (slot.item) slot.item.effects.forEach(effect => {
-            const [type, effectKey, value] = effect.split(':');
-            if (type === 'attr' && finalAttributes[effectKey]) finalAttributes[effectKey].value += parseFloat(value) || 0;
-        });
+        if (slot.item) {
+            let equipBonus = {};
+            if (slot.item.equipmentBonus) {
+                if (typeof slot.item.equipmentBonus === 'string') {
+                    try { equipBonus = JSON.parse(slot.item.equipmentBonus); } catch(e) { equipBonus = {}; }
+                } else {
+                    equipBonus = slot.item.equipmentBonus;
+                }
+            }
+            for (const [key, value] of Object.entries(equipBonus)) {
+                if (finalAttributes[key]) {
+                    finalAttributes[key].value += value;
+                }
+            }
+            
+            slot.item.effects.forEach(effect => {
+                const [type, effectKey, value] = effect.split(':');
+                if (type === 'attr' && finalAttributes[effectKey]) finalAttributes[effectKey].value += parseFloat(value) || 0;
+            });
+        }
     });
+    
     character.statusEffects.forEach(status => {
         status.linkedEffects.forEach(effect => {
             if (effect.applyOn === 'continuo' && effect.target === 'self' && effect.attribute.startsWith('attributes.')) {
@@ -2876,6 +4038,7 @@ function rollAttributeCheck(attributeKey) {
             }
         });
     });
+    
     const modifier = getModifier(finalAttributes[attributeKey].value);
     const roll = Math.floor(Math.random() * 20) + 1;
     const total = roll + modifier;
@@ -2898,14 +4061,13 @@ function restoreHealthAndMana() {
     saveAndRefresh();
 }
 
-// --- Gestión ---
 document.getElementById('export-json-btn').addEventListener('click', () => {
     saveCharacterToLocalStorage();
     const themeData = JSON.parse(localStorage.getItem(THEME_STORAGE_KEY) || '{}');
     const exportData = { character: character, theme: themeData };
     const dataStr = JSON.stringify(exportData, null, 2);
     const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
-    const exportFileDefaultName = `${character.identity.name.replace(/\s/g, '_') || 'personaje'}_v5.0_premium.json`;
+    const exportFileDefaultName = `${character.identity.name.replace(/\s/g, '_') || 'personaje'}_v6.11_premium.json`;
     const linkElement = document.createElement('a');
     linkElement.setAttribute('href', dataUri);
     linkElement.setAttribute('download', exportFileDefaultName);
@@ -3043,9 +4205,6 @@ document.getElementById('add-xp-btn').addEventListener('click', () => {
     }
 });
 
-// ===================================================================================
-// GESTIÓN DE TEMAS
-// ===================================================================================
 const themes = {
     'theme-light': { name: 'Claro' }, 'theme-dark': { name: 'Oscuro' },
     'theme-forest': { name: 'Bosque' }, 'theme-ocean': { name: 'Océano' },
@@ -3127,10 +4286,6 @@ function loadTheme() {
     if (savedTheme) applyTheme(savedTheme.name);
 }
 
-// ===================================================================================
-// SISTEMA DE ESTADOS (NUEVO Y MEJORADO)
-// ===================================================================================
-
 function renderStatusEffects() {
     const container = document.getElementById('status-effects-list');
     container.innerHTML = '';
@@ -3211,271 +4366,374 @@ function saveAttributeEdit(key) {
 }
 
 function openCombatMode() {
-    const modal = document.getElementById('modal-secondary');
-    const modalContent = document.getElementById('modal-secondary-content');
+    // Open map modal with image upload
+    openMapModal();
+}
+
+function openMapModal() {
+    if (!character.map) character.map = { avatar: { x: 0, y: 0 }, gridSize: 20, backgroundImage: '', markers: [] };
+    if (!character.map.markers) character.map.markers = [];
+    if (!Array.isArray(character.map.markers)) character.map.markers = [];
     
-    // Generar HTML del modo combate - Layout ancho de 3 columnas
-    let combatHTML = `
-        <div class="combat-header">
-            <h2>⚔️ MODO DE COMBATE</h2>
-            <button class="btn btn-secondary w-14 h-14 flex items-center justify-center text-2xl" onclick="closeModalSecondary()">✕</button>
+    const mapBg = character.map.backgroundImage ? `url('${character.map.backgroundImage}')` : 'none';
+    const markerTypes = ['Aliado', 'Enemigo', 'Punto de Interés', 'Trampa'];
+    const markerColors = { 'Aliado': '#10b981', 'Enemigo': '#ef4444', 'Punto de Interés': '#f59e0b', 'Trampa': '#8b5cf6' };
+    
+    const markerRows = character.map.markers.map((m, i) => `
+        <div class="flex gap-2 items-center text-sm p-2 border-b hover:bg-gray-100 dark:hover:bg-gray-700">
+            <div class="w-4 h-4 rounded flex-shrink-0" style="background-color: ${markerColors[m.type] || '#6b7280'}"></div>
+            <span class="flex-1 font-medium min-w-fit">${m.type}</span>
+            <span class="text-xs text-gray-500 font-mono min-w-fit">(${m.x}, ${m.y})</span>
+            <input type="text" placeholder="Nombre" value="${m.name || ''}" class="input-field text-xs flex-1 py-1" onchange="character.map.markers[${i}].name = this.value; saveCharacterToLocalStorage();">
+            <button class="btn btn-danger text-xs px-2 flex-shrink-0" onclick="character.map.markers.splice(${i}, 1); openMapModal()">✕</button>
+        </div>
+    `).join('');
+    
+    const gridSize = Math.max(20, Math.min(50, character.map.gridSize || 20));
+    const content = `
+        <div class="flex justify-between items-center mb-2">
+            <h3 class="text-lg font-bold">🗺️ Mapa del Mundo</h3>
+            <div class="flex gap-1">
+                <label class="btn btn-secondary text-xs cursor-pointer py-2 px-3">
+                    📤 Subir
+                    <input type="file" id="map-bg-upload" accept="image/*" style="display:none;">
+                </label>
+                <button class="btn btn-danger text-xs py-2 px-3" onclick="clearMapBackground()">Limpiar</button>
+            </div>
+        </div>
+        <!-- CONTROLES PRINCIPALES -->
+        <div class="bg-gradient-to-r from-blue-50 to-blue-100 dark:from-blue-900 dark:to-blue-800 rounded-lg p-3 mb-2 border border-blue-200 dark:border-blue-700">
+            <h4 class="font-bold text-sm mb-2 text-blue-900 dark:text-blue-100">🗺️ Configuración</h4>
+            <div class="grid grid-cols-4 gap-2">
+                <div>
+                    <label class="text-xs font-semibold block mb-1 text-blue-800 dark:text-blue-200">Tamaño Grid</label>
+                    <input type="number" id="map-size" class="input-field text-sm" min="20" max="50" value="${gridSize}" onchange="updateMapSize(parseInt(this.value))">
+                </div>
+                <div>
+                    <label class="text-xs font-semibold block mb-1 text-blue-800 dark:text-blue-200">Avatar X</label>
+                    <input type="number" id="avatar-x" class="input-field text-sm" value="${character.map.avatar.x || 0}" min="0" max="${gridSize - 1}">
+                </div>
+                <div>
+                    <label class="text-xs font-semibold block mb-1 text-blue-800 dark:text-blue-200">Avatar Y</label>
+                    <input type="number" id="avatar-y" class="input-field text-sm" value="${character.map.avatar.y || 0}" min="0" max="${gridSize - 1}">
+                </div>
+                <div>
+                    <label class="text-xs font-semibold block mb-1 text-blue-800 dark:text-blue-200">Modo</label>
+                    <select id="map-mode" class="input-field text-xs py-2" onchange="updateMapModeControls()">
+                        <option value="avatar">👤 Avatar</option>
+                        <option value="marker">📍 Marcador</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- CONTROL DE MARCADOR -->
+        <div id="marker-control" style="display: none;" class="bg-gradient-to-r from-amber-50 to-amber-100 dark:from-amber-900 dark:to-amber-800 rounded-lg p-2 mb-2 border border-amber-200 dark:border-amber-700">
+            <h4 class="font-bold text-sm mb-1 text-amber-900 dark:text-amber-100">📍 Marcador</h4>
+            <select id="marker-type" class="input-field text-xs w-full">
+                ${markerTypes.map(t => `<option value="${t}">${t}</option>`).join('')}
+            </select>
+        </div>
+
+
+        <!-- MAPA GRID -->
+        <div id="map-modal-container" style="position: relative; background-image: ${mapBg}; background-size: 100% 100%; background-position: center; background-repeat: no-repeat; padding: 0.75rem; border-radius: 0.5rem; border: 2px solid #d1d5db; aspect-ratio: 1; min-height: 550px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+            <div id="map-grid-modal" style="display: grid; grid-template-columns: repeat(${gridSize}, 1fr); gap: 1px; width: 100%; height: 100%; background: rgba(0,0,0,0.02);"></div>
         </div>
         
-        <div class="combat-grid-compact">
-            <!-- COLUMNA IZQUIERDA: MASCOTAS -->
-            <div class="combat-col-left space-y-4">
-                <div class="combat-section h-full">
-                    <div class="combat-section-title">🐾 Mascotas</div>
-                    <div class="space-y-2 max-h-96 overflow-y-auto">
-    `;
-    
-    if (character.inventory.pets.length > 0) {
-        character.inventory.pets.forEach((pet, idx) => {
-            combatHTML += `
-                <div class="p-3 rounded-lg bg-orange-50 dark:bg-orange-900/20 border-l-4 border-orange-500">
-                    <p class="font-bold text-orange-700 dark:text-orange-400 text-sm">${pet.name}</p>
-                    <p class="text-xs text-gray-600 dark:text-gray-400 mb-2 line-clamp-2">${pet.description || ''}</p>
-                    <div class="flex gap-1">
-                        <button class="item-action-btn btn btn-primary flex-1" onclick="showNotification('Mascota', '${pet.name} está listo para el combate!')">Usar</button>
-                        <button class="item-action-btn btn btn-secondary flex-1" onclick="showNotification('Info', '${pet.name} - ${pet.description || 'Sin descripción'}')">Info</button>
-                    </div>
-                </div>
-            `;
-        });
-    } else {
-        combatHTML += '<p class="text-xs text-gray-500 italic text-center py-4">Sin mascotas</p>';
-    }
-    
-    combatHTML += `
-                    </div>
+        <!-- INFO DEL MAPA -->
+        <p id="map-info-modal" class="text-xs mt-2 font-mono text-gray-700 dark:text-gray-300 text-center bg-gray-100 dark:bg-gray-700 p-1 rounded">📍 Cada celda = 5 pies</p>
+        
+        <!-- ESTADÍSTICAS COMPACTAS -->
+        <div class="grid grid-cols-3 gap-2 mt-2">
+            <div class="bg-gradient-to-br from-green-50 to-green-100 dark:from-green-900 dark:to-green-800 rounded p-2 border border-green-200 dark:border-green-700">
+                <h5 class="font-semibold text-xs text-green-900 dark:text-green-100 mb-1">📊 Información</h5>
+                <div class="text-xs space-y-0 text-green-800 dark:text-green-200">
+                    <p><strong>Grid:</strong> ${gridSize}×${gridSize}</p>
+                    <p><strong>Total:</strong> ${gridSize * 5}×${gridSize * 5} pies</p>
                 </div>
             </div>
-            
-            <!-- COLUMNA CENTRAL: ESTADÍSTICAS Y HABILIDADES -->
-            <div class="combat-col-center space-y-4">
-                <!-- ESTADÍSTICAS VITALES -->
-                <div class="combat-section">
-                    <div class="combat-section-title">⚡ Vitales</div>
-                    <div class="space-y-2">
-                        <div class="combat-stat-item vital-health cursor-pointer hover:shadow-lg transition-all" onclick="editVitalCombat('health')" title="Click para editar">
-                            <span class="combat-stat-label">Vida</span>
-                            <span class="combat-stat-value">${character.stats.health.current}/${character.stats.health.max}</span>
-                        </div>
-                        <div class="combat-stat-item vital-mana cursor-pointer hover:shadow-lg transition-all" onclick="editVitalCombat('mana')" title="Click para editar">
-                            <span class="combat-stat-label">Místyculas</span>
-                            <span class="combat-stat-value">${character.stats.mana.current}/${character.stats.mana.max}</span>
-                        </div>
-                        <div class="combat-stat-item vital-armor cursor-pointer hover:shadow-lg transition-all" onclick="editVitalCombat('armor')" title="Click para editar">
-                            <span class="combat-stat-label">Armadura</span>
-                            <span class="combat-stat-value">${character.stats.armor.current}</span>
-                        </div>
-                        <div class="combat-stat-item vital-actions cursor-pointer hover:shadow-lg transition-all" onclick="editVitalCombat('actions')" title="Click para editar">
-                            <span class="combat-stat-label">Acciones</span>
-                            <span class="combat-stat-value">${character.combat.currentActions}</span>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- ATRIBUTOS -->
-                <div class="combat-section">
-                    <div class="combat-section-title">💪 Atributos</div>
-                    <div class="grid grid-cols-2 gap-2">
-    `;
-    
-    for (const key in character.attributes) {
-        const attr = character.attributes[key];
-        const mod = getModifier(attr.value);
-        combatHTML += `
-            <div class="p-3 rounded-lg bg-gray-50 dark:bg-gray-800 border-l-4 border-blue-500 text-center cursor-pointer hover:shadow-lg transition-all" onclick="rollAttributeCheckCombat('${key}')">
-                <p class="text-xs font-bold text-gray-600 dark:text-gray-400">${attr.name}</p>
-                <p class="text-2xl font-bold text-blue-600">${attr.value}</p>
-                <p class="text-xs text-blue-500 font-bold">${mod >= 0 ? '+' : ''}${mod}</p>
-                <p class="text-xs text-gray-500 mt-1">🎲 Click para tirada</p>
-            </div>
-        `;
-    }
-    
-    combatHTML += `
-                    </div>
-                </div>
-                
-                <!-- ACCIONES DE COMBATE -->
-                <div class="combat-section">
-                    <div class="combat-section-title">⚔️ Acciones</div>
-                    <div class="space-y-2">
-                        <button class="w-full p-2 rounded-lg bg-blue-500 hover:bg-blue-600 text-white text-sm font-bold transition-all" onclick="useCombatAction('Menor', 1)">A. Menor (1)</button>
-                        <button class="w-full p-2 rounded-lg bg-purple-500 hover:bg-purple-600 text-white text-sm font-bold transition-all" onclick="useCombatAction('Objeto', 1)">A. Objeto (1)</button>
-                        <button class="w-full p-2 rounded-lg bg-red-500 hover:bg-red-600 text-white text-sm font-bold transition-all" onclick="useCombatAction('Compleja', 2)">A. Compleja (2)</button>
-                        <button class="w-full p-2 rounded-lg bg-yellow-600 hover:bg-yellow-700 text-white text-sm font-bold transition-all" onclick="useCombatAction('Reacción', 3)">Reacción (3)</button>
-                        <button class="w-full p-2 rounded-lg bg-green-600 hover:bg-green-700 text-white text-sm font-bold transition-all" onclick="useCombatAction('Bonus', 1)">A. Bonus (+1)</button>
-                        <button class="w-full p-2 rounded-lg bg-orange-600 hover:bg-orange-700 text-white text-sm font-bold transition-all" onclick="useCombatAction('Legendaria', 20)">Acción Legendaria (20)</button>
-                        <button class="w-full p-2 rounded-lg bg-gray-600 hover:bg-gray-700 text-white text-sm font-bold transition-all" onclick="endTurn()">Finalizar Turno</button>
-                    </div>
-                </div>
-                
-                <!-- HABILIDADES -->
-                <div class="combat-section">
-                    <div class="combat-section-title">🎯 Habilidades</div>
-                    <div class="space-y-2 max-h-40 overflow-y-auto">
-    `;
-    
-    if (character.inventory.skills.length > 0) {
-        character.inventory.skills.forEach((skill, index) => {
-            combatHTML += `
-                <div class="p-2 rounded-lg bg-green-50 dark:bg-green-900/20 border-l-4 border-green-500">
-                    <div class="flex justify-between items-start gap-2">
-                        <div class="flex-1 min-w-0">
-                            <p class="font-bold text-green-700 dark:text-green-400 text-sm">${skill.name}</p>
-                            <p class="text-xs text-gray-600 dark:text-gray-400 line-clamp-1">${skill.description || ''}</p>
-                            <p class="text-xs text-green-600 dark:text-green-300 mt-1">💚 PA: ${skill.costPA} | 💙 MP: ${skill.costMP}</p>
-                        </div>
-                        <button class="item-action-btn btn btn-primary whitespace-nowrap text-xs" onclick="useAbility('skills', ${index})">Usar</button>
-                    </div>
-                </div>
-            `;
-        });
-    } else {
-        combatHTML += '<p class="text-xs text-gray-500 italic">Sin habilidades</p>';
-    }
-    
-    combatHTML += `
-                    </div>
+            <div class="bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900 dark:to-blue-800 rounded p-2 border border-blue-200 dark:border-blue-700">
+                <h5 class="font-semibold text-xs text-blue-900 dark:text-blue-100 mb-1">🎮 Modos</h5>
+                <div class="text-xs space-y-0 text-blue-800 dark:text-blue-200">
+                    <p>👤 Avatar • 📍 Marcador</p>
                 </div>
             </div>
-            
-            <!-- COLUMNA DERECHA: TÉCNICAS Y EQUIPO -->
-            <div class="combat-col-right space-y-4">
-                <!-- TÉCNICAS/HECHIZOS -->
-                <div class="combat-section">
-                    <div class="combat-section-title">✨ Técnicas/Hechizos</div>
-                    <div class="space-y-2 max-h-40 overflow-y-auto">
+        </div>
+        
+        <!-- BOTONES DE ACCIÓN -->
+        <div class="flex justify-end gap-2 mt-3 pt-2 border-t border-gray-300 dark:border-gray-600">
+            <button class="btn btn-secondary" onclick="closeModal()">❌ Cerrar</button>
+            <button class="btn btn-primary" onclick="saveMapState()">💾 Guardar Mapa</button>
+        </div>
     `;
+    openModal(content);
+    renderMapModalGrid();
     
-    if (character.inventory.techniques.length > 0) {
-        character.inventory.techniques.forEach((tech, index) => {
-            combatHTML += `
-                <div class="p-2 rounded-lg bg-purple-50 dark:bg-purple-900/20 border-l-4 border-purple-500">
-                    <div class="flex justify-between items-start gap-2">
-                        <div class="flex-1 min-w-0">
-                            <p class="font-bold text-purple-700 dark:text-purple-400 text-sm">${tech.name}</p>
-                            <p class="text-xs text-gray-600 dark:text-gray-400 line-clamp-1">${tech.description || ''}</p>
-                            <p class="text-xs text-purple-600 dark:text-purple-300 mt-1">💚 PA: ${tech.costPA} | 💙 MP: ${tech.costMP}</p>
-                        </div>
-                        <button class="item-action-btn btn btn-primary whitespace-nowrap text-xs" onclick="useAbility('techniques', ${index})">Usar</button>
-                    </div>
-                </div>
-            `;
-        });
-    } else {
-        combatHTML += '<p class="text-xs text-gray-500 italic">Sin técnicas</p>';
-    }
-    
-    combatHTML += `
-                    </div>
-                </div>
-                
-                <!-- EQUIPAMIENTO -->
-                <div class="combat-section">
-                    <div class="combat-section-title">🛡️ Equipo</div>
-                    <div class="space-y-1.5 max-h-40 overflow-y-auto">
-    `;
-    
-    character.equipment.forEach((slot, idx) => {
-        if (slot.item) {
-            combatHTML += `
-                <div class="p-2 rounded-lg bg-yellow-50 dark:bg-yellow-900/20 border-l-4 border-yellow-500">
-                    <p class="font-semibold text-yellow-700 dark:text-yellow-400 text-xs">${slot.slotName}</p>
-                    <p class="text-xs text-gray-600 dark:text-gray-400 mb-1">${slot.item.name}</p>
-                    <div class="flex gap-1">
-                        <button class="item-action-btn btn btn-secondary flex-1 text-xs" onclick="useEquippedItem(${idx})">Usar</button>
-                        <button class="item-action-btn btn btn-danger flex-1 text-xs" onclick="unequipItem(${idx})">Desequipar</button>
-                    </div>
-                </div>
-            `;
-        } else {
-            combatHTML += `
-                <div class="p-2 rounded-lg bg-gray-50 dark:bg-gray-800 border-l-4 border-gray-300 opacity-50">
-                    <p class="font-semibold text-gray-400 text-xs">${slot.slotName}</p>
-                    <p class="text-xs text-gray-500">Vacío</p>
-                </div>
-            `;
+    document.getElementById('map-bg-upload')?.addEventListener('change', function(e) {
+        if (e.target.files[0]) {
+            const reader = new FileReader();
+            reader.onload = (evt) => {
+                character.map.backgroundImage = evt.target.result;
+                document.getElementById('map-modal-container').style.backgroundImage = `url('${evt.target.result}')`;
+                saveCharacterToLocalStorage();
+            };
+            reader.readAsDataURL(e.target.files[0]);
         }
     });
     
-    combatHTML += `
-                    </div>
-                </div>
-                
-                <!-- OBJETOS -->
-                <div class="combat-section">
-                    <div class="combat-section-title">🎁 Objetos</div>
-                    <div class="space-y-1.5 max-h-40 overflow-y-auto">
-    `;
-    
-    if (character.inventory.items.length > 0) {
-        character.inventory.items.forEach((item, index) => {
-            combatHTML += `
-                <div class="p-2 rounded-lg bg-cyan-50 dark:bg-cyan-900/20 border-l-4 border-cyan-500">
-                    <div class="flex items-start gap-2">
-                        <div class="flex-1 min-w-0">
-                            <p class="font-bold text-cyan-700 dark:text-cyan-400 text-xs">${item.name}</p>
-                            <p class="text-xs text-gray-600">x${item.quantity || 1}</p>
-                        </div>
-                        <div class="flex gap-1 flex-shrink-0">
-                            <button class="item-action-btn btn btn-primary text-xs whitespace-nowrap" onclick="equipItemFromInventory(${index})">Equipar</button>
-                            <button class="item-action-btn btn btn-secondary text-xs whitespace-nowrap" onclick="useItemEffect(${index})">Usar</button>
-                        </div>
-                    </div>
-                </div>
-            `;
-        });
-    } else {
-        combatHTML += '<p class="text-xs text-gray-500 italic">Sin objetos</p>';
-    }
-    
-    combatHTML += `
-                    </div>
-                </div>
-                
-                <!-- ESTADOS ACTIVOS -->
-                <div class="combat-section">
-                    <div class="flex justify-between items-center mb-3">
-                        <div class="combat-section-title">🔴 Estados</div>
-                        <button class="btn btn-primary text-xs px-2 py-1" onclick="openStatusEffectForm()">+ Añadir</button>
-                    </div>
-                    <div class="space-y-1.5 max-h-40 overflow-y-auto">
-    `;
-    
-    if (character.statusEffects.length > 0) {
-        character.statusEffects.forEach(status => {
-            const itemClass = status.type === 'Buff' ? 'bg-green-100 dark:bg-green-900/30 border-green-500' : 
-                            status.type === 'Debuff' ? 'bg-red-100 dark:bg-red-900/30 border-red-500' : 
-                            'bg-gray-100 dark:bg-gray-800 border-gray-500';
-            combatHTML += `
-                <div class="p-2 rounded-lg ${itemClass} border-l-4 text-xs">
-                    <p class="font-semibold">${status.name}</p>
-                    <p class="text-xs opacity-75">${status.duration}${status.durationType.charAt(0)}</p>
-                </div>
-            `;
-        });
-    } else {
-        combatHTML += '<p class="text-xs text-gray-500 italic">Sin estados</p>';
-    }
-    
-    combatHTML += `
-                    </div>
-                </div>
-            </div>
-        </div>
-    `;
-    
-    modalContent.innerHTML = combatHTML;
-    modal.classList.add('active');
+
 }
+
+function renderMapModalGrid() {
+    const grid = document.getElementById('map-grid-modal');
+    if (!grid) return;
+    
+    grid.innerHTML = '';
+    const size = Math.max(20, Math.min(50, character.map.gridSize || 20));
+    const mode = document.getElementById('map-mode')?.value || 'avatar';
+    const markerType = document.getElementById('marker-type')?.value || 'Aliado';
+    const markerColors = { 'Aliado': '#10b981', 'Enemigo': '#ef4444', 'Punto de Interés': '#f59e0b', 'Trampa': '#8b5cf6' };
+    
+    for (let y = 0; y < size; y++) {
+        for (let x = 0; x < size; x++) {
+            const cell = document.createElement('div');
+            cell.className = 'map-cell';
+            cell.style.userSelect = 'none';
+            cell.style.width = '100%';
+            cell.style.height = '100%';
+            cell.style.backgroundColor = 'rgba(200, 200, 200, 0.3)';
+            cell.style.border = '1px solid rgba(100, 100, 100, 0.5)';
+            cell.style.cursor = 'pointer';
+            cell.style.display = 'flex';
+            cell.style.alignItems = 'center';
+            cell.style.justifyContent = 'center';
+            cell.style.fontSize = '11px';
+            cell.style.fontWeight = '600';
+            cell.style.transition = 'all 0.15s';
+            cell.style.position = 'relative';
+            cell.style.zIndex = '20';
+            
+            const marker = character.map.markers.find(m => m.x === x && m.y === y);
+            const isAvatar = character.map.avatar.x === x && character.map.avatar.y === y;
+            
+
+            
+            if (isAvatar) {
+                cell.style.backgroundColor = 'rgba(59, 130, 246, 0.7)';
+                cell.style.color = 'white';
+                cell.style.boxShadow = 'inset 0 0 8px rgba(0,0,0,0.3)';
+                cell.textContent = '①';
+                cell.setAttribute('title', `Avatar en (${x}, ${y})`);
+            } 
+            else if (marker) {
+                cell.style.backgroundColor = markerColors[marker.type] || '#6b7280';
+                cell.style.color = 'white';
+                cell.style.boxShadow = '0 0 4px rgba(0,0,0,0.4)';
+                cell.textContent = marker.type.charAt(0).toUpperCase();
+                cell.setAttribute('title', `${marker.type}: ${marker.name || '(sin nombre)'}`);
+            }
+            
+            cell.addEventListener('mouseover', () => {
+                if (!isAvatar && !marker) {
+                    cell.style.backgroundColor = 'rgba(150, 150, 150, 0.5)';
+                    cell.style.transform = 'scale(1.02)';
+                }
+            });
+            
+            cell.addEventListener('mouseout', () => {
+                if (!isAvatar && !marker) {
+                    cell.style.backgroundColor = 'rgba(200, 200, 200, 0.3)';
+                    cell.style.transform = 'scale(1)';
+                }
+            });
+            
+            cell.addEventListener('click', () => {
+                const mapInfo = document.getElementById('map-info-modal');
+                const mode = document.getElementById('map-mode')?.value || 'avatar';
+                
+                if (mode === 'marker') {
+                    const markerType = document.getElementById('marker-type')?.value || 'Aliado';
+                    const existingIdx = character.map.markers.findIndex(m => m.x === x && m.y === y);
+                    
+                    if (existingIdx >= 0) {
+                        character.map.markers.splice(existingIdx, 1);
+                        mapInfo.textContent = `✓ Marcador eliminado en (${x}, ${y})`;
+                    } else {
+                        character.map.markers.push({ x, y, type: markerType, name: '' });
+                        mapInfo.textContent = `✓ ${markerType} agregado en (${x}, ${y})`;
+                    }
+                    saveCharacterToLocalStorage();
+                    renderMapModalGrid();
+                } else {
+                    const prev = { ...character.map.avatar };
+                    character.map.avatar.x = x;
+                    character.map.avatar.y = y;
+                    
+                    document.getElementById('avatar-x').value = x;
+                    document.getElementById('avatar-y').value = y;
+                    
+                    const distCells = Math.sqrt(Math.pow(prev.x - x, 2) + Math.pow(prev.y - y, 2)).toFixed(1);
+                    const distFeet = (distCells * 5).toFixed(1);
+                    mapInfo.textContent = `✓ Avatar movido a (${x}, ${y}) — Distancia: ${distFeet} pies`;
+                    
+                    renderMapModalGrid();
+                }
+            });
+            
+            grid.appendChild(cell);
+        }
+    }
+}
+
+function updateMapSize(newSize) {
+    newSize = Math.max(5, Math.min(20, parseInt(newSize) || 10));
+    character.map.gridSize = newSize;
+    
+    if (character.map.avatar.x >= newSize) character.map.avatar.x = newSize - 1;
+    if (character.map.avatar.y >= newSize) character.map.avatar.y = newSize - 1;
+    
+    character.map.markers = character.map.markers.filter(m => m.x < newSize && m.y < newSize);
+    
+    renderMapModalGrid();
+    
+    document.getElementById('avatar-x').max = newSize - 1;
+    document.getElementById('avatar-y').max = newSize - 1;
+    
+    saveCharacterToLocalStorage();
+}
+
+function clearMapBackground() {
+    character.map.backgroundImage = '';
+    document.getElementById('map-modal-container').style.backgroundImage = 'none';
+    saveCharacterToLocalStorage();
+}
+
+function updateMapModeControls() {
+    const mode = document.getElementById('map-mode').value;
+    document.getElementById('marker-control').style.display = mode === 'marker' ? 'block' : 'none';
+    document.getElementById('regla-control').style.display = mode === 'regla' ? 'block' : 'none';
+}
+
+function updateReglaControls() {
+    const tipo = document.getElementById('regla-type').value;
+    const dirControl = document.getElementById('regla-direccion-control');
+    const orientControl = document.getElementById('regla-orientacion-control');
+    const lineaParams = document.getElementById('regla-linea-params');
+    const otrosParams = document.getElementById('regla-otros-params');
+    
+    if (tipo === 'linea') {
+        orientControl.style.display = 'block';
+        dirControl.style.display = 'none';
+        lineaParams.style.display = 'block';
+        otrosParams.style.display = 'none';
+    } else if (['plus', 'minus', 'parentesis', 'mayor'].includes(tipo)) {
+        orientControl.style.display = 'none';
+        dirControl.style.display = 'block';
+        lineaParams.style.display = 'block';
+        otrosParams.style.display = 'none';
+    } else if (['cono', 'cadena', 'aura', 'luna', 'medialuna'].includes(tipo)) {
+        orientControl.style.display = 'none';
+        dirControl.style.display = 'block';
+        lineaParams.style.display = 'none';
+        otrosParams.style.display = 'block';
+    } else {
+        orientControl.style.display = 'none';
+        dirControl.style.display = 'none';
+        lineaParams.style.display = 'none';
+        otrosParams.style.display = 'none';
+    }
+    
+    renderMapModalGrid();
+}
+
+function setReglaDirection(dir) {
+    const dirButtons = document.querySelectorAll('button[onclick^="setReglaDirection"]');
+    dirButtons.forEach(btn => {
+        btn.classList.remove('btn-primary');
+        btn.classList.add('btn-secondary');
+        
+        const match = btn.getAttribute('onclick').match(/'([^']+)'/);
+        if (match && match[1] === dir) {
+            btn.classList.remove('btn-secondary');
+            btn.classList.add('btn-primary');
+        }
+    });
+    
+    renderMapModalGrid();
+}
+
+function saveMapState() {
+    const gridSize = character.map.gridSize || 10;
+    let x = parseInt(document.getElementById('avatar-x').value) || 0;
+    let y = parseInt(document.getElementById('avatar-y').value) || 0;
+    
+    // Validar límites
+    x = Math.max(0, Math.min(x, gridSize - 1));
+    y = Math.max(0, Math.min(y, gridSize - 1));
+    
+    character.map.avatar.x = x;
+    character.map.avatar.y = y;
+    
+    document.getElementById('avatar-x').value = x;
+    document.getElementById('avatar-y').value = y;
+    
+    saveAndRefresh();
+    showNotification('Mapa Guardado', `Avatar guardado en (${x}, ${y}) con ${character.map.markers.length} marcador(es).`);
+    closeModal();
+}
+
+function limpiarTodasLasReglas_REMOVED() {
+    if (!character.map.reglas || character.map.reglas.length === 0) {
+        showNotification('Sin Reglas', 'No hay reglas para limpiar');
+        return;
+    }
+    
+    const confirmDelete = confirm(`¿Eliminar TODAS las ${character.map.reglas.length} reglas?`);
+    if (confirmDelete) {
+        character.map.reglas = [];
+        saveCharacterToLocalStorage();
+        renderMapModalGrid();
+        
+        reglaDeleteModeActive = false;
+        const deleteBtn = document.getElementById('toggle-eliminar-regla');
+        const deleteText = document.getElementById('toggle-eliminar-text');
+        const deleteOptions = document.getElementById('eliminar-options');
+        if (deleteBtn) {
+            deleteBtn.classList.remove('btn-danger');
+            deleteBtn.classList.add('btn-secondary');
+            deleteText.textContent = '⭕ Eliminar: OFF';
+            deleteOptions.style.display = 'none';
+        }
+        
+        showNotification('✓ Reglas Eliminadas', 'Se han borrado todas las reglas del mapa.');
+    }
+}
+
+function eliminarRegla_REMOVED(indice) {
+    if (character.map.reglas && indice >= 0 && indice < character.map.reglas.length) {
+        const reglaEliminada = character.map.reglas[indice];
+        character.map.reglas.splice(indice, 1);
+        saveCharacterToLocalStorage();
+        renderMapModalGrid();
+        showNotification('✓ Regla Eliminada', `${reglaEliminada.tipo} en (${reglaEliminada.x}, ${reglaEliminada.y})`);
+    }
+}
+
+// renderReglasList removed - regla system eliminated
 
 function unequipItem(slotIndex) {
     if (character.equipment[slotIndex].item) {
-        // Agregar el item al inventario
+        const itemName = character.equipment[slotIndex].item.name;
+        let equipBonus = {};
+        if (character.equipment[slotIndex].item.equipmentBonus) {
+            if (typeof character.equipment[slotIndex].item.equipmentBonus === 'string') {
+                try { equipBonus = JSON.parse(character.equipment[slotIndex].item.equipmentBonus); } catch(e) { equipBonus = {}; }
+            } else {
+                equipBonus = character.equipment[slotIndex].item.equipmentBonus;
+            }
+        }
+        
         const item = character.equipment[slotIndex].item;
         const existingItem = character.inventory.items.find(i => i.name === item.name);
         
@@ -3485,11 +4743,20 @@ function unequipItem(slotIndex) {
             character.inventory.items.push({ ...item, quantity: 1 });
         }
         
-        // Desequipar
         character.equipment[slotIndex].item = null;
-        saveAndRefresh();
+        
+        calculateDerivedStats();
+        updateUI();
+        saveCharacterToLocalStorage();
+        
+        closeModalSecondary();
         refreshCombatEquipment();
-        showNotification('Desequipado', `${item.name} ha sido movido al inventario`);
+        
+        let bonusText = '';
+        if (Object.keys(equipBonus).length > 0) {
+            bonusText = ' (se retiran bonuses: ' + Object.entries(equipBonus).map(([k, v]) => `${k}: ${v > 0 ? '+' : ''}${v}`).join(', ') + ')';
+        }
+        showNotification('Desequipado', `${itemName} ha sido movido al inventario${bonusText}`);
     }
 }
 
@@ -3501,21 +4768,28 @@ function openStatusEffectForm(status = null, index = -1) {
     const isEditing = status !== null;
     tempLinkedEffects = isEditing ? JSON.parse(JSON.stringify(status.linkedEffects)) : [];
     
-    const predefinedButtons = predefinedStatusEffects.map(effect => `<button class="btn btn-secondary w-full mb-2" onclick="loadPredefinedStatus('${effect.name}')">${effect.name}</button>`).join('');
+    const predefinedRows = predefinedStatusEffects.map((effect, i) => `
+        <div class="flex items-center justify-between gap-2 p-2 bg-green-50 dark:bg-green-700 rounded">
+            <button class="btn btn-secondary flex-1 text-sm py-1 text-left" onclick="loadPredefinedStatus('${effect.name}')">${effect.name}</button>
+            <button class="btn btn-danger text-xs px-2 py-1" title="Eliminar predefinido" onclick="removePredefinedStatus(${i})">-</button>
+        </div>
+    `).join('');
 
     const content = `
         <h3 class="text-2xl font-bold mb-4">${isEditing ? 'Editar' : 'Crear'} Estado</h3>
         <div class="modal-scrollable-content"><div class="space-y-4">
-            <div class="pt-4 border-t dark:border-gray-600">
-                <h4 class="font-semibold mb-2">Estados Predefinidos</h4>
-                <div class="grid grid-cols-2 gap-2">${predefinedButtons}</div>
+            <div class="bg-white-50 dark:bg-white-900/30 p-3 rounded border border-blue-200 dark:border-blue-700">
+                <h4 class="font-semibold mb-2 text-sm">Predefinidos</h4>
+                <div class="space-y-2">
+                    ${predefinedRows || '<p class="text-xs text-gray-500">Sin predefinidos (crea uno nuevo)</p>'}
+                </div>
             </div>
             <div>
-                <label for="status-name" class="block text-sm font-medium">Nombre del Estado</label>
+                <label for="status-name" class="block text-sm font-medium">Nombre</label>
                 <input id="status-name" class="input-field mt-1" placeholder="Ej: Furia, Envenenado" value="${status?.name || ''}">
             </div>
             <div>
-                 <label for="status-description" class="block text-sm font-medium">Descripción</label>
+                <label for="status-description" class="block text-sm font-medium">Descripción</label>
                 <textarea id="status-description" class="input-field mt-1" placeholder="¿Qué hace este estado?" rows="2">${status?.description || ''}</textarea>
             </div>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2 border-t dark:border-gray-700">
@@ -3533,7 +4807,7 @@ function openStatusEffectForm(status = null, index = -1) {
             </div>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                    <label for="status-duration-type" class="block text-sm font-medium">Tipo de Duración</label>
+                    <label for="status-duration-type" class="block text-sm font-medium">Duración</label>
                     <select id="status-duration-type" class="input-field mt-1">
                         <option value="Rondas" ${status?.durationType === 'Rondas' ? 'selected' : ''}>Rondas</option>
                         <option value="Acciones" ${status?.durationType === 'Acciones' ? 'selected' : ''}>Acciones</option>
@@ -3541,19 +4815,21 @@ function openStatusEffectForm(status = null, index = -1) {
                     </select>
                 </div>
                 <div>
-                    <label for="status-duration" class="block text-sm font-medium">Duración</label>
-                    <input type="number" id="status-duration" class="input-field mt-1" placeholder="1" value="${status?.duration || 1}">
+                    <input type="number" id="status-duration" class="input-field mt-5" placeholder="1" value="${status?.duration || 1}">
                 </div>
             </div>
             <div class="pt-4 border-t dark:border-gray-700">
-                <h4 class="font-semibold mb-2 text-center">Efectos Vinculados</h4>
-                <div id="linked-effects-list" class="space-y-2 bg-gray-100 dark:bg-gray-800 p-2 rounded min-h-[4rem]"></div>
-                <button class="btn btn-secondary text-sm w-full mt-2" onclick="openLinkedEffectForm()">Añadir Efecto Vinculado</button>
+                <h4 class="font-semibold mb-2">Efectos Vinculados</h4>
+                <div id="linked-effects-list" class="space-y-2 bg-gray-100 dark:bg-gray-800 p-2 rounded min-h-[4rem] mb-2"></div>
+                <button class="btn btn-secondary text-sm w-full" onclick="openLinkedEffectForm()">+ Agregar Efecto</button>
             </div>
         </div></div>
-        <div class="flex justify-end mt-6 pt-4 border-t dark:border-gray-600">
-            <button class="btn btn-secondary" onclick="closeModal()">Cancelar</button>
-            <button class="btn btn-primary" onclick="saveStatusEffect(${index})">${isEditing ? 'Guardar Cambios' : 'Crear Estado'}</button>
+        <div class="flex justify-between gap-2 mt-6 pt-4 border-t dark:border-gray-600">
+            <button class="btn btn-secondary" onclick="savePredefinedStatus()">💾 Guardar como Predefinido</button>
+            <div class="flex gap-2">
+                <button class="btn btn-secondary" onclick="closeModal()">Cancelar</button>
+                <button class="btn btn-primary" onclick="saveStatusEffect(${index})">${isEditing ? 'Guardar Cambios' : 'Crear Estado'}</button>
+            </div>
         </div>
     `;
     openModal(content);
@@ -3572,6 +4848,41 @@ function loadPredefinedStatus(name) {
         tempLinkedEffects = JSON.parse(JSON.stringify(predefined.linkedEffects));
         renderLinkedEffectsList();
     }
+}
+
+function savePredefinedStatus() {
+    const name = document.getElementById('status-name').value.trim();
+    if (!name) {
+        showNotification('Error', 'El nombre del estado es obligatorio');
+        return;
+    }
+    
+    const exists = predefinedStatusEffects.find(effect => effect.name === name);
+    if (exists) {
+        showNotification('Error', 'Este nombre ya existe en los predefinidos');
+        return;
+    }
+    
+    const newPredefined = {
+        name: name,
+        description: document.getElementById('status-description').value,
+        type: document.getElementById('status-type').value,
+        isStackable: document.getElementById('status-isStackable').checked,
+        durationType: document.getElementById('status-duration-type').value,
+        duration: parseInt(document.getElementById('status-duration').value) || 1,
+        linkedEffects: JSON.parse(JSON.stringify(tempLinkedEffects))
+    };
+    
+    predefinedStatusEffects.push(newPredefined);
+    showNotification('Guardado', `"${name}" se guardó como predefinido`);
+    openStatusEffectForm();
+}
+
+function removePredefinedStatus(index) {
+    const name = predefinedStatusEffects[index].name;
+    predefinedStatusEffects.splice(index, 1);
+    showNotification('Eliminado', `"${name}" fue removido de predefinidos`);
+    openStatusEffectForm();
 }
 
 function renderLinkedEffectsList() {
@@ -3704,9 +5015,6 @@ function removeStatusEffect(statusId) {
     saveAndRefresh();
 }
 
-// ===================================================================================
-// NUEVO: SISTEMA DE RECURSOS
-// ===================================================================================
 function renderResources() {
     const container = document.getElementById('resources-container');
     container.innerHTML = '';
@@ -3796,15 +5104,27 @@ function setResource(index, value) {
     saveAndRefresh();
 }
 
+function updateFavoresCurrent(value) {
+    character.favores.current = Math.max(0, value);
+    saveCharacterToLocalStorage();
+}
 
-// ===================================================================================
-// INICIALIZACIÓN
-// ===================================================================================
+function updateFavoresMax(value) {
+    character.favores.max = Math.max(1, value);
+    saveCharacterToLocalStorage();
+}
+
+    // Favores UI - deprecated, now integrated in renderSpiritAmulet
+function renderFavoresUI() {
+}
+
 function initializeCharacter(isImport = false) {
     if (!isImport) {
         const loadedCharacter = loadCharacterFromLocalStorage();
         character = loadedCharacter ? loadedCharacter : getDefaultCharacter();
     }
+    if (!character.favores) character.favores = { current: 0, max: 10, notes: '' };
+    if (!character.map) character.map = { avatar: { x: 0, y: 0 }, gridSize: 10 };
     // Re-sync spirit relation bonuses on any load
     for (const key in character.spiritRelations) {
         const relationValue = character.spiritRelations[key]?.relation || 0;
@@ -3831,4 +5151,3 @@ window.onload = () => {
 </script>
 </body>
 </html>
-
